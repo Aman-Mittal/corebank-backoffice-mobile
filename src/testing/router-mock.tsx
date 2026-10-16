@@ -20,7 +20,11 @@ import type { ReactNode } from 'react';
  * A stand-in for expo-router in component tests: links render as anchors, redirects render a
  * marker the test can assert on, and navigation calls are recorded.
  */
-export const routerCalls: { replace: unknown[]; push: unknown[] } = { replace: [], push: [] };
+export const routerCalls: { replace: unknown[]; push: unknown[]; dismissTo: unknown[] } = {
+  replace: [],
+  push: [],
+  dismissTo: [],
+};
 export const searchParams: { reason?: string } = {};
 
 export const expoRouterMock = {
@@ -35,6 +39,7 @@ export const expoRouterMock = {
   useRouter: () => ({
     replace: (to: unknown) => routerCalls.replace.push(to),
     push: (to: unknown) => routerCalls.push.push(to),
+    dismissTo: (to: unknown) => routerCalls.dismissTo.push(to),
   }),
   useLocalSearchParams: () => searchParams,
   usePathname: () => '/home',
@@ -43,5 +48,6 @@ export const expoRouterMock = {
 export function resetRouterMock() {
   routerCalls.replace.length = 0;
   routerCalls.push.length = 0;
+  routerCalls.dismissTo.length = 0;
   delete searchParams.reason;
 }

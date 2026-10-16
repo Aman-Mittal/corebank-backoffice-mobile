@@ -32,6 +32,20 @@ export const EXTRA_ROUTES: readonly NavEntry[] = [
     phase: 1,
   },
   {
+    id: 'organization.offices.new',
+    labelKey: 'ROUTES.OFFICES_NEW',
+    route: '/organization/offices/new',
+    access: { anyOf: ['CREATE_OFFICE'] },
+    phase: 1,
+  },
+  {
+    id: 'organization.staff.new',
+    labelKey: 'ROUTES.STAFF_NEW',
+    route: '/organization/staff/new',
+    access: { anyOf: ['CREATE_STAFF'] },
+    phase: 1,
+  },
+  {
     id: 'security.users.create',
     labelKey: 'ROUTES.USERS_CREATE',
     route: '/security/users/create',

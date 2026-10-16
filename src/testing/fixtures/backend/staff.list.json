@@ -1,0 +1,26 @@
+[
+  {
+    "id": 1,
+    "firstname": "Program",
+    "lastname": "Director",
+    "displayName": "Director, Program",
+    "officeId": 1,
+    "officeName": "Head Office",
+    "isLoanOfficer": true,
+    "isActive": true,
+    "mobileNo": "0700000001",
+    "joiningDate": "2020-01-01"
+  },
+  {
+    "id": 2,
+    "firstname": "Grace",
+    "lastname": "Okello",
+    "displayName": "Okello, Grace",
+    "officeId": 2,
+    "officeName": "Kampala Branch",
+    "isLoanOfficer": false,
+    "isActive": false,
+    "emailAddress": "grace@example.org",
+    "joiningDate": "2026-10-05"
+  }
+]

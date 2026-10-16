@@ -16,6 +16,7 @@
 
 import { AUTH_API, type AuthApi } from '@/core/adapters/api/auth.api';
 import { OFFICE_API, type OfficeApi } from '@/core/adapters/api/office.api';
+import { STAFF_API, type StaffApi } from '@/core/adapters/api/staff.api';
 import { TWO_FACTOR_API, type TwoFactorApi } from '@/core/adapters/api/two-factor.api';
 import { USER_DETAILS_API, type UserDetailsApi } from '@/core/adapters/api/user-details.api';
 import {
@@ -65,6 +66,7 @@ export interface FakeAdapters {
   /** API contracts that reject until a test overrides them, so an unexpected call is loud. */
   readonly authApi: AuthApi;
   readonly officeApi: OfficeApi;
+  readonly staffApi: StaffApi;
   readonly twoFactorApi: TwoFactorApi;
   readonly userDetailsApi: UserDetailsApi;
   /** No identity provider unless a test passes `deploymentConfig` overrides. */
@@ -145,6 +147,12 @@ export function createFakeAdapters(): FakeAdapters {
     create: unscripted('OfficeApi.create'),
     update: unscripted('OfficeApi.update'),
   };
+  const staffApi: StaffApi = {
+    list: unscripted('StaffApi.list'),
+    get: unscripted('StaffApi.get'),
+    create: unscripted('StaffApi.create'),
+    update: unscripted('StaffApi.update'),
+  };
 
   const twoFactorApi: TwoFactorApi = {
     methods: unscripted('TwoFactorApi.methods'),
@@ -163,6 +171,7 @@ export function createFakeAdapters(): FakeAdapters {
     provide(DEPLOYMENT_CONFIG, deploymentConfig),
     provide(AUTH_API, authApi),
     provide(OFFICE_API, officeApi),
+    provide(STAFF_API, staffApi),
     provide(STORAGE, storage),
     provide(SECURE_STORAGE, secureStorage),
     provide(DOWNLOAD, download),
@@ -183,6 +192,7 @@ export function createFakeAdapters(): FakeAdapters {
     session,
     authApi,
     officeApi,
+    staffApi,
     twoFactorApi,
     userDetailsApi,
     deploymentConfig,
