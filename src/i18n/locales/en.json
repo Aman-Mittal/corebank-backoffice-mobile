@@ -34,7 +34,13 @@
       "NETWORK": "Cannot reach the server. Check your connection and try again.",
       "FORBIDDEN": "You do not have permission to perform this action.",
       "UNKNOWN": "Something went wrong. Please try again."
-    }
+    },
+    "YES": "Yes",
+    "NO": "No",
+    "ACTIVE": "Active",
+    "INACTIVE": "Inactive",
+    "SAVE": "Save",
+    "EDIT": "Edit"
   },
   "HOME": {
     "TITLE": "Home",
@@ -186,7 +192,9 @@
   "ROUTES": {
     "CLIENTS_NEW": "New client",
     "USERS_CREATE": "New user",
-    "ROLES_CREATE": "New role"
+    "ROLES_CREATE": "New role",
+    "OFFICES_NEW": "New office",
+    "STAFF_NEW": "New staff member"
   },
   "ACCESS_DENIED": {
     "TITLE": "Access denied",
@@ -213,5 +221,55 @@
     "BACK": "Back to sign-in",
     "SEND_FAILED": "The code could not be sent. Try again, or choose another channel.",
     "INVALID": "The code was not accepted."
+  },
+  "STATE": {
+    "LOAD_FAILED": "This could not be loaded.",
+    "RETRY": "Try again"
+  },
+  "FORM": {
+    "REQUIRED": "Required",
+    "DATE_INVALID": "Enter a real date as YYYY-MM-DD.",
+    "DATE_HINT": "YYYY-MM-DD",
+    "DIGITS_ONLY": "Use digits only.",
+    "EMAIL_INVALID": "Enter a valid email address.",
+    "SAVE_FAILED": "The changes could not be saved. Please try again."
+  },
+  "OFFICES": {
+    "TITLE": "Offices",
+    "NEW": "New office",
+    "NEW_TITLE": "New office",
+    "EDIT_TITLE": "Edit office",
+    "SEARCH": "Search offices",
+    "EMPTY": "No offices match your search.",
+    "NOT_FOUND": "This office does not exist.",
+    "BACK": "Back to offices",
+    "NAME": "Name",
+    "PARENT": "Parent office",
+    "PARENT_PLACEHOLDER": "Choose an office",
+    "OPENING_DATE": "Opening date",
+    "EXTERNAL_ID": "External id"
+  },
+  "STAFF": {
+    "TITLE": "Staff",
+    "NEW": "New staff",
+    "NEW_TITLE": "New staff member",
+    "EDIT_TITLE": "Edit staff member",
+    "SEARCH": "Search staff",
+    "EMPTY": "There are no staff yet.",
+    "NO_MATCH": "No staff match your search.",
+    "NOT_FOUND": "This staff member does not exist.",
+    "BACK": "Back to staff",
+    "OFFICE": "Office",
+    "OFFICE_PLACEHOLDER": "Choose an office",
+    "ALL_OFFICES": "All offices",
+    "FIRSTNAME": "First name",
+    "LASTNAME": "Last name",
+    "MOBILE": "Mobile number",
+    "EMAIL": "Email",
+    "EXTERNAL_ID": "External id",
+    "JOINING_DATE": "Joining date",
+    "LOAN_OFFICER": "Loan officer",
+    "ACTIVE": "Active",
+    "STATUS": "Status"
   }
 }

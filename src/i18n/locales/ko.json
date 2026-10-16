@@ -34,7 +34,13 @@
       "NETWORK": "서버에 연결할 수 없습니다. 연결을 확인하고 다시 시도하세요.",
       "FORBIDDEN": "이 작업을 수행할 권한이 없습니다.",
       "UNKNOWN": "문제가 발생했습니다. 다시 시도하세요."
-    }
+    },
+    "YES": "예",
+    "NO": "아니요",
+    "ACTIVE": "활성",
+    "INACTIVE": "비활성",
+    "SAVE": "저장",
+    "EDIT": "편집"
   },
   "HOME": {
     "TITLE": "홈",
@@ -186,7 +192,9 @@
   "ROUTES": {
     "CLIENTS_NEW": "새 고객",
     "USERS_CREATE": "새 사용자",
-    "ROLES_CREATE": "새 역할"
+    "ROLES_CREATE": "새 역할",
+    "OFFICES_NEW": "새 지점",
+    "STAFF_NEW": "새 직원"
   },
   "ACCESS_DENIED": {
     "TITLE": "접근 거부",
@@ -213,5 +221,55 @@
     "BACK": "로그인으로 돌아가기",
     "SEND_FAILED": "코드를 보낼 수 없습니다. 다시 시도하거나 다른 채널을 선택하세요.",
     "INVALID": "코드가 수락되지 않았습니다."
+  },
+  "STATE": {
+    "LOAD_FAILED": "불러올 수 없습니다.",
+    "RETRY": "다시 시도"
+  },
+  "FORM": {
+    "REQUIRED": "필수",
+    "DATE_INVALID": "YYYY-MM-DD 형식의 실제 날짜를 입력하세요.",
+    "DATE_HINT": "YYYY-MM-DD",
+    "DIGITS_ONLY": "숫자만 사용하세요.",
+    "EMAIL_INVALID": "유효한 이메일 주소를 입력하세요.",
+    "SAVE_FAILED": "변경 사항을 저장할 수 없습니다. 다시 시도하세요."
+  },
+  "OFFICES": {
+    "TITLE": "지점",
+    "NEW": "새 지점",
+    "NEW_TITLE": "새 지점",
+    "EDIT_TITLE": "지점 편집",
+    "SEARCH": "지점 검색",
+    "EMPTY": "검색과 일치하는 지점이 없습니다.",
+    "NOT_FOUND": "이 지점은 존재하지 않습니다.",
+    "BACK": "지점 목록으로",
+    "NAME": "이름",
+    "PARENT": "상위 지점",
+    "PARENT_PLACEHOLDER": "지점을 선택하세요",
+    "OPENING_DATE": "개설일",
+    "EXTERNAL_ID": "외부 ID"
+  },
+  "STAFF": {
+    "TITLE": "직원",
+    "NEW": "새 직원",
+    "NEW_TITLE": "새 직원",
+    "EDIT_TITLE": "직원 편집",
+    "SEARCH": "직원 검색",
+    "EMPTY": "아직 직원이 없습니다.",
+    "NO_MATCH": "검색과 일치하는 직원이 없습니다.",
+    "NOT_FOUND": "이 직원은 존재하지 않습니다.",
+    "BACK": "직원 목록으로",
+    "OFFICE": "지점",
+    "OFFICE_PLACEHOLDER": "지점을 선택하세요",
+    "ALL_OFFICES": "모든 지점",
+    "FIRSTNAME": "이름",
+    "LASTNAME": "성",
+    "MOBILE": "휴대폰 번호",
+    "EMAIL": "이메일",
+    "EXTERNAL_ID": "외부 ID",
+    "JOINING_DATE": "입사일",
+    "LOAN_OFFICER": "대출 담당자",
+    "ACTIVE": "활성",
+    "STATUS": "상태"
   }
 }
