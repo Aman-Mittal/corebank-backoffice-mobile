@@ -65,6 +65,11 @@ jobs:
           npm run check:licenses:selftest
           npm run check:licenses
           npm run check:licenses:production
+      # cyclonedx-npm fails on any `npm ls` problem, so the tree must be clean. Two pins in
+      # package.json exist for that: react-native-reanimated/-worklets at the SDK 57 versions
+      # (otherwise reanimated floats to a worklets that expo-modules-core rejects), and a root
+      # `ajv@^8` devDependency (otherwise eslint's ajv 6 is hoisted and breaks the optional ajv 8
+      # peer of @hookform/resolvers).
       - name: SBOM (CycloneDX)
         run: npx --yes @cyclonedx/cyclonedx-npm@4 --output-file sbom.json
       - name: The OpenAPI spec is the pinned, hash-verified file
