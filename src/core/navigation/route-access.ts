@@ -65,7 +65,9 @@ export const NAV_ENTRIES: readonly NavEntry[] = NAV_CATALOGUE.flatMap((n) =>
   isGroup(n) ? n.children : [n],
 );
 
-const ALL_ROUTES = [...NAV_ENTRIES, ...EXTRA_ROUTES].toSorted(
+// `sort` on a fresh copy, not `toSorted`: Hermes has no `toSorted`, and this runs at import, so
+// the Android app crashed on start.
+const ALL_ROUTES = [...NAV_ENTRIES, ...EXTRA_ROUTES].sort(
   (a, b) => b.route.length - a.route.length,
 );
 

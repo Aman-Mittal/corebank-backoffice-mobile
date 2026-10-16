@@ -139,6 +139,17 @@ module.exports = tseslint.config(
       'unicorn/prefer-global-this': 'off',
       'unicorn/no-array-for-each': 'off',
       'unicorn/no-useless-undefined': 'off',
+      // Off: they ask for the ES2023 copy methods, which Hermes (the native JS engine) does not
+      // have. A module-level `toSorted` crashed the Android app on start; banned below instead.
+      'unicorn/no-array-sort': 'off',
+      'unicorn/no-array-reverse': 'off',
+      'no-restricted-properties': [
+        'error',
+        ...['toSorted', 'toReversed', 'toSpliced'].map((property) => ({
+          property,
+          message: 'Hermes has no ES2023 array copy methods: copy the array, then sort/reverse it.',
+        })),
+      ],
       // Off: Expo Router and Metro resolve `@/` and platform suffixes; TypeScript already checks.
       'import/no-unresolved': 'off',
       'import/namespace': 'off',
@@ -170,6 +181,8 @@ module.exports = tseslint.config(
       ...testingLibrary.configs['flat/react'].rules,
       '@typescript-eslint/no-non-null-assertion': 'off',
       'no-restricted-globals': 'off',
+      // Tests run on Node, which has the array copy methods.
+      'no-restricted-properties': 'off',
     },
   },
   {
@@ -177,6 +190,7 @@ module.exports = tseslint.config(
     rules: {
       'no-restricted-imports': 'off',
       'no-restricted-globals': 'off',
+      'no-restricted-properties': 'off',
       '@typescript-eslint/no-non-null-assertion': 'off',
       // Playwright fixtures take a parameter named `use`; they are not React hooks.
       'react-hooks/rules-of-hooks': 'off',
