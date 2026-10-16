@@ -117,6 +117,4 @@ jobs:
           arch: x86_64
           target: google_apis
           ram-size: 3072M
-          script: |
-            adb install android/app/build/outputs/apk/release/app-release.apk
-            maestro test e2e/native --exclude-tags=pending -e APP_ID=io.github.amanmittal.mfibackoffice
+          script: bash scripts/maestro-ci.sh android/app/build/outputs/apk/release/app-release.apk
