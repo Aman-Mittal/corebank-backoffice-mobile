@@ -28,13 +28,25 @@ out=$(mktemp)
 
 adb install "$app" || exit 1
 
+# Prints stdin as one annotation: colour codes stripped, escaped as workflow commands require,
+# lines joined with %0A.
+annotate() {
+  sed -e 's/\x1b\[[0-9;]*[A-Za-z]//g' -e 's/%/%25/g' -e 's/\r/%0D/g' |
+    awk -v title="$1" 'BEGIN { printf "::error title=%s::", title } { printf "%s%%0A", $0 } END { print "" }'
+}
+
+adb logcat -c
 maestro test e2e/native --exclude-tags=pending -e APP_ID="$APP_ID" 2>&1 | tee "$out"
 status=${PIPESTATUS[0]}
 
 if [ "$status" -ne 0 ]; then
-  # One annotation: strip colour codes, escape as workflow commands require, join with %0A.
-  tail -n 40 "$out" |
-    sed -e 's/\x1b\[[0-9;]*[A-Za-z]//g' -e 's/%/%25/g' -e 's/\r/%0D/g' |
-    awk 'BEGIN { printf "::error title=Maestro flows failed::" } { printf "%s%%0A", $0 } END { print "" }'
+  tail -n 40 "$out" | annotate 'Maestro flows failed'
+  # Why the app did not show what the flow expected: crashes and JS errors.
+  adb logcat -d -s 'ReactNativeJS:*' 'AndroidRuntime:E' 'ReactNative:E' '*:F' | tail -n 60 |
+    annotate 'App log - crashes and JS errors'
+  # What is on screen now: each view's resource id and text.
+  adb shell uiautomator dump /sdcard/ui.xml >/dev/null 2>&1
+  adb shell cat /sdcard/ui.xml | grep -o -E '(resource-id|text|content-desc)="[^"]+"' | head -n 60 |
+    annotate 'Screen at the end of the run'
 fi
 exit "$status"
