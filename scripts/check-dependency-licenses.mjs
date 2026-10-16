@@ -18,6 +18,13 @@
  * under the License.
  */
 
+/*
+ * Modified by Aman Mittal, 2026, for CoreBank Backoffice (Apache License 2.0, section 4(b)):
+ * adapted from fineract-backoffice-ui's script of the same name. The deprecated `licenses` array
+ * is now read from each package manifest (legacyLicenses), and the BlueOak-1.0.0 note names this
+ * project's toolchain.
+ */
+
 /**
  * Classifies every dependency's licence against the ASF third-party licensing policy.
  *
