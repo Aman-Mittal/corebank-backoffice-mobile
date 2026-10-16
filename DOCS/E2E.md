@@ -57,7 +57,7 @@ npm run web:export
 npm run e2e:web:mocked                                  # mocked + mobile projects
 npm run e2e:stack -- --fresh                            # docker backend, about 1.5 GB
 npm run e2e:web -- --project=setup --project=backend    # then stop it: npm run e2e:stack -- --down
-APP_ID=io.github.amanmittal.corebankbackoffice npm run e2e:native   # Maestro, device or emulator
+APP_ID=io.github.amanmittal.mfibackoffice npm run e2e:native   # Maestro, device or emulator
 ```
 
 ## Resource limits
@@ -67,7 +67,7 @@ The development machine and CI runners are shared. Rules:
 - **Never run the heavy suites side by side on one machine:** Playwright `backend`, Maestro on an
   emulator, and the docker stack. CI gives each one its own job.
 - **The stack checks memory first:** `e2e-stack.sh` refuses to start with less than 2 GB available
-  (`CBO_MIN_FREE_MB`). Its containers are capped at 512 MB (PostgreSQL) and 1.5 GB (backend).
+  (`MBO_MIN_FREE_MB`). Its containers are capped at 512 MB (PostgreSQL) and 1.5 GB (backend).
 - **Playwright is capped:** at most 2 workers locally, 1 on CI and against the backend.
 
 ### Per-platform entries

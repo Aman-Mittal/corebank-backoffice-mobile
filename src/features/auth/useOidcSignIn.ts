@@ -39,7 +39,7 @@ interface Prepared {
 
 async function prepare(config: OidcConfig): Promise<Prepared> {
   const discovery = await fetchDiscoveryAsync(config.issuer);
-  const redirectUri = makeRedirectUri({ scheme: 'corebank', path: 'oidc-callback' });
+  const redirectUri = makeRedirectUri({ scheme: 'mfibackoffice', path: 'oidc-callback' });
   const request = new AuthRequest({
     clientId: config.clientId,
     scopes: [...config.scopes],

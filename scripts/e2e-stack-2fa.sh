@@ -26,9 +26,9 @@ set -euo pipefail
 cd "$(dirname "$0")/.."
 
 COMPOSE=(docker compose -f deploy/docker-compose-e2e.yml -f deploy/docker-compose-e2e-2fa.yml)
-API="https://localhost:${CBO_E2E_API_PORT:-8443}/fineract-provider/api/v1"
+API="https://localhost:${MBO_E2E_API_PORT:-8443}/fineract-provider/api/v1"
 TENANT_HEADER="Fineract-Platform-TenantId: default"
-MIN_FREE_MB="${CBO_MIN_FREE_MB:-2048}"
+MIN_FREE_MB="${MBO_MIN_FREE_MB:-2048}"
 
 if [[ "${1:-}" == "--down" ]]; then
   "${COMPOSE[@]}" down
@@ -48,7 +48,7 @@ if [[ "${1:-}" == "--fresh" ]]; then
 fi
 
 "${COMPOSE[@]}" up -d --wait db
-docker exec -i cbo-e2e-db psql -U postgres < deploy/init-db.sql >/dev/null 2>&1 || true
+docker exec -i mbo-e2e-db psql -U postgres < deploy/init-db.sql >/dev/null 2>&1 || true
 "${COMPOSE[@]}" up -d backend mailpit
 
 echo "⏳ Waiting for the backend with two-factor enabled..."
@@ -66,7 +66,7 @@ if [[ "$(curl -sk -o /dev/null -w '%{http_code}' -u mifos:password -H "$TENANT_H
 fi
 
 echo "📮 Pointing SMTP at Mailpit..."
-docker exec -i cbo-e2e-db psql -U postgres -d fineract_default >/dev/null <<'SQL'
+docker exec -i mbo-e2e-db psql -U postgres -d fineract_default >/dev/null <<'SQL'
 UPDATE c_external_service_properties SET value = 'mailpit'
   WHERE name = 'host' AND external_service_id = (SELECT id FROM c_external_service WHERE name = 'SMTP_Email_Account');
 UPDATE c_external_service_properties SET value = '1025'

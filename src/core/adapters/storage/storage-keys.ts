@@ -35,17 +35,17 @@ export type StorageScope = 'session' | 'device';
  */
 export const STORAGE_KEYS = {
   /** The active tenant identifier. */
-  tenant: { key: 'cbo_tenant', scope: 'device' },
+  tenant: { key: 'mbo_tenant', scope: 'device' },
   /** The user's server override. See `core/config/runtime-config.ts`. */
-  runtimeConfig: { key: 'cbo_runtime_config', scope: 'device' },
+  runtimeConfig: { key: 'mbo_runtime_config', scope: 'device' },
   /** Light, dark or system theme. */
-  theme: { key: 'cbo_theme', scope: 'device' },
+  theme: { key: 'mbo_theme', scope: 'device' },
   /** The UI language the user picked, overriding the device locale. */
-  language: { key: 'cbo_language', scope: 'device' },
+  language: { key: 'mbo_language', scope: 'device' },
   /** Persisted reference-data query cache (non-sensitive, see DOCS/OFFLINE.md). */
-  queryCache: { key: 'cbo_query_cache', scope: 'device' },
+  queryCache: { key: 'mbo_query_cache', scope: 'device' },
   /** Non-secret profile of the signed-in user, for showing the shell before revalidation. */
-  profile: { key: 'cbo_profile', scope: 'session' },
+  profile: { key: 'mbo_profile', scope: 'session' },
 } as const satisfies Record<string, { key: string; scope: StorageScope }>;
 
 export type StorageKey = keyof typeof STORAGE_KEYS;

@@ -19,15 +19,15 @@
 #   scripts/e2e-stack.sh --fresh  # destroy the volume first (what CI does every run)
 #   scripts/e2e-stack.sh --down   # stop and free the memory
 #
-# The backend needs about 1 GB. Refuses to start when the host has less than CBO_MIN_FREE_MB
+# The backend needs about 1 GB. Refuses to start when the host has less than MBO_MIN_FREE_MB
 # available, rather than pushing a shared machine into swap (DOCS/E2E.md, "Resource limits").
 
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
 COMPOSE=(docker compose -f deploy/docker-compose-e2e.yml)
-HEALTH_URL="https://localhost:${CBO_E2E_API_PORT:-8443}/fineract-provider/actuator/info"
-MIN_FREE_MB="${CBO_MIN_FREE_MB:-2048}"
+HEALTH_URL="https://localhost:${MBO_E2E_API_PORT:-8443}/fineract-provider/actuator/info"
+MIN_FREE_MB="${MBO_MIN_FREE_MB:-2048}"
 
 if [[ "${1:-}" == "--down" ]]; then
   "${COMPOSE[@]}" down
@@ -37,7 +37,7 @@ fi
 if command -v free >/dev/null; then
   AVAILABLE_MB=$(free -m | awk 'NR==2 {print $7}')
   if (( AVAILABLE_MB < MIN_FREE_MB )); then
-    echo "❌ Only ${AVAILABLE_MB} MB available; the stack needs ~${MIN_FREE_MB} MB. Free memory or set CBO_MIN_FREE_MB."
+    echo "❌ Only ${AVAILABLE_MB} MB available; the stack needs ~${MIN_FREE_MB} MB. Free memory or set MBO_MIN_FREE_MB."
     exit 1
   fi
 fi
@@ -51,7 +51,7 @@ echo "🐘 Starting PostgreSQL..."
 "${COMPOSE[@]}" up -d --wait db
 
 echo "📦 Ensuring the databases exist (idempotent)..."
-docker exec -i cbo-e2e-db psql -U postgres < deploy/init-db.sql
+docker exec -i mbo-e2e-db psql -U postgres < deploy/init-db.sql
 
 echo "🚀 Starting the backend..."
 "${COMPOSE[@]}" up -d backend

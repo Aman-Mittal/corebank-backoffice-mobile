@@ -23,7 +23,7 @@ import { createStorage, memoryBackend, type StorageAdapter } from './storage.ada
  * `sessionStorage` ends with the tab.
  */
 export function createPlatformStorage(): StorageAdapter {
-  const device = createMMKV({ id: 'cbo-device' });
+  const device = createMMKV({ id: 'mbo-device' });
   const session = memoryBackend();
   return createStorage(() => ({
     session,

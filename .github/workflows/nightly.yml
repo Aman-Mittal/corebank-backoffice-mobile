@@ -66,4 +66,4 @@ jobs:
       - run: npx expo run:ios --configuration Release --no-bundler
       - run: |
           curl -fsSL "https://get.maestro.mobile.dev" | bash
-          "$HOME/.maestro/bin/maestro" test e2e/native/flows --exclude-tags=pending -e APP_ID=io.github.amanmittal.corebankbackoffice
+          "$HOME/.maestro/bin/maestro" test e2e/native/flows --exclude-tags=pending -e APP_ID=io.github.amanmittal.mfibackoffice

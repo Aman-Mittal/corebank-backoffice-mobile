@@ -1,0 +1,96 @@
+# Copyright 2026 Aman Mittal
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# Publishes the web build of `main` to GitHub Pages as a demo, against the community sandbox
+# backend. Modelled on fineract-backoffice-ui's dev-release.yml (same deploy action and pin, same
+# no-cache and no-persisted-credentials rules), but triggered by `main`.
+#
+# One-time setup: Settings → Pages → "Deploy from a branch", branch `gh-pages`, folder `/`.
+name: GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# Granted per job: only the deploy job may push.
+permissions: {}
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    name: Build the web export and publish it to gh-pages
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: write # peaceiris/actions-gh-pages force-pushes the built site to gh-pages
+    env:
+      # The demo has no backend of its own. The sandbox answers CORS for the Pages origin and
+      # allows every header the app sends (tenant, TFA token, correlation id).
+      EXPO_PUBLIC_API_BASE_URL: https://sandbox.mifos.community/fineract-provider/api
+      EXPO_PUBLIC_TENANT_ID: default
+      # Pages serves the project at /<repository>/, so the export needs that base path. Taken from
+      # the event so a repository rename does not need an edit here.
+      BASE_PATH: /${{ github.event.repository.name }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v4
+        with:
+          # The deploy step authenticates with `github_token` of its own; credentials left in
+          # .git/config would be in reach of every later step.
+          persist-credentials: false
+
+      # No dependency cache on a publishing path: a cache is writable from any branch, so
+      # restoring one here would let lower-privilege content reach what is served (zizmor
+      # `cache-poisoning`). `package-manager-cache: false` keeps that true if package.json ever
+      # gains a `packageManager` field.
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version-file: .nvmrc
+          package-manager-cache: false
+
+      - run: npm install --no-audit --no-fund
+      - run: npm run setup
+      - run: npm run typecheck
+      - run: npm test
+
+      - name: Set the export's base path
+        # In the job only, so local exports and the e2e suites keep serving from `/`.
+        run: |
+          node -e '
+            const fs = require("node:fs");
+            const app = JSON.parse(fs.readFileSync("app.json", "utf8"));
+            app.expo.experiments = { ...app.expo.experiments, baseUrl: process.env.BASE_PATH };
+            fs.writeFileSync("app.json", JSON.stringify(app, null, 2) + "\n");
+          '
+
+      - run: npm run web:export
+
+      - name: Single-page fallback and no Jekyll
+        # Pages has no rewrite rules: a deep link such as /<repo>/clients is answered with
+        # 404.html, so it must be the app. The page renders, but with HTTP status 404 (the
+        # same as fineract-backoffice-ui's demo). Expo emits `_expo/` paths, which Jekyll skips.
+        run: |
+          cp dist/index.html dist/404.html
+          touch dist/.nojekyll
+
+      - name: Deploy to GitHub Pages
+        # Pinned to the commit v4.0.0 points at (peaceiris publishes annotated tags).
+        uses: peaceiris/actions-gh-pages@4f9cc6602d3f66b9c108549d475ec49e8ef4d45e # v4.0.0
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist
+          force_orphan: true

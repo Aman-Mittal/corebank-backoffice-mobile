@@ -1,5 +1,5 @@
 {
-  "name": "corebank-backoffice-mobile",
+  "name": "mfi-backoffice-mobile",
   "version": "0.1.0",
   "main": "expo-router/entry",
   "dependencies": {
@@ -114,7 +114,7 @@
     }
   },
   "license": "Apache-2.0",
-  "description": "CoreBank Backoffice: an independent Expo (iOS/Android/Web) backoffice client compatible with the Apache Fineract REST API. Not an ASF project; see DISCLAIMER.md.",
+  "description": "MFI Backoffice: an independent Expo (iOS/Android/Web) backoffice client compatible with the Apache Fineract REST API. Not an ASF project; see DISCLAIMER.md.",
   "engines": {
     "node": ">=22.22.3"
   }

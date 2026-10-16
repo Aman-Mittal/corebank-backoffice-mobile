@@ -81,7 +81,7 @@ describe('createStorage', () => {
     expect(storage.read('theme', 'dark')).toBe('dark');
   });
 
-  it('uses the cbo_ prefix for every key', () => {
-    for (const { key } of Object.values(STORAGE_KEYS)) expect(key).toMatch(/^cbo_[a-z_]+$/);
+  it('uses the mbo_ prefix for every key', () => {
+    for (const { key } of Object.values(STORAGE_KEYS)) expect(key).toMatch(/^mbo_[a-z_]+$/);
   });
 });

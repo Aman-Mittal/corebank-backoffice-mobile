@@ -9,6 +9,20 @@ the repository variable `EAS_ENABLED` is `true`.
 4. **Production:** a tag `vX.Y.Z` starts the `production` builds for both stores. Bump `version` in
    `app.json` first.
 
-The bundle id `io.github.amanmittal.corebankbackoffice` is a placeholder; change it before the
+## Web demo (GitHub Pages)
+
+`.github/workflows/pages.yml` builds every push to `main` (or a manual run) and publishes the web
+export to the `gh-pages` branch, at `https://<owner>.github.io/<repository>/`. The demo points at
+the community sandbox (`https://sandbox.mifos.community`, tenant `default`), which answers CORS for
+the Pages origin.
+
+1. After the first run, set Settings → Pages → "Deploy from a branch" → `gh-pages`, folder `/`.
+2. The base path comes from the repository name, so a rename needs no edit.
+3. Pages has no rewrite rules. A deep link (`…/clients`) is served `404.html`, which is the app, so
+   it renders correctly but with HTTP status 404.
+
+## Bundle id
+
+The bundle id `io.github.amanmittal.mfibackoffice` is a placeholder; change it before the
 first store submission. The `e2e` build profile builds an APK that points at the emulator-reachable
 docker stack (`10.0.2.2`).

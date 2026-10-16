@@ -16,7 +16,7 @@ limitations under the License.
 
 # Disclaimer
 
-CoreBank Backoffice is an independent, community-built backoffice client that is compatible with the
+MFI Backoffice is an independent, community-built backoffice client that is compatible with the
 REST API of Apache Fineract®. The project deliberately does not use "Fineract" in its name.
 
 - It is **not** an Apache Software Foundation (ASF) project.

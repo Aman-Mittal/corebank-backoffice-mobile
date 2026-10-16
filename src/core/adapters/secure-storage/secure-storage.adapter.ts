@@ -27,8 +27,8 @@ import { token } from '../registry';
  * credential", which sends the user to sign in rather than to a crash.
  */
 export const SECURE_KEYS = {
-  session: 'cbo_session',
-  tfaToken: 'cbo_tfa_token',
+  session: 'mbo_session',
+  tfaToken: 'mbo_tfa_token',
 } as const;
 
 export type SecureKey = keyof typeof SECURE_KEYS;

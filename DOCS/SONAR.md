@@ -26,7 +26,7 @@ binding is stored in `.vscode/settings.json`:
 {
   "sonarlint.connectedMode.project": {
     "connectionId": "<sonarcloud-org>",
-    "projectKey": "<sonarcloud-org>_corebank-backoffice-mobile"
+    "projectKey": "<sonarcloud-org>_mfi-backoffice-mobile"
   }
 }
 ```

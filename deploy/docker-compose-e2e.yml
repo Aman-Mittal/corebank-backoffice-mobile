@@ -17,19 +17,19 @@
 #
 # Container names and host ports differ from that project's stack so both can exist side by side;
 # memory is capped because the backend needs about 1 GB and the e2e host is shared (DOCS/E2E.md).
-name: corebank-e2e
+name: mfi-e2e
 
 services:
   db:
     image: postgres:15
-    container_name: cbo-e2e-db
+    container_name: mbo-e2e-db
     ports:
-      - '${CBO_E2E_DB_PORT:-5434}:5432'
+      - '${MBO_E2E_DB_PORT:-5434}:5432'
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
     volumes:
-      - cbo-e2e-postgres-data:/var/lib/postgresql/data
+      - mbo-e2e-postgres-data:/var/lib/postgresql/data
     mem_limit: 512m
     healthcheck:
       test: ['CMD-SHELL', 'pg_isready -U postgres']
@@ -39,12 +39,12 @@ services:
 
   backend:
     image: apache/fineract:latest
-    container_name: cbo-e2e-backend
+    container_name: mbo-e2e-backend
     depends_on:
       db:
         condition: service_healthy
     ports:
-      - '${CBO_E2E_API_PORT:-8443}:8443'
+      - '${MBO_E2E_API_PORT:-8443}:8443'
     mem_limit: 1536m
     environment:
       - JAVA_TOOL_OPTIONS=-Xmx1g -XX:+UseSerialGC
@@ -60,4 +60,4 @@ services:
       - FINERACT_REMOTE_JOB_MESSAGE_HANDLER_SPRING_EVENTS_ENABLED=true
 
 volumes:
-  cbo-e2e-postgres-data:
+  mbo-e2e-postgres-data:

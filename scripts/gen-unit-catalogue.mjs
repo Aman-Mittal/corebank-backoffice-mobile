@@ -31,7 +31,7 @@ import { join, relative } from 'node:path';
 import { ROOT } from './lib/e2e-refs.mjs';
 
 const OUT = join(ROOT, 'DOCS/test-plan/unit-test-catalogue.md');
-const tmp = join(mkdtempSync(join(tmpdir(), 'cbo-vitest-list-')), 'list.json');
+const tmp = join(mkdtempSync(join(tmpdir(), 'mbo-vitest-list-')), 'list.json');
 execFileSync('npx', ['vitest', 'list', `--json=${tmp}`], {
   cwd: ROOT,
   stdio: ['ignore', 'ignore', 'inherit'],

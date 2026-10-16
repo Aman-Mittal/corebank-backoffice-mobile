@@ -17,8 +17,12 @@
 /**
  * Web: `/config.json` beside the app. A missing or unreadable file is "no configuration", not an
  * error — most deployments will not serve one.
+ *
+ * Resolved against the export's base path (`experiments.baseUrl`, inlined by Expo as
+ * `EXPO_BASE_URL`), so a build served under a subpath such as GitHub Pages reads its own file.
  */
 export async function readDeploymentSource(): Promise<unknown> {
-  const res = await fetch('/config.json', { cache: 'no-store' });
+  const base = (process.env.EXPO_BASE_URL ?? '').replace(/\/+$/, '');
+  const res = await fetch(`${base}/config.json`, { cache: 'no-store' });
   return res.ok ? res.json() : null;
 }

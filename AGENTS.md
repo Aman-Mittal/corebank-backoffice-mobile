@@ -42,10 +42,12 @@ Docs: https://docs.expo.dev/eas/index.md
 
 ## This project
 
-- **Name and trademarks.** The app is "CoreBank Backoffice". Do not use "Fineract" in names,
+- **Name and trademarks.** The app is "MFI Backoffice". Do not use "Fineract" in names,
   identifiers, bundle ids or UI text. It may appear only where the backend's API requires it (HTTP
   header names, URL paths) and in the compatibility statement in DISCLAIMER.md, NOTICE and the
-  About screen.
+  About screen. The project was first called "CoreBank Backoffice"; it was renamed because
+  "CoreBank" is a US trademark, so do not reintroduce it either. Internal identifiers use the
+  `mbo` prefix (storage keys `mbo_*`, containers `mbo-e2e-*`, env vars `MBO_*`).
 - **Routes** live in `src/app/` and only compose screens from `src/features/*`.
 - **Adapters** ([DOCS/ADAPTERS.md](DOCS/ADAPTERS.md)): features reach libraries and the API only
   through `useAdapter(TOKEN)`. Generated API types stay in `src/core/adapters/api`.

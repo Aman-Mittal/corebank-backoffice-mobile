@@ -30,7 +30,7 @@ test.describe('app shell @mobile', () => {
     await expect(login.username).toBeVisible();
     await expect(login.password).toBeVisible();
     await expect(login.submit).toBeVisible();
-    await expect(page).toHaveTitle(/CoreBank Backoffice/);
+    await expect(page).toHaveTitle(/MFI Backoffice/);
     expect(errors).toEqual([]);
     await checkA11y();
   });

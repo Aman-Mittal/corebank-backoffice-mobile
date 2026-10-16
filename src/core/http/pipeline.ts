@@ -39,4 +39,4 @@ export function compose(...middleware: readonly Middleware[]): (base: FetchFn) =
  * Read and stripped by `retry`, so it never reaches the server. Only an explicit claim turns
  * retries on for a write: a POST that timed out may already have been applied.
  */
-export const IDEMPOTENT_HEADER = 'x-cbo-idempotent';
+export const IDEMPOTENT_HEADER = 'x-mbo-idempotent';

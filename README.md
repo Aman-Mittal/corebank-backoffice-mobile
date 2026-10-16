@@ -1,4 +1,4 @@
-# CoreBank Backoffice (mobile + web)
+# MFI Backoffice (mobile + web)
 
 > **Disclaimer.** This is an independent, community-built client that is compatible with the REST
 > API of Apache Fineract®. It is **not** an Apache Software Foundation project, is **not** part of
@@ -63,7 +63,7 @@ the sign-in screen (Phase 1).
 - [DOCS/LINT_POLICY.md](DOCS/LINT_POLICY.md) and [DOCS/SONAR.md](DOCS/SONAR.md): static analysis without LGPL tooling
 - [DOCS/LICENSING.md](DOCS/LICENSING.md): dependency policy and recorded exceptions
 - [DOCS/OFFLINE.md](DOCS/OFFLINE.md): what works offline and what does not
-- [DOCS/RELEASING.md](DOCS/RELEASING.md): EAS builds and updates
+- [DOCS/RELEASING.md](DOCS/RELEASING.md): EAS builds and updates, and the GitHub Pages web demo
 - [DOCS/OPENAPI.md](DOCS/OPENAPI.md): the pinned spec, generated types and what is not committed
 - [DOCS/test-plan/](DOCS/test-plan/README.md): every e2e scenario and unit case, written before the code
 - [DOCS/adr/](DOCS/adr/): architecture decision records
