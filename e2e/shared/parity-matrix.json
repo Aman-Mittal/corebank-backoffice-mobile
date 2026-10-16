@@ -178,6 +178,22 @@
       "platforms": ["web", "android", "ios"]
     },
     {
+      "id": "P1-ORG-001",
+      "phase": 1,
+      "area": "organization",
+      "title": "offices",
+      "source": "fineract-backoffice-ui:src/app/features/organization/offices (no e2e spec of its own)",
+      "platforms": ["web", "android", "ios"]
+    },
+    {
+      "id": "P1-ORG-002",
+      "phase": 1,
+      "area": "organization",
+      "title": "staff",
+      "source": "fineract-backoffice-ui:src/app/features/organization/staff (no e2e spec of its own)",
+      "platforms": ["web", "android", "ios"]
+    },
+    {
       "id": "P1-SHELL-001",
       "phase": 1,
       "area": "shell",
