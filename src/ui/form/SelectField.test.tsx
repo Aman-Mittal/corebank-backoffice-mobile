@@ -42,6 +42,8 @@ describe('SelectField', () => {
     );
     const trigger = screen.getByTestId('f');
     expect(trigger).toHaveTextContent('Head Office');
+    // The name holds the visible text as well as the label (WCAG 2.5.3).
+    expect(trigger).toHaveAccessibleName('Office Head Office');
     expect(trigger).toHaveAttribute('aria-expanded', 'false');
     await userEvent.click(trigger);
     expect(screen.getByRole('radiogroup')).toBeInTheDocument();

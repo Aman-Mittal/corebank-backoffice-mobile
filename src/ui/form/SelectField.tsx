@@ -54,6 +54,7 @@ export function SelectField<V extends string | number>({
   const [open, setOpen] = useState(false);
   const chosen = options.find((o) => o.value === value);
   const labelId = `${testID}-label`;
+  const valueId = `${testID}-value`;
   return (
     <View style={styles.field}>
       <Text nativeID={labelId} style={fieldStyles.label}>
@@ -62,14 +63,16 @@ export function SelectField<V extends string | number>({
       <Pressable
         testID={testID}
         role="button"
-        aria-labelledby={labelId}
+        // Named by the label and the shown value, so the name contains the visible text
+        // (WCAG 2.5.3, axe `label-content-name-mismatch`): "Office Head Office".
+        aria-labelledby={`${labelId} ${valueId}`}
         aria-expanded={disabled ? undefined : open}
         aria-disabled={disabled}
         disabled={disabled}
         onPress={() => setOpen((o) => !o)}
         style={[styles.trigger, disabled && styles.disabled, error ? styles.invalid : null]}
       >
-        <Text style={[styles.value, !chosen && styles.placeholder]}>
+        <Text nativeID={valueId} style={[styles.value, !chosen && styles.placeholder]}>
           {chosen?.label ?? placeholder}
         </Text>
         {disabled ? null : (
