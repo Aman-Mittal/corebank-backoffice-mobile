@@ -1,0 +1,95 @@
+# Copyright 2026 Aman Mittal
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# Every PR: static checks, licence gates, ratchets, unit tests with coverage, and SonarCloud.
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  checks:
+    name: Lint, types, licences, ratchets, unit tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v4
+        with:
+          fetch-depth: 0 # the e2e-first ratchet diffs against origin/main
+          persist-credentials: false
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+          cache-dependency-path: package.json
+      - run: npm install --no-audit --no-fund
+      - run: npm run setup
+      - name: Expo dependency alignment
+        run: npx expo install --check
+      - name: Expo doctor
+        run: npx expo-doctor
+      - run: npm run format:check
+      - run: npm run typecheck
+      - name: ESLint (and report for Sonar)
+        run: |
+          npm run lint
+          npm run lint:report
+      - run: npm run test:eslint-rules
+      - run: npm run i18n:check
+      - name: Licence headers, LICENSE, NOTICE, DISCLAIMER
+        run: npm run check:headers
+      - name: Dependency licences (ASF policy; Category X and unknown block)
+        run: |
+          npm run check:licenses:selftest
+          npm run check:licenses
+          npm run check:licenses:production
+      - name: SBOM (CycloneDX)
+        run: npx --yes @cyclonedx/cyclonedx-npm@4 --output-file sbom.json
+      - name: The OpenAPI spec is the pinned, hash-verified file
+        run: npm run api:check
+      - name: e2e-first ratchet
+        env:
+          BASE_REF: origin/main
+          E2E_SPEC_FIRST: ${{ contains(github.event.pull_request.labels.*.name, 'e2e-spec-first') && '1' || '0' }}
+        run: npm run check:expected-red
+      - run: npm run check:testids
+      - name: Test plan documents every scenario, and the suites implement them
+        run: npm run check:test-plan
+      - name: Unit-test catalogue is current
+        run: npm run check:docs-tests
+      - name: Unit tests with coverage
+        run: npm run test:ci
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        if: always()
+        with:
+          name: reports
+          path: |
+            coverage/lcov.info
+            eslint-report.json
+            sbom.json
+      - name: SonarCloud
+        # Skipped when the secret is not configured (forks, first push before setup).
+        if: env.SONAR_TOKEN != ''
+        uses: SonarSource/sonarqube-scan-action@d209202bc7d53ff1cc128f7f907dac145c9d6ae9 # v8.3.0
