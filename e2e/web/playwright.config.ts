@@ -40,7 +40,9 @@ export default defineConfig({
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
   workers: process.env.CI ? 1 : 2,
-  reporter: process.env.CI ? [['list'], ['html', { open: 'never' }]] : 'list',
+  // On CI, `github` turns each failure into a check annotation, which can be read without
+  // access to the job logs.
+  reporter: process.env.CI ? [['list'], ['github'], ['html', { open: 'never' }]] : 'list',
   expect: { timeout: Number(process.env.E2E_ACTION_TIMEOUT ?? 10_000) },
   timeout: 30_000,
   use: {
