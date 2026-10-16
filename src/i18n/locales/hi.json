@@ -1,13 +1,13 @@
 {
   "APP": {
-    "NAME": "CoreBank Backoffice"
+    "NAME": "MFI Backoffice"
   },
   "ABOUT": {
     "TITLE": "परिचय",
     "VERSION": "संस्करण {{version}}",
     "LICENSE": "Apache License, Version 2.0 के अंतर्गत लाइसेंस प्राप्त।",
     "DISCLAIMER_TITLE": "अस्वीकरण",
-    "DISCLAIMER": "CoreBank Backoffice एक स्वतंत्र, समुदाय द्वारा निर्मित क्लाइंट है जो Apache Fineract® के REST API के साथ संगत है। यह Apache Software Foundation की परियोजना नहीं है, Apache Fineract का हिस्सा नहीं है, और ASF द्वारा समर्थित या उससे संबद्ध नहीं है। Apache, Apache Fineract और Fineract, The Apache Software Foundation के ट्रेडमार्क हैं, जिनका उपयोग यहाँ केवल संगतता बताने के लिए किया गया है।"
+    "DISCLAIMER": "MFI Backoffice एक स्वतंत्र, समुदाय द्वारा निर्मित क्लाइंट है जो Apache Fineract® के REST API के साथ संगत है। यह Apache Software Foundation की परियोजना नहीं है, Apache Fineract का हिस्सा नहीं है, और ASF द्वारा समर्थित या उससे संबद्ध नहीं है। Apache, Apache Fineract और Fineract, The Apache Software Foundation के ट्रेडमार्क हैं, जिनका उपयोग यहाँ केवल संगतता बताने के लिए किया गया है।"
   },
   "AUTH": {
     "SIGN_IN": "साइन इन करें",

@@ -98,7 +98,7 @@ scripts; project `web` covers components through react-native-web in jsdom.
 - createStorage > clears only its own keys in one scope
 - createStorage > never throws when the backend does
 - createStorage > treats a denied store (getter throws) as absent
-- createStorage > uses the cbo_ prefix for every key
+- createStorage > uses the mbo_ prefix for every key
 
 ## `src/core/app-registry.test.ts` (node)
 
