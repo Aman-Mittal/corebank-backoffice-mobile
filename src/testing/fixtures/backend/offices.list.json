@@ -1,0 +1,19 @@
+[
+  {
+    "id": 1,
+    "name": "Head Office",
+    "nameDecorated": "Head Office",
+    "externalId": "1",
+    "openingDate": [2009, 1, 1],
+    "hierarchy": "."
+  },
+  {
+    "id": 2,
+    "name": "Kampala Branch",
+    "nameDecorated": "....Kampala Branch",
+    "openingDate": [2026, 10, 2],
+    "hierarchy": ".2.",
+    "parentId": 1,
+    "parentName": "Head Office"
+  }
+]
