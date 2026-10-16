@@ -37,8 +37,13 @@ const CORS = {
  * forgot a stub fails on it instead of hanging.
  */
 export async function mockApi(page: Page, handlers: Record<string, Handler>) {
-  const calls: { method: string; path: string; headers: Record<string, string>; body: unknown }[] =
-    [];
+  const calls: {
+    method: string;
+    path: string;
+    query: Record<string, string>;
+    headers: Record<string, string>;
+    body: unknown;
+  }[] = [];
   const unmatched: string[] = [];
   await page.route(`${MOCK_API}/**`, async (route: Route) => {
     const req = route.request();
@@ -48,6 +53,7 @@ export async function mockApi(page: Page, handlers: Record<string, Handler>) {
     calls.push({
       method: req.method(),
       path,
+      query: Object.fromEntries(new URL(req.url()).searchParams),
       headers: req.headers(),
       body: req.postDataJSON?.() ?? null,
     });

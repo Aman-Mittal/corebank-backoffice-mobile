@@ -79,6 +79,77 @@ export const TID = {
     version: 'about.version',
     license: 'about.license',
   },
+  /** Loading, failure and empty states shared by every data screen. */
+  state: {
+    loading: 'state.loading',
+    error: 'state.error',
+    retry: 'state.retry',
+    empty: 'state.empty',
+    notFound: 'state.not-found',
+    back: 'state.back',
+  },
+  offices: {
+    screen: 'offices.screen',
+    search: 'offices.search',
+    create: 'offices.create',
+    /** One per office: `offices.row.2`. */
+    row: (id: number | string) => `offices.row.${id}`,
+  },
+  office: {
+    screen: 'office.screen',
+    name: 'office.name',
+    parent: 'office.parent',
+    openingDate: 'office.opening-date',
+    externalId: 'office.external-id',
+    edit: 'office.edit',
+  },
+  officeForm: {
+    screen: 'office-form.screen',
+    name: 'office-form.name',
+    parent: 'office-form.parent',
+    openingDate: 'office-form.opening-date',
+    externalId: 'office-form.external-id',
+    submit: 'office-form.submit',
+    error: 'office-form.error',
+  },
+  staff: {
+    screen: 'staff.screen',
+    search: 'staff.search',
+    officeFilter: 'staff.office-filter',
+    create: 'staff.create',
+    /** One per staff member: `staff.row.2`. */
+    row: (id: number | string) => `staff.row.${id}`,
+  },
+  staffMember: {
+    screen: 'staff-member.screen',
+    name: 'staff-member.name',
+    office: 'staff-member.office',
+    mobile: 'staff-member.mobile',
+    email: 'staff-member.email',
+    externalId: 'staff-member.external-id',
+    joiningDate: 'staff-member.joining-date',
+    loanOfficer: 'staff-member.loan-officer',
+    status: 'staff-member.status',
+    edit: 'staff-member.edit',
+  },
+  staffForm: {
+    screen: 'staff-form.screen',
+    office: 'staff-form.office',
+    firstname: 'staff-form.firstname',
+    lastname: 'staff-form.lastname',
+    mobile: 'staff-form.mobile',
+    email: 'staff-form.email',
+    externalId: 'staff-form.external-id',
+    joiningDate: 'staff-form.joining-date',
+    loanOfficer: 'staff-form.loan-officer',
+    active: 'staff-form.active',
+    submit: 'staff-form.submit',
+    error: 'staff-form.error',
+  },
+  /** An option of a select field: `office-form.parent.option.2`. */
+  option: (field: string, value: number | string) => `${field}.option.${value}`,
+  /** The message under a form field: `office-form.name.error`. */
+  fieldError: (field: string) => `${field}.error`,
 } as const;
 
 /** Flattened, for the check script and for Maestro flow authors. */

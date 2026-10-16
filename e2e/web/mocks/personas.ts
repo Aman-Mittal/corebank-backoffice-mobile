@@ -28,6 +28,10 @@ export const PERSONAS = {
   loanOfficer: ['READ_LOAN'],
   nobody: [],
   junk: ['NOT_A_REAL_CODE'],
+  officeAdmin: ['READ_OFFICE', 'CREATE_OFFICE', 'UPDATE_OFFICE'],
+  officeReader: ['READ_OFFICE'],
+  staffAdmin: ['READ_STAFF', 'CREATE_STAFF', 'UPDATE_STAFF', 'READ_OFFICE'],
+  staffReader: ['READ_STAFF'],
 } as const satisfies Record<string, readonly string[]>;
 
 export type Persona = keyof typeof PERSONAS;
