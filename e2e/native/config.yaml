@@ -12,8 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Maestro workspace config. Flows tagged `pending` are written ahead of their implementation
-# (e2e-first) and are excluded on PRs; the nightly probe runs them and expects them to fail.
+# Maestro workspace config. Run Maestro on this folder (`maestro test e2e/native`): it reads
+# config.yaml only from the folder it is given, and without the `flows` glob below it runs only
+# top-level flows, of which there are none. Flows tagged `pending` are written ahead of their
+# implementation (e2e-first) and are excluded on PRs; the nightly probe runs them and expects them
+# to fail.
 flows:
   - flows/**
 includeTags: []

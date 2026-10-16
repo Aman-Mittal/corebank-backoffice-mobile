@@ -99,7 +99,7 @@
     "web:export": "expo export -p web",
     "e2e:web": "playwright test -c e2e/web/playwright.config.ts",
     "e2e:web:mocked": "playwright test -c e2e/web/playwright.config.ts --project=mocked --project=mobile",
-    "e2e:native": "maestro test e2e/native/flows --exclude-tags=pending",
+    "e2e:native": "maestro test e2e/native --exclude-tags=pending",
     "e2e:stack": "bash scripts/e2e-stack.sh",
     "test:watch": "vitest",
     "docs:tests": "node scripts/gen-unit-catalogue.mjs",

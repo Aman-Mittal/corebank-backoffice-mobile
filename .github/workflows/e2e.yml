@@ -119,4 +119,4 @@ jobs:
           ram-size: 3072M
           script: |
             adb install android/app/build/outputs/apk/release/app-release.apk
-            maestro test e2e/native/flows --exclude-tags=pending -e APP_ID=io.github.amanmittal.mfibackoffice
+            maestro test e2e/native --exclude-tags=pending -e APP_ID=io.github.amanmittal.mfibackoffice
