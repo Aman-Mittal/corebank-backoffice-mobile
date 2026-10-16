@@ -22,6 +22,7 @@ import { useI18n } from '@/core/adapters/i18n/useI18n';
 import { useGranted } from '@/core/auth/usePermission';
 import { isGroup, type NavEntry, type NavGroup } from '@/core/navigation/nav-catalogue';
 import { normalisePath } from '@/core/navigation/route-access';
+import { href } from '@/core/navigation/href';
 import { visibleNav } from '@/core/navigation/visible-nav';
 import { colors, MIN_TOUCH, spacing } from '@/ui/theme';
 
@@ -111,7 +112,7 @@ function Item({
       aria-current={current ? 'page' : undefined}
       onPress={() => {
         onNavigate?.();
-        router.push(entry.route as never);
+        router.push(href(entry.route));
       }}
       style={[styles.row, nested && styles.nested, current && styles.current]}
     >
