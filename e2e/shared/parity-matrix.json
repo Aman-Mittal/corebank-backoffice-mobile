@@ -1,0 +1,909 @@
+{
+  "$comment": "Every behaviour the app must reach parity on. A row is closed when its spec(s) exist and are green on its platforms; see DOCS/E2E.md.",
+  "rows": [
+    {
+      "id": "P0-ABOUT-001",
+      "phase": 0,
+      "area": "about",
+      "title": "about screen shows the non-endorsement disclaimer",
+      "source": "new",
+      "platforms": ["web", "android", "ios"]
+    },
+    {
+      "id": "P0-HARNESS-001",
+      "phase": 0,
+      "area": "harness",
+      "title": "app boots and renders the sign-in screen",
+      "source": "new",
+      "platforms": ["web", "android", "ios"]
+    },
+    {
+      "id": "P1-CLIENTS-001",
+      "phase": 1,
+      "area": "clients",
+      "title": "charges/add-charge",
+      "source": "web-app:playwright/tests/charges/add-charge.spec.ts (behaviour reference only, MPL-2.0: do not copy)",
+      "platforms": ["web", "android", "ios"]
+    },
+    {
+      "id": "P1-CLIENTS-002",
+      "phase": 1,
+      "area": "clients",
+      "title": "charges/charge-operations",
+      "source": "web-app:playwright/tests/charges/charge-operations.spec.ts (behaviour reference only, MPL-2.0: do not copy)",
+      "platforms": ["web", "android", "ios"]
+    },
+    {
+      "id": "P1-CLIENTS-003",
+      "phase": 1,
+      "area": "clients",
+      "title": "client",
+      "source": "fineract-backoffice-ui:e2e/client.spec.ts",
+      "platforms": ["web", "android", "ios"]
+    },
+    {
+      "id": "P1-CLIENTS-004",
+      "phase": 1,
+      "area": "clients",
+      "title": "client-empty-account-cta",
+      "source": "fineract-backoffice-ui:e2e/client-empty-account-cta.spec.ts",
+      "platforms": ["web", "android", "ios"]
+    },
+    {
+      "id": "P1-CLIENTS-005",
+      "phase": 1,
+      "area": "clients",
+      "title": "client-legal-form-search",
+      "source": "fineract-backoffice-ui:e2e/client-legal-form-search.spec.ts",
+      "platforms": ["web", "android", "ios"]
+    },
+    {
+      "id": "P1-CLIENTS-006",
+      "phase": 1,
+      "area": "clients",
+      "title": "client-load-error",
+      "source": "fineract-backoffice-ui:e2e/client-load-error.spec.ts",
+      "platforms": ["web", "android", "ios"]
+    },
+    {
+      "id": "P1-CLIENTS-007",
+      "phase": 1,
+      "area": "clients",
+      "title": "client-servicing-gaps",
+      "source": "fineract-backoffice-ui:e2e/client-servicing-gaps.spec.ts",
+      "platforms": ["web", "android", "ios"]
+    },
+    {
+      "id": "P1-CLIENTS-008",
+      "phase": 1,
+      "area": "clients",
+      "title": "client-transfer",
+      "source": "fineract-backoffice-ui:e2e/client-transfer.spec.ts",
+      "platforms": ["web", "android", "ios"]
+    },
+    {
+      "id": "P1-CLIENTS-009",
+      "phase": 1,
+      "area": "clients",
+      "title": "clients/create-client",
+      "source": "web-app:playwright/tests/clients/create-client.spec.ts (behaviour reference only, MPL-2.0: do not copy)",
+      "platforms": ["web", "android", "ios"]
+    },
+    {
+      "id": "P1-CLIENTS-010",
+      "phase": 1,
+      "area": "clients",
+      "title": "clients/create-client-form-validation",
+      "source": "web-app:playwright/tests/clients/create-client-form-validation.spec.ts (behaviour reference only, MPL-2.0: do not copy)",
+      "platforms": ["web", "android", "ios"]
+    },
+    {
+      "id": "P1-CLIENTS-011",
+      "phase": 1,
+      "area": "clients",
+      "title": "clients/lifecycle/activate",
+      "source": "web-app:playwright/tests/clients/lifecycle/activate.spec.ts (behaviour reference only, MPL-2.0: do not copy)",
+      "platforms": ["web", "android", "ios"]
+    },
+    {
+      "id": "P1-CLIENTS-012",
+      "phase": 1,
+      "area": "clients",
+      "title": "clients/lifecycle/illegal-transitions",
+      "source": "web-app:playwright/tests/clients/lifecycle/illegal-transitions.spec.ts (behaviour reference only, MPL-2.0: do not copy)",
+      "platforms": ["web", "android", "ios"]
+    },
+    {
+      "id": "P1-CLIENTS-013",
+      "phase": 1,
+      "area": "clients",
+      "title": "clients/lifecycle/reactivate-after-close",
+      "source": "web-app:playwright/tests/clients/lifecycle/reactivate-after-close.spec.ts (behaviour reference only, MPL-2.0: do not copy)",
+      "platforms": ["web", "android", "ios"]
+    },
+    {
+      "id": "P1-CLIENTS-014",
+      "phase": 1,
+      "area": "clients",
+      "title": "clients/lifecycle/reject",
+      "source": "web-app:playwright/tests/clients/lifecycle/reject.spec.ts (behaviour reference only, MPL-2.0: do not copy)",
+      "platforms": ["web", "android", "ios"]
+    },
+    {
+      "id": "P1-CLIENTS-015",
+      "phase": 1,
+      "area": "clients",
+      "title": "clients/lifecycle/undo-rejection",
+      "source": "web-app:playwright/tests/clients/lifecycle/undo-rejection.spec.ts (behaviour reference only, MPL-2.0: do not copy)",
+      "platforms": ["web", "android", "ios"]
+    },
+    {
+      "id": "P1-CLIENTS-016",
+      "phase": 1,
+      "area": "clients",
+      "title": "clients/lifecycle/withdraw",
+      "source": "web-app:playwright/tests/clients/lifecycle/withdraw.spec.ts (behaviour reference only, MPL-2.0: do not copy)",
+      "platforms": ["web", "android", "ios"]
+    },
+    {
+      "id": "P1-CLIENTS-017",
+      "phase": 1,
+      "area": "clients",
+      "title": "close-client",
+      "source": "web-app:playwright/tests/close-client.spec.ts (behaviour reference only, MPL-2.0: do not copy)",
+      "platforms": ["web", "android", "ios"]
+    },
+    {
+      "id": "P1-CLIENTS-018",
+      "phase": 1,
+      "area": "clients",
+      "title": "collateral-currency-search",
+      "source": "fineract-backoffice-ui:e2e/collateral-currency-search.spec.ts",
+      "platforms": ["web", "android", "ios"]
+    },
+    {
+      "id": "P1-CLIENTS-019",
+      "phase": 1,
+      "area": "clients",
+      "title": "kyc/family-members",
+      "source": "web-app:playwright/tests/kyc/family-members.spec.ts (behaviour reference only, MPL-2.0: do not copy)",
+      "platforms": ["web", "android", "ios"]
+    },
+    {
+      "id": "P1-CLIENTS-020",
+      "phase": 1,
+      "area": "clients",
+      "title": "kyc/identifiers-and-notes",
+      "source": "web-app:playwright/tests/kyc/identifiers-and-notes.spec.ts (behaviour reference only, MPL-2.0: do not copy)",
+      "platforms": ["web", "android", "ios"]
+    },
+    {
+      "id": "P1-SHELL-001",
+      "phase": 1,
+      "area": "shell",
+      "title": "accessibility",
+      "source": "fineract-backoffice-ui:e2e/accessibility.spec.ts",
+      "platforms": ["web", "android", "ios"]
+    },
+    {
+      "id": "P1-SHELL-002",
+      "phase": 1,
+      "area": "shell",
+      "title": "all-functions-read-shortcut",
+      "source": "fineract-backoffice-ui:e2e/all-functions-read-shortcut.spec.ts",
+      "platforms": ["web", "android", "ios"]
+    },
+    {
+      "id": "P1-SHELL-003",
+      "phase": 1,
+      "area": "shell",
+      "title": "authenticated-smoke",
+      "source": "web-app:playwright/tests/authenticated-smoke.spec.ts (behaviour reference only, MPL-2.0: do not copy)",
+      "platforms": ["web", "android", "ios"]
+    },
+    {
+      "id": "P1-SHELL-004",
+      "phase": 1,
+      "area": "shell",
+      "title": "branded-deployment",
+      "source": "fineract-backoffice-ui:e2e/branded-deployment.spec.ts",
+      "platforms": ["web"]
+    },
+    {
+      "id": "P1-SHELL-005",
+      "phase": 1,
+      "area": "shell",
+      "title": "breadcrumb",
+      "source": "fineract-backoffice-ui:e2e/breadcrumb.spec.ts",
+      "platforms": ["web", "android", "ios"]
+    },
+    {
+      "id": "P1-SHELL-006",
+      "phase": 1,
+      "area": "shell",
+      "title": "client-date-picker-revisit",
+      "source": "fineract-backoffice-ui:e2e/client-date-picker-revisit.spec.ts",
+      "platforms": ["web", "android", "ios"]
+    },
+    {
+      "id": "P1-SHELL-007",
+      "phase": 1,
+      "area": "shell",
+      "title": "date-picker-revisit",
+      "source": "fineract-backoffice-ui:e2e/date-picker-revisit.spec.ts",
+      "platforms": ["web", "android", "ios"]
+    },
+    {
+      "id": "P1-SHELL-008",
+      "phase": 1,
+      "area": "shell",
+      "title": "deployment-customization",
+      "source": "fineract-backoffice-ui:e2e/deployment-customization.spec.ts",
+      "platforms": ["web"]
+    },
+    {
+      "id": "P1-SHELL-009",
+      "phase": 1,
+      "area": "shell",
+      "title": "e2e-journey",
+      "source": "fineract-backoffice-ui:e2e/e2e-journey.spec.ts",
+      "platforms": ["web", "android", "ios"]
+    },
+    {
+      "id": "P1-SHELL-010",
+      "phase": 1,
+      "area": "shell",
+      "title": "feature-coverage",
+      "source": "fineract-backoffice-ui:e2e/feature-coverage.spec.ts",
+      "platforms": ["web", "android", "ios"]
+    },
+    {
+      "id": "P1-SHELL-011",
+      "phase": 1,
+      "area": "shell",
+      "title": "form-layout-reflow",
+      "source": "fineract-backoffice-ui:e2e/form-layout-reflow.spec.ts",
+      "platforms": ["web", "android", "ios"]
+    },
+    {
+      "id": "P1-SHELL-012",
+      "phase": 1,
+      "area": "shell",
+      "title": "functional-coverage",
+      "source": "fineract-backoffice-ui:e2e/functional-coverage.spec.ts",
+      "platforms": ["web", "android", "ios"]
+    },
+    {
+      "id": "P1-SHELL-013",
+      "phase": 1,
+      "area": "shell",
+      "title": "global-search-nav-shortcuts",
+      "source": "fineract-backoffice-ui:e2e/global-search-nav-shortcuts.spec.ts",
+      "platforms": ["web", "android", "ios"]
+    },
+    {
+      "id": "P1-SHELL-014",
+      "phase": 1,
+      "area": "shell",
+      "title": "global-search-navigation",
+      "source": "fineract-backoffice-ui:e2e/global-search-navigation.spec.ts",
+      "platforms": ["web", "android", "ios"]
+    },
+    {
+      "id": "P1-SHELL-015",
+      "phase": 1,
+      "area": "shell",
+      "title": "guidance-tour",
+      "source": "fineract-backoffice-ui:e2e/guidance-tour.spec.ts",
+      "platforms": ["web", "android", "ios"]
+    },
+    {
+      "id": "P1-SHELL-016",
+      "phase": 1,
+      "area": "shell",
+      "title": "keyboard-shortcuts",
+      "source": "fineract-backoffice-ui:e2e/keyboard-shortcuts.spec.ts",
+      "platforms": ["web"]
+    },
+    {
+      "id": "P1-SHELL-017",
+      "phase": 1,
+      "area": "shell",
+      "title": "list-load-failure",
+      "source": "fineract-backoffice-ui:e2e/list-load-failure.spec.ts",
+      "platforms": ["web", "android", "ios"]
+    },
+    {
+      "id": "P1-SHELL-018",
+      "phase": 1,
+      "area": "shell",
+      "title": "list-pagination",
+      "source": "fineract-backoffice-ui:e2e/list-pagination.spec.ts",
+      "platforms": ["web", "android", "ios"]
+    },
+    {
+      "id": "P1-SHELL-019",
+      "phase": 1,
+      "area": "shell",
+      "title": "login",
+      "source": "fineract-backoffice-ui:e2e/login.spec.ts",
+      "platforms": ["web", "android", "ios"]
+    },
+    {
+      "id": "P1-SHELL-020",
+      "phase": 1,
+      "area": "shell",
+      "title": "login",
+      "source": "web-app:playwright/tests/login.spec.ts (behaviour reference only, MPL-2.0: do not copy)",
+      "platforms": ["web", "android", "ios"]
+    },
+    {
+      "id": "P1-SHELL-021",
+      "phase": 1,
+      "area": "shell",
+      "title": "login-responsive",
+      "source": "web-app:playwright/tests/login-responsive.spec.ts (behaviour reference only, MPL-2.0: do not copy)",
+      "platforms": ["web", "android", "ios"]
+    },
+    {
+      "id": "P1-SHELL-022",
+      "phase": 1,
+      "area": "shell",
+      "title": "logout-reason-notice",
+      "source": "fineract-backoffice-ui:e2e/logout-reason-notice.spec.ts",
+      "platforms": ["web", "android", "ios"]
+    },
+    {
+      "id": "P1-SHELL-023",
+      "phase": 1,
+      "area": "shell",
+      "title": "mobile-shell",
+      "source": "fineract-backoffice-ui:e2e/mobile-shell.spec.ts",
+      "platforms": ["web", "android", "ios"]
+    },
+    {
+      "id": "P1-SHELL-024",
+      "phase": 1,
+      "area": "shell",
+      "title": "oidc-login",
+      "source": "fineract-backoffice-ui:e2e/oidc-login.spec.ts",
+      "platforms": ["web", "android", "ios"]
+    },
+    {
+      "id": "P1-SHELL-025",
+      "phase": 1,
+      "area": "shell",
+      "title": "oidc-login-backend",
+      "source": "fineract-backoffice-ui:e2e/oidc-login-backend.spec.ts",
+      "platforms": ["web", "android", "ios"]
+    },
+    {
+      "id": "P1-SHELL-026",
+      "phase": 1,
+      "area": "shell",
+      "title": "parity-screens",
+      "source": "fineract-backoffice-ui:e2e/parity-screens.spec.ts",
+      "platforms": ["web", "android", "ios"]
+    },
+    {
+      "id": "P1-SHELL-027",
+      "phase": 1,
+      "area": "shell",
+      "title": "rbac",
+      "source": "fineract-backoffice-ui:e2e/rbac.spec.ts",
+      "platforms": ["web", "android", "ios"]
+    },
+    {
+      "id": "P1-SHELL-028",
+      "phase": 1,
+      "area": "shell",
+      "title": "rbac-backend-restricted-user",
+      "source": "fineract-backoffice-ui:e2e/rbac-backend-restricted-user.spec.ts",
+      "platforms": ["web", "android", "ios"]
+    },
+    {
+      "id": "P1-SHELL-029",
+      "phase": 1,
+      "area": "shell",
+      "title": "rbac-dead-end-controls",
+      "source": "fineract-backoffice-ui:e2e/rbac-dead-end-controls.spec.ts",
+      "platforms": ["web", "android", "ios"]
+    },
+    {
+      "id": "P1-SHELL-030",
+      "phase": 1,
+      "area": "shell",
+      "title": "rbac-disabled-flag-backend",
+      "source": "fineract-backoffice-ui:e2e/rbac-disabled-flag-backend.spec.ts",
+      "platforms": ["web", "android", "ios"]
+    },
+    {
+      "id": "P1-SHELL-031",
+      "phase": 1,
+      "area": "shell",
+      "title": "rbac-feature-flag",
+      "source": "fineract-backoffice-ui:e2e/rbac-feature-flag.spec.ts",
+      "platforms": ["web", "android", "ios"]
+    },
+    {
+      "id": "P1-SHELL-032",
+      "phase": 1,
+      "area": "shell",
+      "title": "rbac-multi-permission",
+      "source": "fineract-backoffice-ui:e2e/rbac-multi-permission.spec.ts",
+      "platforms": ["web", "android", "ios"]
+    },
+    {
+      "id": "P1-SHELL-033",
+      "phase": 1,
+      "area": "shell",
+      "title": "rbac-office-scoped-user",
+      "source": "fineract-backoffice-ui:e2e/rbac-office-scoped-user.spec.ts",
+      "platforms": ["web", "android", "ios"]
+    },
+    {
+      "id": "P1-SHELL-034",
+      "phase": 1,
+      "area": "shell",
+      "title": "rbac-permissionless-user",
+      "source": "fineract-backoffice-ui:e2e/rbac-permissionless-user.spec.ts",
+      "platforms": ["web", "android", "ios"]
+    },
+    {
+      "id": "P1-SHELL-035",
+      "phase": 1,
+      "area": "shell",
+      "title": "rbac-route-protection",
+      "source": "fineract-backoffice-ui:e2e/rbac-route-protection.spec.ts",
+      "platforms": ["web", "android", "ios"]
+    },
+    {
+      "id": "P1-SHELL-036",
+      "phase": 1,
+      "area": "shell",
+      "title": "two-factor-authentication",
+      "source": "fineract-backoffice-ui:e2e/two-factor-authentication.spec.ts",
+      "platforms": ["web", "android", "ios"]
+    },
+    {
+      "id": "P1-SHELL-037",
+      "phase": 1,
+      "area": "shell",
+      "title": "two-factor-backend",
+      "source": "fineract-backoffice-ui:e2e/two-factor-backend.spec.ts",
+      "platforms": ["web", "android", "ios"]
+    },
+    {
+      "id": "P2-GROUPS-001",
+      "phase": 2,
+      "area": "groups",
+      "title": "center-servicing",
+      "source": "fineract-backoffice-ui:e2e/center-servicing.spec.ts",
+      "platforms": ["web", "android", "ios"]
+    },
+    {
+      "id": "P2-GROUPS-002",
+      "phase": 2,
+      "area": "groups",
+      "title": "collection-sheet",
+      "source": "fineract-backoffice-ui:e2e/collection-sheet.spec.ts",
+      "platforms": ["web", "android", "ios"]
+    },
+    {
+      "id": "P2-GROUPS-003",
+      "phase": 2,
+      "area": "groups",
+      "title": "glim-gsim-accounts",
+      "source": "fineract-backoffice-ui:e2e/glim-gsim-accounts.spec.ts",
+      "platforms": ["web", "android", "ios"]
+    },
+    {
+      "id": "P2-GROUPS-004",
+      "phase": 2,
+      "area": "groups",
+      "title": "group-detail",
+      "source": "fineract-backoffice-ui:e2e/group-detail.spec.ts",
+      "platforms": ["web", "android", "ios"]
+    },
+    {
+      "id": "P2-GROUPS-005",
+      "phase": 2,
+      "area": "groups",
+      "title": "group-membership",
+      "source": "fineract-backoffice-ui:e2e/group-membership.spec.ts",
+      "platforms": ["web", "android", "ios"]
+    },
+    {
+      "id": "P2-GROUPS-006",
+      "phase": 2,
+      "area": "groups",
+      "title": "groups/create-group",
+      "source": "web-app:playwright/tests/groups/create-group.spec.ts (behaviour reference only, MPL-2.0: do not copy)",
+      "platforms": ["web", "android", "ios"]
+    },
+    {
+      "id": "P2-GROUPS-007",
+      "phase": 2,
+      "area": "groups",
+      "title": "groups/manage-members",
+      "source": "web-app:playwright/tests/groups/manage-members.spec.ts (behaviour reference only, MPL-2.0: do not copy)",
+      "platforms": ["web", "android", "ios"]
+    },
+    {
+      "id": "P3-LOANS-001",
+      "phase": 3,
+      "area": "loans",
+      "title": "charge-refund",
+      "source": "fineract-backoffice-ui:e2e/charge-refund.spec.ts",
+      "platforms": ["web", "android", "ios"]
+    },
+    {
+      "id": "P3-LOANS-002",
+      "phase": 3,
+      "area": "loans",
+      "title": "contract-termination",
+      "source": "fineract-backoffice-ui:e2e/contract-termination.spec.ts",
+      "platforms": ["web", "android", "ios"]
+    },
+    {
+      "id": "P3-LOANS-003",
+      "phase": 3,
+      "area": "loans",
+      "title": "loan-account-actions",
+      "source": "fineract-backoffice-ui:e2e/loan-account-actions.spec.ts",
+      "platforms": ["web", "android", "ios"]
+    },
+    {
+      "id": "P3-LOANS-004",
+      "phase": 3,
+      "area": "loans",
+      "title": "loan-approved-amount-revision",
+      "source": "fineract-backoffice-ui:e2e/loan-approved-amount-revision.spec.ts",
+      "platforms": ["web", "android", "ios"]
+    },
+    {
+      "id": "P3-LOANS-005",
+      "phase": 3,
+      "area": "loans",
+      "title": "loan-charge-off",
+      "source": "fineract-backoffice-ui:e2e/loan-charge-off.spec.ts",
+      "platforms": ["web", "android", "ios"]
+    },
+    {
+      "id": "P3-LOANS-006",
+      "phase": 3,
+      "area": "loans",
+      "title": "loan-delinquency-actions",
+      "source": "fineract-backoffice-ui:e2e/loan-delinquency-actions.spec.ts",
+      "platforms": ["web", "android", "ios"]
+    },
+    {
+      "id": "P3-LOANS-007",
+      "phase": 3,
+      "area": "loans",
+      "title": "loan-flows-non-admin-roles",
+      "source": "fineract-backoffice-ui:e2e/loan-flows-non-admin-roles.spec.ts",
+      "platforms": ["web", "android", "ios"]
+    },
+    {
+      "id": "P3-LOANS-008",
+      "phase": 3,
+      "area": "loans",
+      "title": "loan-lifecycle",
+      "source": "fineract-backoffice-ui:e2e/loan-lifecycle.spec.ts",
+      "platforms": ["web", "android", "ios"]
+    },
+    {
+      "id": "P3-LOANS-009",
+      "phase": 3,
+      "area": "loans",
+      "title": "loan-portfolio-summary",
+      "source": "fineract-backoffice-ui:e2e/loan-portfolio-summary.spec.ts",
+      "platforms": ["web", "android", "ios"]
+    },
+    {
+      "id": "P3-LOANS-010",
+      "phase": 3,
+      "area": "loans",
+      "title": "loan-repayment-gating",
+      "source": "fineract-backoffice-ui:e2e/loan-repayment-gating.spec.ts",
+      "platforms": ["web", "android", "ios"]
+    },
+    {
+      "id": "P3-LOANS-011",
+      "phase": 3,
+      "area": "loans",
+      "title": "loan-schedule-type",
+      "source": "fineract-backoffice-ui:e2e/loan-schedule-type.spec.ts",
+      "platforms": ["web", "android", "ios"]
+    },
+    {
+      "id": "P3-LOANS-012",
+      "phase": 3,
+      "area": "loans",
+      "title": "loan-schedule-type-gating",
+      "source": "fineract-backoffice-ui:e2e/loan-schedule-type-gating.spec.ts",
+      "platforms": ["web", "android", "ios"]
+    },
+    {
+      "id": "P3-LOANS-013",
+      "phase": 3,
+      "area": "loans",
+      "title": "loan-servicing",
+      "source": "fineract-backoffice-ui:e2e/loan-servicing.spec.ts",
+      "platforms": ["web", "android", "ios"]
+    },
+    {
+      "id": "P3-LOANS-014",
+      "phase": 3,
+      "area": "loans",
+      "title": "loan-servicing-gaps",
+      "source": "fineract-backoffice-ui:e2e/loan-servicing-gaps.spec.ts",
+      "platforms": ["web", "android", "ios"]
+    },
+    {
+      "id": "P3-LOANS-015",
+      "phase": 3,
+      "area": "loans",
+      "title": "loans/create-loan-account",
+      "source": "web-app:playwright/tests/loans/create-loan-account.spec.ts (behaviour reference only, MPL-2.0: do not copy)",
+      "platforms": ["web", "android", "ios"]
+    },
+    {
+      "id": "P3-LOANS-016",
+      "phase": 3,
+      "area": "loans",
+      "title": "loans/lifecycle/approve-disburse",
+      "source": "web-app:playwright/tests/loans/lifecycle/approve-disburse.spec.ts (behaviour reference only, MPL-2.0: do not copy)",
+      "platforms": ["web", "android", "ios"]
+    },
+    {
+      "id": "P3-LOANS-017",
+      "phase": 3,
+      "area": "loans",
+      "title": "loans/lifecycle/reject",
+      "source": "web-app:playwright/tests/loans/lifecycle/reject.spec.ts (behaviour reference only, MPL-2.0: do not copy)",
+      "platforms": ["web", "android", "ios"]
+    },
+    {
+      "id": "P3-LOANS-018",
+      "phase": 3,
+      "area": "loans",
+      "title": "loans/lifecycle/undo-transitions",
+      "source": "web-app:playwright/tests/loans/lifecycle/undo-transitions.spec.ts (behaviour reference only, MPL-2.0: do not copy)",
+      "platforms": ["web", "android", "ios"]
+    },
+    {
+      "id": "P3-LOANS-019",
+      "phase": 3,
+      "area": "loans",
+      "title": "working-capital-loan-actions",
+      "source": "fineract-backoffice-ui:e2e/working-capital-loan-actions.spec.ts",
+      "platforms": ["web", "android", "ios"]
+    },
+    {
+      "id": "P4-SAVINGS-001",
+      "phase": 4,
+      "area": "savings",
+      "title": "deposit-account-servicing",
+      "source": "fineract-backoffice-ui:e2e/deposit-account-servicing.spec.ts",
+      "platforms": ["web", "android", "ios"]
+    },
+    {
+      "id": "P4-SAVINGS-002",
+      "phase": 4,
+      "area": "savings",
+      "title": "savings-flows-non-admin-roles",
+      "source": "fineract-backoffice-ui:e2e/savings-flows-non-admin-roles.spec.ts",
+      "platforms": ["web", "android", "ios"]
+    },
+    {
+      "id": "P4-SAVINGS-003",
+      "phase": 4,
+      "area": "savings",
+      "title": "savings-transaction-correction",
+      "source": "fineract-backoffice-ui:e2e/savings-transaction-correction.spec.ts",
+      "platforms": ["web", "android", "ios"]
+    },
+    {
+      "id": "P4-SAVINGS-004",
+      "phase": 4,
+      "area": "savings",
+      "title": "savings-transaction-gating",
+      "source": "fineract-backoffice-ui:e2e/savings-transaction-gating.spec.ts",
+      "platforms": ["web", "android", "ios"]
+    },
+    {
+      "id": "P4-SAVINGS-005",
+      "phase": 4,
+      "area": "savings",
+      "title": "savings/create-savings-account",
+      "source": "web-app:playwright/tests/savings/create-savings-account.spec.ts (behaviour reference only, MPL-2.0: do not copy)",
+      "platforms": ["web", "android", "ios"]
+    },
+    {
+      "id": "P4-SAVINGS-006",
+      "phase": 4,
+      "area": "savings",
+      "title": "savings/create-savings-account-validation",
+      "source": "web-app:playwright/tests/savings/create-savings-account-validation.spec.ts (behaviour reference only, MPL-2.0: do not copy)",
+      "platforms": ["web", "android", "ios"]
+    },
+    {
+      "id": "P4-SAVINGS-007",
+      "phase": 4,
+      "area": "savings",
+      "title": "savings/lifecycle/approve-activate",
+      "source": "web-app:playwright/tests/savings/lifecycle/approve-activate.spec.ts (behaviour reference only, MPL-2.0: do not copy)",
+      "platforms": ["web", "android", "ios"]
+    },
+    {
+      "id": "P4-SAVINGS-008",
+      "phase": 4,
+      "area": "savings",
+      "title": "savings/lifecycle/reject",
+      "source": "web-app:playwright/tests/savings/lifecycle/reject.spec.ts (behaviour reference only, MPL-2.0: do not copy)",
+      "platforms": ["web", "android", "ios"]
+    },
+    {
+      "id": "P4-SAVINGS-009",
+      "phase": 4,
+      "area": "savings",
+      "title": "savings/lifecycle/undo-approval",
+      "source": "web-app:playwright/tests/savings/lifecycle/undo-approval.spec.ts (behaviour reference only, MPL-2.0: do not copy)",
+      "platforms": ["web", "android", "ios"]
+    },
+    {
+      "id": "P4-SAVINGS-010",
+      "phase": 4,
+      "area": "savings",
+      "title": "savings/transactions/deposit-withdrawal",
+      "source": "web-app:playwright/tests/savings/transactions/deposit-withdrawal.spec.ts (behaviour reference only, MPL-2.0: do not copy)",
+      "platforms": ["web", "android", "ios"]
+    },
+    {
+      "id": "P4-SAVINGS-011",
+      "phase": 4,
+      "area": "savings",
+      "title": "share-account-servicing",
+      "source": "fineract-backoffice-ui:e2e/share-account-servicing.spec.ts",
+      "platforms": ["web", "android", "ios"]
+    },
+    {
+      "id": "P5-PRODUCTS-001",
+      "phase": 5,
+      "area": "products",
+      "title": "delinquency-configuration",
+      "source": "fineract-backoffice-ui:e2e/delinquency-configuration.spec.ts",
+      "platforms": ["web", "android", "ios"]
+    },
+    {
+      "id": "P5-PRODUCTS-002",
+      "phase": 5,
+      "area": "products",
+      "title": "deposit-product-configuration",
+      "source": "fineract-backoffice-ui:e2e/deposit-product-configuration.spec.ts",
+      "platforms": ["web", "android", "ios"]
+    },
+    {
+      "id": "P5-PRODUCTS-003",
+      "phase": 5,
+      "area": "products",
+      "title": "deposit-product-edit",
+      "source": "fineract-backoffice-ui:e2e/deposit-product-edit.spec.ts",
+      "platforms": ["web", "android", "ios"]
+    },
+    {
+      "id": "P5-PRODUCTS-004",
+      "phase": 5,
+      "area": "products",
+      "title": "interest-rate-charts",
+      "source": "fineract-backoffice-ui:e2e/interest-rate-charts.spec.ts",
+      "platforms": ["web", "android", "ios"]
+    },
+    {
+      "id": "P5-PRODUCTS-005",
+      "phase": 5,
+      "area": "products",
+      "title": "loan-product-accounting",
+      "source": "fineract-backoffice-ui:e2e/loan-product-accounting.spec.ts",
+      "platforms": ["web", "android", "ios"]
+    },
+    {
+      "id": "P5-PRODUCTS-006",
+      "phase": 5,
+      "area": "products",
+      "title": "loan-product-down-payment",
+      "source": "fineract-backoffice-ui:e2e/loan-product-down-payment.spec.ts",
+      "platforms": ["web", "android", "ios"]
+    },
+    {
+      "id": "P5-PRODUCTS-007",
+      "phase": 5,
+      "area": "products",
+      "title": "share-product-accounting",
+      "source": "fineract-backoffice-ui:e2e/share-product-accounting.spec.ts",
+      "platforms": ["web", "android", "ios"]
+    },
+    {
+      "id": "P6-ACCOUNTING-001",
+      "phase": 6,
+      "area": "accounting",
+      "title": "accounting-closure-backend",
+      "source": "fineract-backoffice-ui:e2e/accounting-closure-backend.spec.ts",
+      "platforms": ["web", "android", "ios"]
+    },
+    {
+      "id": "P6-ACCOUNTING-002",
+      "phase": 6,
+      "area": "accounting",
+      "title": "teller-cash-management",
+      "source": "fineract-backoffice-ui:e2e/teller-cash-management.spec.ts",
+      "platforms": ["web", "android", "ios"]
+    },
+    {
+      "id": "P8-SYSTEM-001",
+      "phase": 8,
+      "area": "system",
+      "title": "batch-api-operations",
+      "source": "fineract-backoffice-ui:e2e/batch-api-operations.spec.ts",
+      "platforms": ["web", "android", "ios"]
+    },
+    {
+      "id": "P8-SYSTEM-002",
+      "phase": 8,
+      "area": "system",
+      "title": "bulk-import-entity-types",
+      "source": "fineract-backoffice-ui:e2e/bulk-import-entity-types.spec.ts",
+      "platforms": ["web", "android", "ios"]
+    },
+    {
+      "id": "P8-SYSTEM-003",
+      "phase": 8,
+      "area": "system",
+      "title": "scheduler-jobs",
+      "source": "fineract-backoffice-ui:e2e/scheduler-jobs.spec.ts",
+      "platforms": ["web", "android", "ios"]
+    },
+    {
+      "id": "P9-REPORTING-001",
+      "phase": 9,
+      "area": "reporting",
+      "title": "full-demo",
+      "source": "fineract-backoffice-ui:e2e/full-demo.spec.ts",
+      "platforms": ["web", "android", "ios"]
+    },
+    {
+      "id": "P9-REPORTING-002",
+      "phase": 9,
+      "area": "reporting",
+      "title": "report-enhancements",
+      "source": "fineract-backoffice-ui:e2e/report-enhancements.spec.ts",
+      "platforms": ["web", "android", "ios"]
+    },
+    {
+      "id": "P9-REPORTING-003",
+      "phase": 9,
+      "area": "reporting",
+      "title": "report-mailing-job",
+      "source": "fineract-backoffice-ui:e2e/report-mailing-job.spec.ts",
+      "platforms": ["web", "android", "ios"]
+    },
+    {
+      "id": "P9-REPORTING-004",
+      "phase": 9,
+      "area": "reporting",
+      "title": "report-parameter-backend",
+      "source": "fineract-backoffice-ui:e2e/report-parameter-backend.spec.ts",
+      "platforms": ["web", "android", "ios"]
+    },
+    {
+      "id": "P9-REPORTING-005",
+      "phase": 9,
+      "area": "reporting",
+      "title": "reporting",
+      "source": "fineract-backoffice-ui:e2e/reporting.spec.ts",
+      "platforms": ["web", "android", "ios"]
+    }
+  ]
+}

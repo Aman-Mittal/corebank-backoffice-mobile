@@ -1,0 +1,4 @@
+{
+  "$comment": "The delivery phase in progress. Raising it brings that phase's parity rows into scope of check-expected-red.",
+  "current": 0
+}
