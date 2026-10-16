@@ -1,0 +1,12 @@
+node_modules
+dist
+coverage
+api-spec
+src/api/generated
+public/api
+playwright-report
+test-results
+package-lock.json
+LICENSE
+AGENTS.md
+DOCS/test-plan/unit-test-catalogue.md

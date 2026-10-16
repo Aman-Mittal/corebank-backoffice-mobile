@@ -1,0 +1,15 @@
+CoreBank Backoffice (corebank-backoffice-mobile)
+Copyright 2026 Aman Mittal
+
+This product is licensed under the Apache License, Version 2.0 (see LICENSE).
+
+DISCLAIMER: This is an independent project. It is not an Apache Software Foundation project,
+is not part of Apache Fineract, and is not endorsed by or affiliated with the ASF. Apache,
+Apache Fineract and Fineract are trademarks of The Apache Software Foundation. See DISCLAIMER.md.
+
+Portions of this software (scripts, lint rules, API adapter and mapper patterns, e2e harness)
+are derived from the fineract-backoffice-ui project, licensed under the Apache License, Version 2.0.
+Files carried over from it retain their original license headers.
+
+The Fineract OpenAPI specification in spec/openapi.json is published by the Apache
+Fineract project under the Apache License, Version 2.0.

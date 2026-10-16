@@ -1,0 +1,41 @@
+{
+  "expo": {
+    "name": "CoreBank Backoffice",
+    "slug": "corebank-backoffice",
+    "description": "Independent backoffice client compatible with the Apache Fineract REST API. Not an Apache Software Foundation project and not endorsed by the ASF; see DISCLAIMER.md.",
+    "version": "0.1.0",
+    "scheme": "corebank",
+    "orientation": "default",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "automatic",
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "io.github.amanmittal.corebankbackoffice"
+    },
+    "android": {
+      "package": "io.github.amanmittal.corebankbackoffice",
+      "adaptiveIcon": {
+        "backgroundColor": "#E6F4FE",
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "backgroundImage": "./assets/android-icon-background.png",
+        "monochromeImage": "./assets/android-icon-monochrome.png"
+      },
+      "predictiveBackGestureEnabled": false
+    },
+    "web": {
+      "favicon": "./assets/favicon.png",
+      "output": "single",
+      "bundler": "metro"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-localization",
+      "expo-secure-store",
+      "expo-web-browser",
+      "expo-sharing"
+    ],
+    "experiments": {
+      "typedRoutes": true
+    }
+  }
+}
