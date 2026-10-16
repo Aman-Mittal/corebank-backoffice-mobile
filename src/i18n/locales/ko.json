@@ -1,13 +1,13 @@
 {
   "APP": {
-    "NAME": "CoreBank Backoffice"
+    "NAME": "MFI Backoffice"
   },
   "ABOUT": {
     "TITLE": "정보",
     "VERSION": "버전 {{version}}",
     "LICENSE": "Apache License, Version 2.0에 따라 라이선스가 부여됩니다.",
     "DISCLAIMER_TITLE": "면책 조항",
-    "DISCLAIMER": "CoreBank Backoffice는 Apache Fineract®의 REST API와 호환되는 독립적인 커뮤니티 제작 클라이언트입니다. Apache Software Foundation 프로젝트가 아니며, Apache Fineract의 일부가 아니고, ASF의 보증을 받거나 ASF와 제휴하지 않았습니다. Apache, Apache Fineract 및 Fineract는 The Apache Software Foundation의 상표이며, 여기서는 호환성을 설명하기 위해서만 사용됩니다."
+    "DISCLAIMER": "MFI Backoffice는 Apache Fineract®의 REST API와 호환되는 독립적인 커뮤니티 제작 클라이언트입니다. Apache Software Foundation 프로젝트가 아니며, Apache Fineract의 일부가 아니고, ASF의 보증을 받거나 ASF와 제휴하지 않았습니다. Apache, Apache Fineract 및 Fineract는 The Apache Software Foundation의 상표이며, 여기서는 호환성을 설명하기 위해서만 사용됩니다."
   },
   "AUTH": {
     "SIGN_IN": "로그인",

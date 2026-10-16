@@ -112,7 +112,7 @@ module.exports = {
      */
     function resolvesIntoGuarded(source) {
       // Path aliases (`'@/api/generated/openapi'` for `'src/api/generated/openapi'`) are resolved
-      // from the repository root. Added for corebank-backoffice-mobile, whose imports use `@/`.
+      // from the repository root. Added for mfi-backoffice-mobile, whose imports use `@/`.
       const alias = Object.keys(aliases).find((prefix) => source.startsWith(prefix));
       if (!alias && !source.startsWith('.')) return false;
       const resolved = alias

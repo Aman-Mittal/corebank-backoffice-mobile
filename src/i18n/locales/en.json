@@ -1,13 +1,13 @@
 {
   "APP": {
-    "NAME": "CoreBank Backoffice"
+    "NAME": "MFI Backoffice"
   },
   "ABOUT": {
     "TITLE": "About",
     "VERSION": "Version {{version}}",
     "LICENSE": "Licensed under the Apache License, Version 2.0.",
     "DISCLAIMER_TITLE": "Disclaimer",
-    "DISCLAIMER": "CoreBank Backoffice is an independent, community-built client compatible with the REST API of Apache Fineract®. It is not an Apache Software Foundation project, is not part of Apache Fineract, and is not endorsed by or affiliated with the ASF. Apache, Apache Fineract and Fineract are trademarks of The Apache Software Foundation, used here only to describe compatibility."
+    "DISCLAIMER": "MFI Backoffice is an independent, community-built client compatible with the REST API of Apache Fineract®. It is not an Apache Software Foundation project, is not part of Apache Fineract, and is not endorsed by or affiliated with the ASF. Apache, Apache Fineract and Fineract are trademarks of The Apache Software Foundation, used here only to describe compatibility."
   },
   "AUTH": {
     "SIGN_IN": "Sign in",
