@@ -1,0 +1,6 @@
+{
+  "$comment": "The OpenAPI spec is not committed (it is 2 MB, and this repository is pushed through the GitHub MCP, which carries files inline). `npm run setup` downloads it from this pinned URL and refuses it unless the sha256 matches. To update: point `url` at a new pinned commit and set `sha256` to the file's hash. See DOCS/OPENAPI.md.",
+  "url": "https://raw.githubusercontent.com/Aman-Mittal/fineract-backoffice-ui/cccc4e403f2aeda7405f45248b4796ad1020961f/public/api/fineract.json",
+  "sha256": "327a46ab64562683d40363b07f09e1c81018175e5f32cdfde43a5c82895ee176",
+  "licence": "Apache-2.0 (the Apache Fineract OpenAPI document, as committed in fineract-backoffice-ui)"
+}
