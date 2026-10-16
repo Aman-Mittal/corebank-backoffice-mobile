@@ -47,7 +47,7 @@ jobs:
       # the event so a repository rename does not need an edit here.
       BASE_PATH: /${{ github.event.repository.name }}
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v4
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           # The deploy step authenticates with `github_token` of its own; credentials left in
           # .git/config would be in reach of every later step.

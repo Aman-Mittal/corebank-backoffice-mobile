@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+import { randomBytes } from 'node:crypto';
+
 import type { APIRequestContext, APIResponse } from '@playwright/test';
 
 /**
@@ -56,5 +58,8 @@ export function fineractPost(
   });
 }
 
-/** A unique suffix per run, so seeded names never collide across retries or reruns. */
-export const runId = () => `${Date.now().toString(36)}${Math.random().toString(36).slice(2, 6)}`;
+/**
+ * A unique suffix per run, so seeded names never collide across retries or reruns. It also goes
+ * into seeded users' passwords, so the random part comes from a CSPRNG, not `Math.random`.
+ */
+export const runId = () => `${Date.now().toString(36)}${randomBytes(3).toString('hex')}`;
