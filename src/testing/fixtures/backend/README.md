@@ -15,3 +15,9 @@ built from a generated type inherits the spec's blind spots.
   (fineract-backoffice-ui verified this against a running instance; see its `staff.api.ts`), and
   `emailAddress` is sent although the spec does not declare it. The public sandbox had no staff
   to capture on 2026-10-16, so **re-capture** this from the e2e stack once staff exist there.
+- `clients.page.json` (`GET /v1/clients?offset=0&limit=3&orderBy=displayName&sortOrder=ASC`) and
+  `client.one.json` (`GET /v1/clients/3`) were captured from the community sandbox
+  (`https://sandbox.mifos.community`, tenant `default`) on 2026-10-17. Both send `legalForm`,
+  `timeline` and `[y, m, d]` dates; the spec declares none of these on the list item, and
+  `status` sends `value` where the spec declares `description`. The sandbox had people only, so
+  the entity case is covered by the e2e stack (P1-CLIENTS-005/1).
