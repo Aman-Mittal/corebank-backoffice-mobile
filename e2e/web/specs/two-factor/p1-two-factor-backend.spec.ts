@@ -48,9 +48,9 @@ test.describe('two-factor against the real backend', () => {
     await step.send.click();
     await step.enter(await latestOtp(since));
     await expect(page.getByTestId(TID.home.screen)).toBeVisible();
-    const clients = page.waitForResponse((r) => r.url().includes('/v1/clients'));
+    const clients = page.waitForResponse((r) => new URL(r.url()).pathname.endsWith('/v1/clients'));
     await page.goto('/clients');
-    void clients;
+    expect((await clients).status()).toBe(200);
   });
 
   test('a wrong code is refused with the backend reason', async ({ page }) => {

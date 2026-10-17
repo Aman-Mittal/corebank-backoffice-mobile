@@ -15,6 +15,7 @@
  */
 
 import staff from '@/testing/fixtures/backend/staff.list.json';
+import stackStaff from '@/testing/fixtures/backend/stack.staff.list.json';
 import { fakeApi } from '@/testing/fake-api';
 
 import { HttpStaffApi, mapStaff, type StaffPayload } from './http-staff.api';
@@ -37,6 +38,21 @@ describe('mapStaff (captured shape)', () => {
       joiningDate: '2020-01-01',
     });
     expect(grace).toMatchObject({ isActive: false, emailAddress: 'grace@example.org' });
+  });
+
+  it('maps the list captured from the e2e stack', () => {
+    expect((stackStaff as StaffPayload[]).map(mapStaff)).toEqual([
+      expect.objectContaining({
+        id: 1,
+        displayName: 'Officer, Loan',
+        officeName: 'Head Office',
+        isLoanOfficer: true,
+        isActive: true,
+        joiningDate: '2026-01-02',
+        mobileNo: null,
+      }),
+      expect.objectContaining({ id: 2, isLoanOfficer: false, joiningDate: '2026-01-05' }),
+    ]);
   });
 
   it('accepts a [y, m, d] joining date and builds a display name when none is sent', () => {

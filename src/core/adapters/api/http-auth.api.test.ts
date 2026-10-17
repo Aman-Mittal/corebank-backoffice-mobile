@@ -15,6 +15,7 @@
  */
 
 import captured from '@/testing/fixtures/backend/authentication.json';
+import stack from '@/testing/fixtures/backend/stack.authentication.json';
 import { fakeApi } from '@/testing/fake-api';
 
 import { HttpAuthApi, mapSession } from './http-auth.api';
@@ -35,6 +36,21 @@ describe('mapSession', () => {
       credential: 'bWlmb3M6cGFzc3dvcmQ=',
       scheme: 'Basic',
       tfaToken: null,
+      twoFactorRequired: false,
+      passwordRenewalRequired: false,
+    });
+  });
+
+  it('maps the payload captured from the e2e stack, whose mifos user has no staff name', () => {
+    expect(mapSession(stack, 'default')).toMatchObject({
+      username: 'mifos',
+      displayName: null,
+      permissions: [
+        'ALL_FUNCTIONS',
+        'FORCE_WITHDRAWAL_SAVINGSACCOUNT_CHECKER',
+        'FORCE_WITHDRAWAL_SAVINGSACCOUNT',
+      ],
+      roles: ['Super user'],
       twoFactorRequired: false,
       passwordRenewalRequired: false,
     });

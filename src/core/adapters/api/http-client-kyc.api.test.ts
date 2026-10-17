@@ -15,6 +15,8 @@
  */
 
 import template from '@/testing/fixtures/backend/client.identifiers.template.json';
+import stackIdentifiers from '@/testing/fixtures/backend/stack.client.identifiers.json';
+import stackNotes from '@/testing/fixtures/backend/stack.client.notes.json';
 import { fakeApi } from '@/testing/fake-api';
 
 import { HttpClientKycApi, mapIdentifier, mapNote } from './http-client-kyc.api';
@@ -53,6 +55,32 @@ describe('mapIdentifier / mapNote', () => {
     ).toEqual({ id: 1, note: 'Hi', createdBy: 'mifos', createdOn: '2026-10-01T09:30:00Z' });
     expect(() => mapNote({ note: 'x' })).toThrow(/no id/);
     expect(() => mapIdentifier({ documentKey: 'x' })).toThrow(/no id/);
+  });
+});
+
+describe('payloads captured from the e2e stack', () => {
+  it('maps an identifier, whose document type carries only an id and a name', () => {
+    expect(stackIdentifiers.map(mapIdentifier)).toEqual([
+      {
+        id: 11,
+        documentTypeId: 1,
+        documentTypeName: 'Passport',
+        documentKey: 'P-ADA-1',
+        description: 'Issued in London',
+        status: 'active',
+      },
+    ]);
+  });
+
+  it('maps a note, keeping its date-time with offset', () => {
+    expect(stackNotes.map(mapNote)).toEqual([
+      {
+        id: 4,
+        note: 'Prefers morning visits',
+        createdBy: 'mifos',
+        createdOn: '2026-10-17T16:19:55.462952+05:30',
+      },
+    ]);
   });
 });
 

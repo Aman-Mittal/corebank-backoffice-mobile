@@ -91,7 +91,9 @@ test.describe('client identifiers', () => {
     await ids.key.fill('P-ADA-1');
     await ids.description.fill('Again');
     await ids.submit.click();
-    await expect(ids.fieldError(TID.identifierForm.key)).toContainText('already exists');
+    await expect(ids.fieldError(TID.identifierForm.key)).toContainText(
+      'already has a Passport with unique key P-ADA-1',
+    );
     await expect(ids.key).toHaveValue('P-ADA-1');
     await expect(ids.description).toHaveValue('Again');
     await expect(ids.rows).toHaveCount(1);
