@@ -47,7 +47,7 @@
 | -------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------- | ------ |
 | P1-SHELL-023/1 | **At** 390×844, **when** signed in, **then** the navigation starts closed and is out of the tab order. **When** the menu button is tapped, **then** a modal drawer opens (`role=dialog`, `aria-modal`) and focus moves into it | web                 | green  |
 | P1-SHELL-023/2 | **At** 390×844, the drawer closes on its close button, on Escape, and on the backdrop                                                                                                                                          | web                 | green  |
-| P1-SHELL-023/3 | **At** 390×844, choosing a destination in the drawer navigates there and closes the drawer                                                                                                                                     | web, native-backend | red    |
+| P1-SHELL-023/3 | **At** 390×844, choosing a destination in the drawer navigates there and closes the drawer                                                                                                                                     | web, native-backend | green  |
 | P1-SHELL-023/4 | **At** 390×844, the signed-in screen does not scroll sideways, and every header control is at least 44×44                                                                                                                      | web                 | green  |
 | P1-SHELL-023/5 | **At** 1280×800, the sidebar is always visible and there is no menu button                                                                                                                                                     | web                 | green  |
 | P1-SHELL-023/6 | **When** sign-out is chosen from the shell, **then** the session ends and sign-in shows without a notice                                                                                                                       | web                 | green  |
@@ -70,19 +70,20 @@
 | P1-SHELL-002/1 | **Given** `reader` (`ALL_FUNCTIONS_READ`), **then** `/clients` is admitted and `/clients/new` (CREATE_CLIENT) is refused                                                                                                                                                                             | web         | green   |
 | P1-SHELL-002/2 | **Given** `creator`, **then** both `/clients` and `/clients/new` are admitted. **Given** `superuser`, the same                                                                                                                                                                                       | web         | green   |
 | P1-SHELL-032/1 | **Given** `loanOfficer`, **then** Work queues (READ_LOAN _or_ READ_CLIENT) is admitted. **Given** `clerk`, it is too. **Given** `nobody`, it is refused                                                                                                                                              | web         | green   |
-| P1-SHELL-032/2 | **Given** a real role with only READ_CLIENT (created by API in setup), **then** `/clients` is admitted, `/security/users` is refused by the app, and `GET /users` answers 403 from the backend                                                                                                       | web-backend | red     |
+| P1-SHELL-032/2 | **Given** a real role with only READ_CLIENT (created by API in setup), **then** `/clients` is admitted, `/security/users` is refused by the app, and `GET /users` answers 403 from the backend                                                                                                       | web-backend | green   |
 | P1-SHELL-032/3 | **Given** a restricted session, **when** the page reloads, **then** the same permission boundary holds                                                                                                                                                                                               | web         | green   |
-| P1-SHELL-028/1 | **Given** a real restricted user, **then** they hold exactly their role's permissions and the superuser used by the rest of the suite is unaffected                                                                                                                                                  | web-backend | red     |
+| P1-SHELL-028/1 | **Given** a real restricted user, **then** they hold exactly their role's permissions and the superuser used by the rest of the suite is unaffected                                                                                                                                                  | web-backend | green   |
 | P1-SHELL-031/1 | **Given** `rbacEnabled = false`, **then** the full navigation is shown                                                                                                                                                                                                                               | web         | planned |
 | P1-SHELL-030/1 | **Given** `rbacEnabled = false`, the backend still refuses what the role does not cover                                                                                                                                                                                                              | web-backend | planned |
 | P1-SHELL-033/1 | **Given** a branch-office user, **then** only that office's clients are listed                                                                                                                                                                                                                       | web-backend | planned |
 
 ## Status notes
 
-- P1-SHELL-023/3 is green on web. Its `native-backend` Maestro flow has not run on a device yet
-  (`@native` in `expected-red.json`).
-- P1-SHELL-032/2 and P1-SHELL-028/1 need the docker stack and have not run yet. They are
-  `test.fixme` on PRs and run in the nightly pending probe.
+- P1-SHELL-023/3 runs on web and, on every PR, in the Android e2e job (an emulator signed in to the docker stack).
+- P1-SHELL-032/2 and P1-SHELL-028/1 were red against the docker stack because the user factory's
+  password broke the server's default policy, which forbids a character twice in a row
+  (`Pa55-…`). With that fixed both pass (2026-10-17). The nightly pending probe now posts each
+  still-red spec's error as a "Still red" annotation, which is how such a cause shows up.
 - **Defects the scenarios found during implementation:**
   - Two specs passed on the old build: P1-SHELL-002/2 asserted only "no Access Denied", and
     P1-SHELL-023/6 found the home screen's sign-out button. Both now assert positively.

@@ -65,9 +65,9 @@ permission set. It explains that the server cannot complete identity-provider si
 | P1-SHELL-036/10 | **Given** an account without a second factor, **then** sign-in goes straight to home and no `/twofactor` request is made                                                                                           | web            | green  |
 | P1-SHELL-036/11 | **When** a 2FA user signs out, **then** `POST /twofactor/invalidate` is called with the token before sign-in is shown                                                                                              | web            | green  |
 | P1-SHELL-036/12 | **When** a 2FA session reloads, **then** it stays signed in and keeps sending the TFA token                                                                                                                        | web            | green  |
-| P1-SHELL-037/1  | **Against** the 2FA stack (`deploy/docker-compose-e2e-2fa.yml`, mail catcher), **when** signing in as `mifos`, **then** the step appears and the app makes no other API call                                       | web-backend    | red    |
-| P1-SHELL-037/2  | **With** the code read from the mail catcher, sign-in completes and `/clients` loads with status 200                                                                                                               | web-backend    | red    |
-| P1-SHELL-037/3  | **With** a wrong code, the backend's refusal reason is shown                                                                                                                                                       | web-backend    | red    |
+| P1-SHELL-037/1  | **Against** the 2FA stack (`deploy/docker-compose-e2e-2fa.yml`, mail catcher), **when** signing in as `mifos`, **then** the step appears and the app makes no other API call                                       | web-backend    | green  |
+| P1-SHELL-037/2  | **With** the code read from the mail catcher, sign-in completes and `/clients` loads with status 200                                                                                                               | web-backend    | green  |
+| P1-SHELL-037/3  | **With** a wrong code, the backend's refusal reason is shown                                                                                                                                                       | web-backend    | green  |
 | P1-SHELL-037/4  | **On a device**, the same flow completes with the emailed code                                                                                                                                                     | native-backend | red    |
 
 ## E2E scenarios: identity provider (P1-SHELL-024 mocked, P1-SHELL-025 backend)
@@ -88,9 +88,11 @@ permission set. It explains that the server cannot complete identity-provider si
   already existed (no provider configured, no second factor), so they were green from the start.
   They were written so that this slice could not break them.
 
-- **Still red, because they need what this machine cannot run alongside everything else:**
-  - P1-SHELL-037/1–3 need the 2FA stack and Mailpit; they run in the `two-factor` project.
-  - P1-SHELL-037/4 needs a device.
+- **Against real servers:**
+  - P1-SHELL-037/1–3 need the 2FA stack and Mailpit; they run in the `two-factor` project, nightly
+    in their own job. First run against the stack on 2026-10-17: all three pass. P1-SHELL-037/2
+    now also checks that `/clients` answers 200, which it had only waited for.
+  - P1-SHELL-037/4 needs a device signed in to the 2FA stack, with the code read from Mailpit.
   - P1-SHELL-025/1 needs a Keycloak-backed stack that does not exist yet.
 - **Defects the scenarios found during implementation:**
   - P1-SHELL-036/11 found the sign-out invalidator unwired in the composition root. A

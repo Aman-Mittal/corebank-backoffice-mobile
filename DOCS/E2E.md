@@ -23,7 +23,8 @@ How red specs coexist with a green CI:
   passing, Playwright reports "Expected to fail, but passed", and the run fails until its id is
   removed from the list. Phase 0 went through exactly this cycle.
 - **Playwright `backend` and `two-factor`:** an expected-red spec is `test.fixme()` on PRs. The
-  nightly probe (`PENDING_PROBE=1`) runs them as `test.fail()`.
+  nightly probe (`PENDING_PROBE=1`) runs them as `test.fail()`, and posts why each one still
+  fails as a "Still red" annotation (`e2e/web/red-reporter.ts`).
 - **Maestro:** `pending` flows are excluded on PRs (`--exclude-tags=pending`).
 - **`scripts/check-expected-red.mjs`** checks four things:
   - ids match parity rows and specs;
@@ -60,12 +61,23 @@ npm run e2e:web -- --project=setup --project=backend    # then stop it: npm run 
 APP_ID=io.github.amanmittal.mfibackoffice npm run e2e:native   # Maestro, device or emulator
 ```
 
+**Native flows against the stack** (tagged `backend`) need an app that can reach it. The
+emulator's `localhost` is tunnelled to the host with `adb reverse tcp:8080 tcp:8080`, and a local
+relay turns that plain HTTP into HTTPS for the stack, whose certificate is self-signed:
+`socat TCP-LISTEN:8080,fork,reuseaddr OPENSSL:localhost:8443,verify=0`. Build the app with
+`EXPO_PUBLIC_API_BASE_URL=http://localhost:8080/fineract-provider/api` and `MBO_E2E_CLEARTEXT=1`
+(`plugins/with-e2e-cleartext.js` lets that one build use plain HTTP), and pass
+`-e API_URL=http://localhost:8080/fineract-provider/api` so the flows' seed scripts use the relay
+too. `scripts/maestro-ci.sh` does all of this on CI. iOS runs only the flows that need no stack.
+
 ## Resource limits
 
 The development machine and CI runners are shared. Rules:
 
 - **Never run the heavy suites side by side on one machine:** Playwright `backend`, Maestro on an
-  emulator, and the docker stack. CI gives each one its own job.
+  emulator, and the docker stack. CI gives each one its own job; the one exception is the Android
+  job, whose flows need the stack: it builds first, then starts the stack, then the emulator, on a
+  runner with 16 GB. Locally that needs about 5 GB free.
 - **The stack checks memory first:** `e2e-stack.sh` refuses to start with less than 2 GB available
   (`MBO_MIN_FREE_MB`). Its containers are capped at 512 MB (PostgreSQL) and 1.5 GB (backend).
 - **Playwright is capped:** at most 2 workers locally, 1 on CI and against the backend.
