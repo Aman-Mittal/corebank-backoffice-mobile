@@ -71,3 +71,12 @@ jobs:
       - run: npm install --no-audit --no-fund
       - run: npm run setup
       - run: bash scripts/ios-ci.sh
+        env:
+          DIAG: ${{ runner.temp }}/ios-diagnostics
+      # Its own step: the build log can switch workflow commands off for the step that printed it.
+      - name: Report why iOS failed
+        if: failure()
+        run: source scripts/lib/annotate.sh && annotate_files "$DIAG"
+        shell: bash
+        env:
+          DIAG: ${{ runner.temp }}/ios-diagnostics

@@ -28,3 +28,14 @@ annotate() {
     print "::error title=$ARGV[0]::$s\n";
   ' "$1"
 }
+
+# Posts each file in directory $1 as an error annotation titled by its name (without .txt). For a
+# separate `if: failure()` step: a long build log can switch off workflow commands for the rest of
+# the step that printed it (`::stop-commands::`), so the step that failed may not get to say why.
+annotate_files() {
+  local file
+  for file in "$1"/*.txt; do
+    [ -e "$file" ] || continue
+    annotate "$(basename "$file" .txt)" <"$file"
+  done
+}
