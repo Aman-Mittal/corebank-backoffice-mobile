@@ -48,7 +48,10 @@ test.describe('a genuinely restricted user (backend)', () => {
   test('holds exactly its role, and the superuser is unaffected', async ({ page, request }) => {
     spec('P1-SHELL-028/1');
     const user = await createRestrictedUser(request, ['READ_CLIENT']);
-    expect(await permissionsOf(request, user.username, user.password)).toEqual(['READ_CLIENT']);
+    // Newer servers add Spring Security's authentication-factor markers (`FACTOR_PASSWORD`) to
+    // every session's list; they record how the user signed in and grant nothing.
+    const granted = await permissionsOf(request, user.username, user.password);
+    expect(granted.filter((p) => !p.startsWith('FACTOR_'))).toEqual(['READ_CLIENT']);
     expect(await permissionsOf(request, 'mifos', 'password')).toContain('ALL_FUNCTIONS');
     const login = new LoginPage(page);
     await login.open();

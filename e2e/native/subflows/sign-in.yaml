@@ -19,13 +19,18 @@ env:
   PASSWORD: ${PASSWORD || 'password'}
   TENANT: ${TENANT || 'default'}
 ---
+# The keyboard is hidden after each field: left open, it covers the next field on a phone, and
+# the tap meant for that field lands on the keyboard instead (Android, 2026-10-17: the password
+# was typed into the username box after a stray space).
 - tapOn:
     id: login.tenant
 - eraseText
 - inputText: ${TENANT}
+- hideKeyboard
 - tapOn:
     id: login.username
 - inputText: ${USERNAME}
+- hideKeyboard
 - tapOn:
     id: login.password
 - inputText: ${PASSWORD}
