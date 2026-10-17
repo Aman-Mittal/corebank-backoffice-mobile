@@ -339,4 +339,11 @@ scripts; project `web` covers components through react-native-web in jsdom.
 - SelectField > shows the choice, opens a radio group marking it, and reports a new one
 - SelectField > disabled, still shows the value and does not open
 
-## `src/ui/RequireAccess.test.tsx` (web)
+## `src/ui/shell/AppShell.test.tsx` (web)
+
+- AppShell > narrow: the drawer is not rendered until opened, then is a modal dialog holding focus
+- AppShell > narrow: Escape and the backdrop close the drawer
+- AppShell > narrow: choosing an entry navigates and closes the drawer
+- AppShell > wide: a permanent sidebar with only the permitted navigation, and no menu button
+- AppShell > a group toggles its entries and reports aria-expanded
+- AppShell > signs out from the shell
