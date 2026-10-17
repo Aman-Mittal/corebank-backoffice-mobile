@@ -43,3 +43,12 @@
   - a missing key echoes the key;
   - every catalogue has the same keys.
 - **About screen:** renders the keys and version; renders Korean text.
+- **App config:** `app.json` gives `expo-router` a handoff `origin`.
+
+## Status notes
+
+- **P0-ABOUT-001/1 on iOS** failed in the nightly run until the `expo-router` plugin was given an
+  `origin` (2026-10-17). Without one, a release build raises an "Expo Head: Add the handoff
+  origin" alert, which on iOS sat over sign-in and swallowed the tap on About; the screen dump the
+  iOS job now posts on failure showed it. Android shows no such alert. The origin is the GitHub
+  Pages host, where the web build is published.

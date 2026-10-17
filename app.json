@@ -28,7 +28,12 @@
       "bundler": "metro"
     },
     "plugins": [
-      "expo-router",
+      [
+        "expo-router",
+        {
+          "origin": "https://aman-mittal.github.io"
+        }
+      ],
       "expo-localization",
       "expo-secure-store",
       "expo-web-browser",

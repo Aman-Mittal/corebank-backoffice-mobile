@@ -27,6 +27,8 @@ on:
       - scripts/ios-ci.sh
       - scripts/lib/annotate.sh
       - e2e/web/red-reporter.ts
+      # Native build configuration (plugins, origin) changes what the iOS job builds.
+      - app.json
 
 permissions:
   contents: read
