@@ -56,5 +56,25 @@ curl -fsSL "https://get.maestro.mobile.dev" | bash
 status=${PIPESTATUS[0]}
 if [ "$status" -ne 0 ]; then
   { echo "maestro exited $status"; tail -n 40 "$flows"; } >"$DIAG/Maestro flows failed on iOS.txt"
+  # What is on screen now (the failed flow leaves the app where it stopped): each element's id
+  # and text, from Maestro's view hierarchy.
+  "$HOME/.maestro/bin/maestro" hierarchy 2>/dev/null |
+    python3 -c '
+import json, sys
+seen = []
+def walk(node):
+    attrs = node.get("attributes", {})
+    parts = [attrs.get(k) for k in ("resource-id", "text", "accessibilityText", "title")]
+    line = " | ".join(p for p in parts if p)
+    if line and line not in seen:
+        seen.append(line)
+    for child in node.get("children", []):
+        walk(child)
+try:
+    walk(json.load(sys.stdin))
+except ValueError:
+    print("no hierarchy")
+print("\n".join(seen[:80]))
+' >"$DIAG/Screen at the end of the iOS run.txt"
 fi
 exit "$status"

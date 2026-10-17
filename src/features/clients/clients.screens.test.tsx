@@ -51,6 +51,12 @@ function clientApi(overrides: Partial<ClientApi> = {}): ClientApi {
       { id: 51, name: 'Relocated' },
       { id: 52, name: 'Deceased' },
     ]),
+    staffOptions: vi.fn(async () => [
+      { id: 1, name: 'Director, Program' },
+      { id: 4, name: 'Officer, Probe' },
+    ]),
+    assignStaff: vi.fn(async () => undefined),
+    unassignStaff: vi.fn(async () => undefined),
     ...overrides,
   };
 }
@@ -250,5 +256,55 @@ describe('ClientViewScreen', () => {
     await render(<ClientViewScreen clientId={3} />, ['ALL_FUNCTIONS'], api);
     expect(await screen.findByTestId(TID.client.closedOn)).toHaveTextContent('2026-09-30');
     expect(action('reactivate')).toBeInTheDocument();
+  });
+
+  it('assigns a member of staff from the office template', async () => {
+    const pending = { ...PENDING, officeId: 1 };
+    const api = clientApi({ get: vi.fn(async () => pending) });
+    await render(<ClientViewScreen clientId={7} />, ['READ_CLIENT', 'ASSIGNSTAFF_CLIENT'], api);
+    expect(screen.queryByTestId(TID.client.staff)).not.toBeInTheDocument();
+    expect(screen.queryByTestId(TID.client.unassignStaff)).not.toBeInTheDocument();
+    await userEvent.click(await screen.findByTestId(TID.client.assignStaff));
+    expect(api.staffOptions).toHaveBeenCalledWith(1);
+    const confirm = screen.getByTestId(TID.client.staffConfirm);
+    expect(confirm).toHaveAttribute('aria-disabled', 'true');
+    await userEvent.click(await screen.findByTestId(TID.client.staffSelect));
+    await userEvent.click(screen.getByTestId(TID.option(TID.client.staffSelect, 4)));
+    await userEvent.click(confirm);
+    await waitFor(() => expect(api.assignStaff).toHaveBeenCalledWith(7, 4));
+  });
+
+  it('unassigns the current officer once confirmed', async () => {
+    const assigned: Client = { ...ACTIVE, staffId: 1, staffName: 'Director, Program' };
+    const api = clientApi({ get: vi.fn(async () => assigned) });
+    await render(<ClientViewScreen clientId={3} />, ['READ_CLIENT', 'UNASSIGNSTAFF_CLIENT'], api);
+    expect(await screen.findByTestId(TID.client.staff)).toHaveTextContent('Director, Program');
+    expect(screen.queryByTestId(TID.client.assignStaff)).not.toBeInTheDocument();
+    await userEvent.click(screen.getByTestId(TID.client.unassignStaff));
+    await userEvent.click(screen.getByTestId(TID.client.unassignCancel));
+    expect(api.unassignStaff).not.toHaveBeenCalled();
+    await userEvent.click(screen.getByTestId(TID.client.unassignStaff));
+    await userEvent.click(screen.getByTestId(TID.client.unassignConfirm));
+    await waitFor(() => expect(api.unassignStaff).toHaveBeenCalledWith(3, 1));
+  });
+
+  it('says when there is no staff to assign', async () => {
+    const api = clientApi({ staffOptions: vi.fn(async () => []) });
+    await render(<ClientViewScreen clientId={3} />, ['ALL_FUNCTIONS'], api);
+    await userEvent.click(await screen.findByTestId(TID.client.assignStaff));
+    expect(await screen.findByTestId(TID.client.staffNone)).toBeInTheDocument();
+    expect(screen.getByTestId(TID.client.staffConfirm)).toHaveAttribute('aria-disabled', 'true');
+  });
+
+  it('offers no staff change for a closed client', async () => {
+    const closed: Client = { ...ACTIVE, status: 'closed', staffId: 1, staffName: 'Director' };
+    await render(
+      <ClientViewScreen clientId={3} />,
+      ['ALL_FUNCTIONS'],
+      clientApi({ get: vi.fn(async () => closed) }),
+    );
+    expect(await screen.findByTestId(TID.client.staff)).toHaveTextContent('Director');
+    expect(screen.queryByTestId(TID.client.assignStaff)).not.toBeInTheDocument();
+    expect(screen.queryByTestId(TID.client.unassignStaff)).not.toBeInTheDocument();
   });
 });
