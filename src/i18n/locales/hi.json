@@ -311,6 +311,31 @@
       "WITHDRAWN": "वापस लिया गया",
       "REJECTED": "अस्वीकृत",
       "CLOSED": "बंद"
+    },
+    "CLOSED_ON": "बंद करने की तिथि",
+    "ACTIONS": {
+      "REJECT": "अस्वीकार करें",
+      "REJECTION_DATE": "अस्वीकृति तिथि",
+      "REJECT_CONFIRM": "अस्वीकृति की पुष्टि करें",
+      "WITHDRAW": "वापस लें",
+      "WITHDRAWAL_DATE": "वापसी तिथि",
+      "WITHDRAW_CONFIRM": "वापसी की पुष्टि करें",
+      "CLOSE": "बंद करें",
+      "CLOSURE_DATE": "बंद करने की तिथि",
+      "CLOSE_CONFIRM": "बंद करने की पुष्टि करें",
+      "REACTIVATE": "पुनः सक्रिय करें",
+      "REACTIVATION_DATE": "पुनः सक्रियण तिथि",
+      "REACTIVATE_CONFIRM": "पुनः सक्रियण की पुष्टि करें",
+      "UNDO_REJECTION": "अस्वीकृति रद्द करें",
+      "UNDO_REJECTION_CONFIRM": "अस्वीकृति रद्द करने की पुष्टि करें",
+      "UNDO_WITHDRAWAL": "वापसी रद्द करें",
+      "UNDO_WITHDRAWAL_CONFIRM": "वापसी रद्द करने की पुष्टि करें",
+      "REOPENED_DATE": "पुनः खोलने की तिथि",
+      "REASON": "कारण",
+      "REASON_PLACEHOLDER": "कारण चुनें",
+      "NO_REASONS": "इस कार्य के लिए कोई कारण निर्धारित नहीं है। व्यवस्थापक इन्हें कोड {{code}} में जोड़ता है।",
+      "REASONS_FAILED": "कारण लोड नहीं हो सके।",
+      "CANCEL": "रद्द करें"
     }
   }
 }

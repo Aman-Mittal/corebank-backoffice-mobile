@@ -14,11 +14,12 @@
  * limitations under the License.
  */
 
-import type { ClientQuery } from '@/core/adapters/api/client.api';
+import type { ClientQuery, ReasonedCommand } from '@/core/adapters/api/client.api';
 
 /** Query keys for clients, so invalidation names exactly what it means. */
 export const clientKeys = {
   all: ['clients'] as const,
   list: (query: ClientQuery) => [...clientKeys.all, 'list', query] as const,
   detail: (clientId: number) => [...clientKeys.all, 'detail', clientId] as const,
+  reasons: (command: ReasonedCommand) => [...clientKeys.all, 'reasons', command] as const,
 };

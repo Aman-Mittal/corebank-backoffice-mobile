@@ -20,6 +20,7 @@ import userEvent from '@testing-library/user-event';
 import { CLIENT_API, type Client, type ClientApi } from '@/core/adapters/api/client.api';
 import { mapSession } from '@/core/adapters/api/http-auth.api';
 import { mapClient, type ClientPayload } from '@/core/adapters/api/http-client.api';
+import { AppError } from '@/core/http/app-error';
 import { mapOffice, type OfficePayload } from '@/core/adapters/api/http-office.api';
 import { OFFICE_API } from '@/core/adapters/api/office.api';
 import { provide } from '@/core/adapters/registry';
@@ -45,7 +46,11 @@ function clientApi(overrides: Partial<ClientApi> = {}): ClientApi {
     list: vi.fn(async () => ({ total: 45, items: CLIENTS })),
     get: vi.fn(async (id: number) => (id === 7 ? PENDING : CLIENTS.find((c) => c.id === id)!)),
     create: vi.fn(async () => 14),
-    activate: vi.fn(async () => undefined),
+    command: vi.fn(async () => undefined),
+    reasons: vi.fn(async () => [
+      { id: 51, name: 'Relocated' },
+      { id: 52, name: 'Deceased' },
+    ]),
     ...overrides,
   };
 }
@@ -136,28 +141,114 @@ describe('ClientFormScreen', () => {
 });
 
 describe('ClientViewScreen', () => {
+  const ACTIVE = CLIENTS.find((c) => c.id === 3)!;
+  const action = (command: string) => screen.queryByTestId(TID.client.action(command));
+
   it('offers Activate for a pending client to who may, and activates on today', async () => {
     const { api } = await render(<ClientViewScreen clientId={7} />, [
       'READ_CLIENT',
       'ACTIVATE_CLIENT',
     ]);
-    await userEvent.click(await screen.findByTestId(TID.client.activate));
-    expect(screen.getByTestId(TID.client.activateDate)).toHaveValue('2026-01-15');
-    await userEvent.click(screen.getByTestId(TID.client.activateConfirm));
-    await waitFor(() => expect(api.activate).toHaveBeenCalledWith(7, '2026-01-15'));
+    await userEvent.click(await screen.findByTestId(TID.client.action('activate')));
+    expect(screen.getByTestId(TID.client.actionDate)).toHaveValue('2026-01-15');
+    expect(screen.queryByTestId(TID.client.actionReason)).not.toBeInTheDocument();
+    await userEvent.click(screen.getByTestId(TID.client.actionConfirm));
+    await waitFor(() =>
+      expect(api.command).toHaveBeenCalledWith(7, 'activate', {
+        date: '2026-01-15',
+        reasonId: null,
+      }),
+    );
   });
 
-  it('offers no Activate for an active client, nor without the permission', async () => {
+  it('offers each action by status and by permission', async () => {
+    await render(<ClientViewScreen clientId={7} />, ['READ_CLIENT', 'REJECT_CLIENT']);
+    expect(await screen.findByTestId(TID.client.action('reject'))).toBeInTheDocument();
+    expect(action('activate')).not.toBeInTheDocument();
+    expect(action('withdraw')).not.toBeInTheDocument();
+  });
+
+  it('offers only Close for an active client', async () => {
     await render(<ClientViewScreen clientId={3} />, ['ALL_FUNCTIONS']);
-    expect(await screen.findByTestId(TID.client.name)).toHaveTextContent('Arif Arif');
-    expect(screen.queryByTestId(TID.client.activate)).not.toBeInTheDocument();
+    expect(await screen.findByTestId(TID.client.action('close'))).toBeInTheDocument();
+    expect(action('activate')).not.toBeInTheDocument();
   });
 
-  it('offers no Activate to a reader', async () => {
+  it('offers nothing to a reader', async () => {
     await render(<ClientViewScreen clientId={7} />, ['READ_CLIENT']);
     expect(await screen.findByTestId(TID.client.status)).toHaveTextContent(
       'CLIENTS.STATUS.PENDING',
     );
-    expect(screen.queryByTestId(TID.client.activate)).not.toBeInTheDocument();
+    expect(action('activate')).not.toBeInTheDocument();
+    expect(action('reject')).not.toBeInTheDocument();
+  });
+
+  it('needs a reason before a reasoned command confirms, and sends it', async () => {
+    const { api } = await render(<ClientViewScreen clientId={3} />, ['ALL_FUNCTIONS']);
+    await userEvent.click(await screen.findByTestId(TID.client.action('close')));
+    expect(api.reasons).toHaveBeenCalledWith('close');
+    const confirm = screen.getByTestId(TID.client.actionConfirm);
+    expect(confirm).toHaveAttribute('aria-disabled', 'true');
+    await userEvent.click(await screen.findByTestId(TID.client.actionReason));
+    await userEvent.click(screen.getByTestId(TID.option(TID.client.actionReason, 52)));
+    expect(confirm).not.toHaveAttribute('aria-disabled', 'true');
+    await userEvent.clear(screen.getByTestId(TID.client.actionDate));
+    await userEvent.type(screen.getByTestId(TID.client.actionDate), '2026-02-30');
+    expect(confirm).toHaveAttribute('aria-disabled', 'true');
+    await userEvent.clear(screen.getByTestId(TID.client.actionDate));
+    await userEvent.type(screen.getByTestId(TID.client.actionDate), '2026-02-28');
+    await userEvent.click(confirm);
+    await waitFor(() =>
+      expect(api.command).toHaveBeenCalledWith(3, 'close', { date: '2026-02-28', reasonId: 52 }),
+    );
+  });
+
+  it('names the code to fill when no reasons are set up', async () => {
+    const api = clientApi({ reasons: vi.fn(async () => []) });
+    await render(<ClientViewScreen clientId={7} />, ['ALL_FUNCTIONS'], api);
+    await userEvent.click(await screen.findByTestId(TID.client.action('withdraw')));
+    expect(await screen.findByTestId(TID.client.actionNoReasons)).toHaveTextContent(
+      'CLIENTS.ACTIONS.NO_REASONS',
+    );
+    expect(screen.getByTestId(TID.client.actionConfirm)).toHaveAttribute('aria-disabled', 'true');
+  });
+
+  it('cancel closes the panel and sends nothing', async () => {
+    const { api } = await render(<ClientViewScreen clientId={3} />, ['ALL_FUNCTIONS']);
+    await userEvent.click(await screen.findByTestId(TID.client.action('close')));
+    await userEvent.click(screen.getByTestId(TID.client.actionCancel));
+    expect(screen.queryByTestId(TID.client.actionConfirm)).not.toBeInTheDocument();
+    expect(action('close')).toBeInTheDocument();
+    expect(api.command).not.toHaveBeenCalled();
+  });
+
+  it("keeps the panel and shows the server's refusal, and reloads the client", async () => {
+    const refusal = new AppError('domainRule', 403, 'Open loans.', [
+      { field: 'id', message: 'Client cannot be closed because of non-closed loans.' },
+    ]);
+    const api = clientApi({
+      command: vi.fn(async () => {
+        throw refusal;
+      }),
+    });
+    await render(<ClientViewScreen clientId={3} />, ['ALL_FUNCTIONS'], api);
+    await userEvent.click(await screen.findByTestId(TID.client.action('close')));
+    await userEvent.click(await screen.findByTestId(TID.client.actionReason));
+    await userEvent.click(screen.getByTestId(TID.option(TID.client.actionReason, 51)));
+    const reloads = vi.mocked(api.get).mock.calls.length;
+    await userEvent.click(screen.getByTestId(TID.client.actionConfirm));
+    expect(await screen.findByTestId(TID.client.actionError)).toHaveTextContent(
+      'Client cannot be closed because of non-closed loans.',
+    );
+    expect(screen.getByTestId(TID.client.actionReason)).toHaveTextContent('Relocated');
+    await waitFor(() => expect(vi.mocked(api.get).mock.calls.length).toBeGreaterThan(reloads));
+  });
+
+  it('shows the closure date of a closed client, and offers Reactivate', async () => {
+    const closed: Client = { ...ACTIVE, status: 'closed', closedOnDate: '2026-09-30' };
+    const api = clientApi({ get: vi.fn(async () => closed) });
+    await render(<ClientViewScreen clientId={3} />, ['ALL_FUNCTIONS'], api);
+    expect(await screen.findByTestId(TID.client.closedOn)).toHaveTextContent('2026-09-30');
+    expect(action('reactivate')).toBeInTheDocument();
   });
 });

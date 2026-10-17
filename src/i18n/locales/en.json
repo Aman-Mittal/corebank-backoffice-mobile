@@ -311,6 +311,31 @@
       "WITHDRAWN": "Withdrawn",
       "REJECTED": "Rejected",
       "CLOSED": "Closed"
+    },
+    "CLOSED_ON": "Closed on",
+    "ACTIONS": {
+      "REJECT": "Reject",
+      "REJECTION_DATE": "Rejection date",
+      "REJECT_CONFIRM": "Confirm rejection",
+      "WITHDRAW": "Withdraw",
+      "WITHDRAWAL_DATE": "Withdrawal date",
+      "WITHDRAW_CONFIRM": "Confirm withdrawal",
+      "CLOSE": "Close",
+      "CLOSURE_DATE": "Closure date",
+      "CLOSE_CONFIRM": "Confirm closure",
+      "REACTIVATE": "Reactivate",
+      "REACTIVATION_DATE": "Reactivation date",
+      "REACTIVATE_CONFIRM": "Confirm reactivation",
+      "UNDO_REJECTION": "Undo rejection",
+      "UNDO_REJECTION_CONFIRM": "Confirm undoing the rejection",
+      "UNDO_WITHDRAWAL": "Undo withdrawal",
+      "UNDO_WITHDRAWAL_CONFIRM": "Confirm undoing the withdrawal",
+      "REOPENED_DATE": "Reopened on",
+      "REASON": "Reason",
+      "REASON_PLACEHOLDER": "Choose a reason",
+      "NO_REASONS": "No reasons are set up for this action. An administrator adds them to the code {{code}}.",
+      "REASONS_FAILED": "The reasons could not be loaded.",
+      "CANCEL": "Cancel"
     }
   }
 }

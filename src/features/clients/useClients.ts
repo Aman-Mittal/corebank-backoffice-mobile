@@ -17,7 +17,14 @@
 import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { useAdapter } from '@/core/adapters/AdapterProvider';
-import { CLIENT_API, type ClientDraft, type ClientQuery } from '@/core/adapters/api/client.api';
+import {
+  CLIENT_API,
+  type ClientCommand,
+  type ClientCommandInput,
+  type ClientDraft,
+  type ClientQuery,
+  type ReasonedCommand,
+} from '@/core/adapters/api/client.api';
 
 import { clientKeys } from './clients.keys';
 
@@ -49,11 +56,25 @@ export function useCreateClient() {
   });
 }
 
-export function useActivateClient(clientId: number) {
+/**
+ * Runs a lifecycle command. Settled either way, the client is reloaded: after a refusal, the
+ * server's status may not be the one the page showed (another user acted first).
+ */
+export function useClientCommand(clientId: number) {
   const api = useAdapter(CLIENT_API);
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (activationDate: string) => api.activate(clientId, activationDate),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: clientKeys.all }),
+    mutationFn: ({ command, input }: { command: ClientCommand; input: ClientCommandInput }) =>
+      api.command(clientId, command, input),
+    onSettled: () => queryClient.invalidateQueries({ queryKey: clientKeys.all }),
+  });
+}
+
+export function useClientReasons(command: ReasonedCommand | null) {
+  const api = useAdapter(CLIENT_API);
+  return useQuery({
+    queryKey: clientKeys.reasons(command ?? 'reject'),
+    queryFn: () => api.reasons(command ?? 'reject'),
+    enabled: command !== null,
   });
 }

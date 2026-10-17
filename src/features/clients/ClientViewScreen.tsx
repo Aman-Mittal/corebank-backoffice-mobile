@@ -19,14 +19,16 @@ import { useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
 import { useAdapter } from '@/core/adapters/AdapterProvider';
-import type { Client } from '@/core/adapters/api/client.api';
+import type { Client, ClientCommand } from '@/core/adapters/api/client.api';
 import { CLOCK } from '@/core/adapters/clock/clock.adapter';
 import { useI18n } from '@/core/adapters/i18n/useI18n';
-import { usePermission } from '@/core/auth/usePermission';
+import { permissionsSatisfy } from '@/core/auth/permissions';
+import { useGranted } from '@/core/auth/usePermission';
 import { isRealIsoDate, todayIso } from '@/core/forms/date';
 import { formFailure } from '@/core/http/field-errors';
 import { href } from '@/core/navigation/href';
 import { Button } from '@/ui/form/Button';
+import { SelectField } from '@/ui/form/SelectField';
 import { TextField } from '@/ui/form/TextField';
 import { DetailRow, Page } from '@/ui/Page';
 import { ErrorState, isNotFound, LoadingState, NotFoundState } from '@/ui/ScreenState';
@@ -34,13 +36,13 @@ import { colors, spacing } from '@/ui/theme';
 
 import { TID } from '../../../e2e/shared/testids';
 import { CLIENT_ACCESS } from './access';
+import { ACTION_KEYS, clientActions, isReasoned, REASON_CODES } from './client-actions';
 import { LEGAL_FORM_KEYS, statusText } from './client-labels';
-import { useActivateClient, useClient } from './useClients';
+import { useClient, useClientCommand, useClientReasons } from './useClients';
 
 export function ClientViewScreen({ clientId }: { readonly clientId: number }) {
   const { t } = useI18n();
   const router = useRouter();
-  const canActivate = usePermission(CLIENT_ACCESS.activate);
   const valid = Number.isInteger(clientId) && clientId > 0;
   const client = useClient(clientId, { enabled: valid });
 
@@ -89,66 +91,183 @@ export function ClientViewScreen({ clientId }: { readonly clientId: number }) {
       <DetailRow label={t('CLIENTS.ACTIVATION_DATE')} testID={TID.client.activationDate}>
         {c.activationDate}
       </DetailRow>
-      {canActivate && c.status === 'pending' ? <Activate key={c.id} client={c} /> : null}
+      {c.closedOnDate ? (
+        <DetailRow label={t('CLIENTS.CLOSED_ON')} testID={TID.client.closedOn}>
+          {c.closedOnDate}
+        </DetailRow>
+      ) : null}
+      <ClientActions key={c.id} client={c} />
     </Page>
   );
 }
 
-/** Activate, then the date it takes effect (default today), then confirm. */
-function Activate({ client }: { readonly client: Client }) {
+/**
+ * The lifecycle commands this client's status allows and the user may run, and the one panel
+ * that runs them. A refusal stays on screen even when the reloaded status no longer offers the
+ * command that was refused (another user acted first).
+ */
+function ClientActions({ client }: { readonly client: Client }) {
   const { t } = useI18n();
-  const clock = useAdapter(CLOCK);
-  const activate = useActivateClient(client.id);
-  const [open, setOpen] = useState(false);
-  const [date, setDate] = useState(() => todayIso(clock.now()));
+  const granted = useGranted();
+  const run = useClientCommand(client.id);
+  const [open, setOpen] = useState<ClientCommand | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const dateOk = isRealIsoDate(date.trim());
+  const actions = clientActions(client.status).filter((a) =>
+    permissionsSatisfy(granted, CLIENT_ACCESS[a]),
+  );
+  const panel = open !== null && actions.includes(open) ? open : null;
 
-  if (!open) {
-    return (
-      <Button
-        testID={TID.client.activate}
-        label={t('CLIENTS.ACTIVATE')}
-        onPress={() => setOpen(true)}
-      />
-    );
-  }
-  const confirm = async () => {
+  const choose = (command: ClientCommand) => {
+    setError(null);
+    setOpen(command);
+  };
+  const submit = async (command: ClientCommand, date: string, reasonId: number | null) => {
     setError(null);
     try {
-      await activate.mutateAsync(date.trim());
+      await run.mutateAsync({ command, input: { date, reasonId } });
+      setOpen(null);
     } catch (e) {
-      const failure = formFailure(e, { activationDate: 'activationDate' }, t('FORM.SAVE_FAILED'));
-      setError(failure.fields.activationDate ?? failure.form);
+      setError(formFailure(e, {}, t('FORM.SAVE_FAILED')).form);
     }
   };
+
+  if (actions.length === 0 && error === null) return null;
   return (
-    <View style={styles.activate}>
+    <View style={styles.actions}>
+      {panel === null ? (
+        <View style={styles.buttons}>
+          {actions.map((command) => (
+            <Button
+              key={command}
+              testID={TID.client.action(command)}
+              label={t(ACTION_KEYS[command].label)}
+              variant={command === actions[0] ? 'primary' : 'secondary'}
+              onPress={() => choose(command)}
+            />
+          ))}
+        </View>
+      ) : (
+        <CommandPanel
+          key={panel}
+          command={panel}
+          busy={run.isPending}
+          onConfirm={(date, reasonId) => void submit(panel, date, reasonId)}
+          onCancel={() => {
+            setError(null);
+            setOpen(null);
+          }}
+        />
+      )}
+      {error ? (
+        <Text testID={TID.client.actionError} role="alert" style={styles.error}>
+          {error}
+        </Text>
+      ) : null}
+    </View>
+  );
+}
+
+function CommandPanel({
+  command,
+  busy,
+  onConfirm,
+  onCancel,
+}: {
+  readonly command: ClientCommand;
+  readonly busy: boolean;
+  readonly onConfirm: (date: string, reasonId: number | null) => void;
+  readonly onCancel: () => void;
+}) {
+  const { t } = useI18n();
+  const clock = useAdapter(CLOCK);
+  const reasoned = isReasoned(command);
+  const reasons = useClientReasons(reasoned ? command : null);
+  const [date, setDate] = useState(() => todayIso(clock.now()));
+  const [reasonId, setReasonId] = useState<number | null>(null);
+  const keys = ACTION_KEYS[command];
+  const dateOk = isRealIsoDate(date.trim());
+  const reasonOk = !reasoned || reasonId !== null;
+
+  return (
+    <View style={styles.panel}>
       <TextField
-        label={t('CLIENTS.ACTIVATION_DATE')}
-        testID={TID.client.activateDate}
+        label={t(keys.date)}
+        testID={TID.client.actionDate}
         value={date}
         onChangeText={setDate}
         hint={t('FORM.DATE_HINT')}
         error={dateOk ? undefined : t('FORM.DATE_INVALID')}
         inputProps={{ inputMode: 'numeric', autoCorrect: false }}
       />
-      {error ? (
-        <Text testID={TID.client.activateError} role="alert" style={styles.error}>
-          {error}
-        </Text>
+      {reasoned ? (
+        <ReasonField
+          code={REASON_CODES[command]}
+          reasons={reasons}
+          value={reasonId}
+          onChange={setReasonId}
+        />
       ) : null}
-      <Button
-        testID={TID.client.activateConfirm}
-        label={t('CLIENTS.ACTIVATE_CONFIRM')}
-        disabled={!dateOk || activate.isPending}
-        onPress={() => void confirm()}
-      />
+      <View style={styles.buttons}>
+        <Button
+          testID={TID.client.actionConfirm}
+          label={t(keys.confirm)}
+          disabled={!dateOk || !reasonOk || busy}
+          onPress={() => onConfirm(date.trim(), reasoned ? reasonId : null)}
+        />
+        <Button
+          testID={TID.client.actionCancel}
+          label={t('CLIENTS.ACTIONS.CANCEL')}
+          variant="secondary"
+          onPress={onCancel}
+        />
+      </View>
     </View>
   );
 }
 
+function ReasonField({
+  code,
+  reasons,
+  value,
+  onChange,
+}: {
+  readonly code: string;
+  readonly reasons: ReturnType<typeof useClientReasons>;
+  readonly value: number | null;
+  readonly onChange: (id: number) => void;
+}) {
+  const { t } = useI18n();
+  if (reasons.isError) {
+    return (
+      <Text role="alert" style={styles.error}>
+        {t('CLIENTS.ACTIONS.REASONS_FAILED')}
+      </Text>
+    );
+  }
+  if (reasons.isSuccess && reasons.data.length === 0) {
+    // The server requires a reason, so with none set up the command cannot be confirmed.
+    return (
+      <Text testID={TID.client.actionNoReasons} role="alert" style={styles.notice}>
+        {t('CLIENTS.ACTIONS.NO_REASONS', { code })}
+      </Text>
+    );
+  }
+  return (
+    <SelectField
+      label={t('CLIENTS.ACTIONS.REASON')}
+      testID={TID.client.actionReason}
+      options={(reasons.data ?? []).map((r) => ({ value: r.id, label: r.name }))}
+      value={value}
+      onChange={onChange}
+      placeholder={t('CLIENTS.ACTIONS.REASON_PLACEHOLDER')}
+    />
+  );
+}
+
 const styles = StyleSheet.create({
-  activate: { gap: spacing.sm, paddingTop: spacing.sm },
+  actions: { gap: spacing.sm, paddingTop: spacing.sm },
+  buttons: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm },
+  panel: { gap: spacing.sm },
   error: { fontSize: 14, color: colors.danger },
+  notice: { fontSize: 14, color: colors.text },
 });

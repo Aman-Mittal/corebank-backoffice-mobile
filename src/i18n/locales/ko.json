@@ -311,6 +311,31 @@
       "WITHDRAWN": "철회됨",
       "REJECTED": "거부됨",
       "CLOSED": "종료됨"
+    },
+    "CLOSED_ON": "종료일",
+    "ACTIONS": {
+      "REJECT": "거부",
+      "REJECTION_DATE": "거부일",
+      "REJECT_CONFIRM": "거부 확인",
+      "WITHDRAW": "철회",
+      "WITHDRAWAL_DATE": "철회일",
+      "WITHDRAW_CONFIRM": "철회 확인",
+      "CLOSE": "종료",
+      "CLOSURE_DATE": "종료일",
+      "CLOSE_CONFIRM": "종료 확인",
+      "REACTIVATE": "재활성화",
+      "REACTIVATION_DATE": "재활성화일",
+      "REACTIVATE_CONFIRM": "재활성화 확인",
+      "UNDO_REJECTION": "거부 취소",
+      "UNDO_REJECTION_CONFIRM": "거부 취소 확인",
+      "UNDO_WITHDRAWAL": "철회 취소",
+      "UNDO_WITHDRAWAL_CONFIRM": "철회 취소 확인",
+      "REOPENED_DATE": "재개일",
+      "REASON": "사유",
+      "REASON_PLACEHOLDER": "사유를 선택하세요",
+      "NO_REASONS": "이 작업에 설정된 사유가 없습니다. 관리자가 코드 {{code}}에 추가합니다.",
+      "REASONS_FAILED": "사유를 불러오지 못했습니다.",
+      "CANCEL": "취소"
     }
   }
 }

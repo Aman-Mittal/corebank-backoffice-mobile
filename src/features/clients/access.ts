@@ -21,4 +21,10 @@ export const CLIENT_ACCESS = {
   read: { anyOf: ['READ_CLIENT'] },
   create: { anyOf: ['CREATE_CLIENT'] },
   activate: { anyOf: ['ACTIVATE_CLIENT'] },
+  reject: { anyOf: ['REJECT_CLIENT'] },
+  withdraw: { anyOf: ['WITHDRAW_CLIENT'] },
+  close: { anyOf: ['CLOSE_CLIENT'] },
+  reactivate: { anyOf: ['REACTIVATE_CLIENT'] },
+  undoRejection: { anyOf: ['UNDOREJECT_CLIENT'] },
+  undoWithdrawal: { anyOf: ['UNDOWITHDRAWAL_CLIENT'] },
 } as const satisfies Record<string, Access>;

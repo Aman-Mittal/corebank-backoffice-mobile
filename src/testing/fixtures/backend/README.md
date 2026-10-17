@@ -21,3 +21,8 @@ built from a generated type inherits the spec's blind spots.
   `timeline` and `[y, m, d]` dates; the spec declares none of these on the list item, and
   `status` sends `value` where the spec declares `description`. The sandbox had people only, so
   the entity case is covered by the e2e stack (P1-CLIENTS-005/1).
+- `client.template.reject.json` (`GET /v1/clients/template?commandParam=reject`) was captured from
+  the community sandbox on 2026-10-17. Its `narrations` is empty, as were `withdraw` and `close`
+  there: no reasons are set up, which the client lifecycle panel must handle (P1-CLIENTS-014/2).
+  A reason has the server's `CodeValueData` shape (`id`, `name`, `position`, `active`,
+  `mandatory`); **re-capture** a populated one from the e2e stack once reasons are seeded.

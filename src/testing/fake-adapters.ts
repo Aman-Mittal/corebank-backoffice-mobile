@@ -159,7 +159,8 @@ export function createFakeAdapters(): FakeAdapters {
     list: unscripted('ClientApi.list'),
     get: unscripted('ClientApi.get'),
     create: unscripted('ClientApi.create'),
-    activate: unscripted('ClientApi.activate'),
+    command: unscripted('ClientApi.command'),
+    reasons: unscripted('ClientApi.reasons'),
   };
 
   const twoFactorApi: TwoFactorApi = {

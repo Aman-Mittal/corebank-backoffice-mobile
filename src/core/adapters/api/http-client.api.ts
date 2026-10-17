@@ -21,11 +21,15 @@ import { ISO_DATE_FIELDS, toIsoApiDate, withoutBlanks } from './api-date';
 import type {
   Client,
   ClientApi,
+  ClientCommand,
+  ClientCommandInput,
   ClientDraft,
   ClientPage,
   ClientQuery,
+  ClientReason,
   ClientStatus,
   LegalForm,
+  ReasonedCommand,
 } from './client.api';
 import { required } from './required';
 
@@ -38,7 +42,7 @@ export type ClientPayload = Omit<ClientData, 'activationDate' | 'timeline' | 'st
   readonly status?: { readonly id?: number; readonly code?: string; readonly value?: string };
   /** Declared `string`; sent as `[y, m, d]`. */
   readonly activationDate?: ApiDate;
-  readonly timeline?: { readonly submittedOnDate?: ApiDate };
+  readonly timeline?: { readonly submittedOnDate?: ApiDate; readonly closedOnDate?: ApiDate };
   /** Sent, never declared on the single-client response. */
   readonly middlename?: string;
   readonly fullname?: string;
@@ -90,6 +94,7 @@ export function mapClient(payload: ClientPayload): Client {
     emailAddress: orNull(payload.emailAddress),
     submittedOnDate: toIsoApiDate(payload.timeline?.submittedOnDate),
     activationDate: toIsoApiDate(payload.activationDate),
+    closedOnDate: toIsoApiDate(payload.timeline?.closedOnDate),
   };
 }
 
@@ -116,6 +121,38 @@ export function createBody(draft: ClientDraft) {
     activationDate: draft.active ? draft.activationDate : undefined,
     ...ISO_DATE_FIELDS,
   });
+}
+
+/**
+ * Each command's body fields. Close reads `closureDate` (the reference sent `closedOnDate`, which
+ * the server ignores); both undos read `reopenedDate`.
+ */
+const COMMAND_FIELDS: Record<ClientCommand, { date: string; reason?: string }> = {
+  activate: { date: 'activationDate' },
+  reject: { date: 'rejectionDate', reason: 'rejectionReasonId' },
+  withdraw: { date: 'withdrawalDate', reason: 'withdrawalReasonId' },
+  close: { date: 'closureDate', reason: 'closureReasonId' },
+  reactivate: { date: 'reactivationDate' },
+  undoRejection: { date: 'reopenedDate' },
+  undoWithdrawal: { date: 'reopenedDate' },
+};
+
+/** The body `POST /clients/{id}?command=` takes: the command's date, its reason if it has one. */
+export function commandBody(command: ClientCommand, input: ClientCommandInput) {
+  const fields = COMMAND_FIELDS[command];
+  return {
+    [fields.date]: input.date,
+    ...(fields.reason ? { [fields.reason]: input.reasonId } : {}),
+    ...ISO_DATE_FIELDS,
+  };
+}
+
+/** A code value as the command template sends it (`CodeValueData`). */
+interface Narration {
+  readonly id?: number;
+  readonly name?: string;
+  readonly position?: number;
+  readonly active?: boolean;
 }
 
 export class HttpClientApi implements ClientApi {
@@ -154,12 +191,25 @@ export class HttpClientApi implements ClientApi {
     return required(response?.clientId ?? response?.resourceId, 'client create response', 'id');
   }
 
-  async activate(clientId: number, activationDate: string): Promise<void> {
+  async command(clientId: number, command: ClientCommand, input: ClientCommandInput) {
     await call(
       this.client.POST('/v1/clients/{clientId}', {
-        params: { path: { clientId }, query: { command: 'activate' } },
-        body: { activationDate, ...ISO_DATE_FIELDS },
+        params: { path: { clientId }, query: { command } },
+        body: commandBody(command, input),
       }),
     );
+  }
+
+  async reasons(command: ReasonedCommand): Promise<readonly ClientReason[]> {
+    // The template needs only READ_CLIENT; the code tables would need READ_CODE as well.
+    const template = await call(
+      this.client.GET('/v1/clients/template', { params: { query: { commandParam: command } } }),
+    );
+    const narrations = ((template as { narrations?: Narration[] } | undefined)?.narrations ??
+      []) as Narration[];
+    return narrations
+      .filter((n) => n.active !== false && n.id !== undefined)
+      .sort((a, b) => (a.position ?? 0) - (b.position ?? 0))
+      .map((n) => ({ id: required(n.id, 'client reason', 'id'), name: n.name ?? '' }));
   }
 }

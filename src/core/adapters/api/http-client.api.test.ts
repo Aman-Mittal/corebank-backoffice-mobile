@@ -16,9 +16,16 @@
 
 import one from '@/testing/fixtures/backend/client.one.json';
 import page from '@/testing/fixtures/backend/clients.page.json';
+import sandboxTemplate from '@/testing/fixtures/backend/client.template.reject.json';
 import { fakeApi } from '@/testing/fake-api';
 
-import { clientStatus, HttpClientApi, mapClient, type ClientPayload } from './http-client.api';
+import {
+  clientStatus,
+  commandBody,
+  HttpClientApi,
+  mapClient,
+  type ClientPayload,
+} from './http-client.api';
 
 describe('mapClient (captured shape)', () => {
   it('maps a list row, with its legal form, status code and [y, m, d] dates', () => {
@@ -41,6 +48,7 @@ describe('mapClient (captured shape)', () => {
       emailAddress: null,
       submittedOnDate: '2026-10-17',
       activationDate: '2026-10-17',
+      closedOnDate: null,
     });
   });
 
@@ -64,6 +72,11 @@ describe('mapClient (captured shape)', () => {
       'Ada Lovelace',
     );
     expect(mapClient({ id: 9 })).toMatchObject({ legalForm: null, status: 'unknown' });
+  });
+
+  it('reads the closure date from the timeline', () => {
+    const closed = mapClient({ id: 5, timeline: { closedOnDate: [2026, 9, 30] } });
+    expect(closed.closedOnDate).toBe('2026-09-30');
   });
 
   it('fails loudly on a client with no id', () => {
@@ -168,13 +181,68 @@ describe('HttpClientApi', () => {
 
   it('activates with the command and the date', async () => {
     const api = fakeApi({ 'POST /v1/clients/3': [200, { clientId: 3, resourceId: 3 }] });
-    await new HttpClientApi(api.client).activate(3, '2026-01-07');
+    await new HttpClientApi(api.client).command(3, 'activate', { date: '2026-01-07' });
     expect(Object.fromEntries(api.requests[0]!.query)).toEqual({ command: 'activate' });
     expect(api.requests[0]!.body).toEqual({
       activationDate: '2026-01-07',
       dateFormat: 'yyyy-MM-dd',
       locale: 'en',
     });
+  });
+
+  it('posts a reasoned command with its reason', async () => {
+    const api = fakeApi({ 'POST /v1/clients/1': [200, { clientId: 1, resourceId: 1 }] });
+    await new HttpClientApi(api.client).command(1, 'close', { date: '2026-10-02', reasonId: 51 });
+    expect(Object.fromEntries(api.requests[0]!.query)).toEqual({ command: 'close' });
+    expect(api.requests[0]!.body).toEqual({
+      closureDate: '2026-10-02',
+      closureReasonId: 51,
+      dateFormat: 'yyyy-MM-dd',
+      locale: 'en',
+    });
+  });
+
+  it.each([
+    ['activate', { activationDate: 'D' }],
+    ['reject', { rejectionDate: 'D', rejectionReasonId: 9 }],
+    ['withdraw', { withdrawalDate: 'D', withdrawalReasonId: 9 }],
+    ['close', { closureDate: 'D', closureReasonId: 9 }],
+    ['reactivate', { reactivationDate: 'D' }],
+    ['undoRejection', { reopenedDate: 'D' }],
+    ['undoWithdrawal', { reopenedDate: 'D' }],
+  ] as const)('%s sends %o', (command, fields) => {
+    expect(commandBody(command, { date: 'D', reasonId: 9 })).toEqual({
+      ...fields,
+      dateFormat: 'yyyy-MM-dd',
+      locale: 'en',
+    });
+  });
+
+  it('reads reasons from the command template, active ones in order', async () => {
+    const api = fakeApi({
+      'GET /v1/clients/template': [
+        200,
+        {
+          isStaff: false,
+          narrations: [
+            { id: 52, name: 'Deceased', position: 2, active: true, mandatory: false },
+            { id: 53, name: 'Retired', position: 3, active: false, mandatory: false },
+            { id: 51, name: 'Relocated', position: 1, active: true, mandatory: false },
+          ],
+        },
+      ],
+    });
+    const reasons = await new HttpClientApi(api.client).reasons('close');
+    expect(Object.fromEntries(api.requests[0]!.query)).toEqual({ commandParam: 'close' });
+    expect(reasons).toEqual([
+      { id: 51, name: 'Relocated' },
+      { id: 52, name: 'Deceased' },
+    ]);
+  });
+
+  it('answers no reasons for the captured sandbox template, which has none', async () => {
+    const api = fakeApi({ 'GET /v1/clients/template': [200, sandboxTemplate] });
+    expect(await new HttpClientApi(api.client).reasons('reject')).toEqual([]);
   });
 
   it('rejects with an AppError carrying the field the server named', async () => {

@@ -56,6 +56,8 @@ export interface Client {
   readonly emailAddress: string | null;
   readonly submittedOnDate: string | null;
   readonly activationDate: string | null;
+  /** When it was closed; `null` for a client that is not closed. */
+  readonly closedOnDate: string | null;
 }
 
 /** One page of a client query. */
@@ -95,13 +97,34 @@ export type ClientDraft = {
     | { readonly active: false }
   );
 
+/** The commands that move a client between statuses (`POST /clients/{id}?command=`). */
+export type ClientCommand =
+  'activate' | 'reject' | 'withdraw' | 'close' | 'reactivate' | 'undoRejection' | 'undoWithdrawal';
+
+/** The commands that need a reason, chosen from a code the administrator fills. */
+export type ReasonedCommand = Extract<ClientCommand, 'reject' | 'withdraw' | 'close'>;
+
+export interface ClientCommandInput {
+  /** ISO; the command's own date (activation, rejection, closure, …). */
+  readonly date: string;
+  /** Required for a `ReasonedCommand`, ignored otherwise. */
+  readonly reasonId?: number | null;
+}
+
+export interface ClientReason {
+  readonly id: number;
+  readonly name: string;
+}
+
 export interface ClientApi {
   list(query: ClientQuery): Promise<ClientPage>;
   get(clientId: number): Promise<Client>;
   /** Creates a client and answers its id. */
   create(draft: ClientDraft): Promise<number>;
-  /** Activates a pending client on `activationDate` (ISO). */
-  activate(clientId: number, activationDate: string): Promise<void>;
+  /** Runs a lifecycle command on its date (and reason). */
+  command(clientId: number, command: ClientCommand, input: ClientCommandInput): Promise<void>;
+  /** The active reasons a command may give, in the administrator's order. */
+  reasons(command: ReasonedCommand): Promise<readonly ClientReason[]>;
 }
 
 export const CLIENT_API = token<ClientApi>('ClientApi');
