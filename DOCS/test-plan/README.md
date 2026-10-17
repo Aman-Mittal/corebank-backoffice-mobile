@@ -50,4 +50,5 @@ out of date.
 | [P1-04-offices-staff.md](P1-04-offices-staff.md)       | Offices and staff: lists, views, create and edit               |
 | [P1-05-clients.md](P1-05-clients.md)                   | Clients: list, page, create and activate                       |
 | [P1-06-client-lifecycle.md](P1-06-client-lifecycle.md) | Client lifecycle: reject, withdraw, undo, close, reactivate    |
+| [P1-07-client-kyc.md](P1-07-client-kyc.md)             | Client identifiers and notes                                   |
 | [unit-test-catalogue.md](unit-test-catalogue.md)       | Generated list of every unit and component test                |

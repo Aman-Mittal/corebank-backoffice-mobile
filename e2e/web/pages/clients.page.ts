@@ -73,6 +73,8 @@ export class ClientPage {
   readonly actionError: Locator;
   /** Every lifecycle action button on the page. */
   readonly actions: Locator;
+  readonly identifiersLink: Locator;
+  readonly notesLink: Locator;
 
   constructor(private readonly page: Page) {
     const t = TID.client;
@@ -96,6 +98,8 @@ export class ClientPage {
     this.actionCancel = byId(page, t.actionCancel);
     this.actionError = byId(page, t.actionError);
     this.actions = page.locator('[data-testid^="client.action."]').filter({ visible: true });
+    this.identifiersLink = byId(page, t.identifiersLink);
+    this.notesLink = byId(page, t.notesLink);
   }
 
   /** The button for one command: `activate`, `reject`, `undoRejection`, … */

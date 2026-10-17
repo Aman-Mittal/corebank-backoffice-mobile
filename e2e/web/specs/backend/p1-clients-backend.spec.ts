@@ -22,6 +22,7 @@ import {
 import { runId } from '../../../shared/fineract-api';
 import { expect, spec, test } from '../../fixtures';
 import { ClientFormPage, ClientPage, ClientsPage } from '../../pages/clients.page';
+import { IdentifiersPage, NotesPage } from '../../pages/kyc.page';
 import { LoginPage } from '../../pages/login.page';
 
 test.describe('clients against the backend', () => {
@@ -98,5 +99,26 @@ test.describe('clients against the backend', () => {
     await view.actionDate.fill('2026-01-08');
     await view.actionConfirm.click();
     await expect(view.status).toContainText('Pending');
+  });
+
+  test('an identifier and a note added to a new client are listed', async ({ page, request }) => {
+    spec('P1-CLIENTS-020/10');
+    const { clientId } = await createPersonClient(request, { active: true });
+    const key = `P-${runId()}`;
+    const ids = new IdentifiersPage(page);
+    await ids.open(clientId);
+    await ids.add.click();
+    await ids.type.trigger.click();
+    await page.getByText('Passport', { exact: true }).filter({ visible: true }).click();
+    await ids.key.fill(key);
+    await ids.submit.click();
+    await expect(ids.rows).toHaveCount(1);
+    await expect(ids.rows.first()).toContainText(key);
+    const notes = new NotesPage(page);
+    await notes.open(clientId);
+    await notes.text.fill('Met at the branch');
+    await notes.add.click();
+    await expect(notes.rows).toHaveCount(1);
+    await expect(notes.rows.first()).toContainText('Met at the branch');
   });
 });
