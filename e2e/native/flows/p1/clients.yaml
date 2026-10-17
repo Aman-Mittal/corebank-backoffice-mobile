@@ -16,8 +16,10 @@ appId: ${APP_ID}
 tags:
   - p1
   - backend
-  - pending
 ---
+# The stack starts with no clients: one is seeded through the REST API (on the host).
+- runScript:
+    file: ../../scripts/seed-active-client.js
 - runFlow: ../../subflows/launch.yaml
 - runFlow: ../../subflows/sign-in.yaml
 - tapOn:
@@ -26,9 +28,13 @@ tags:
     id: nav.item.clients
 - assertVisible:
     id: clients.screen
-# Whichever client the stack lists first: the backend suite seeds them, so none is fixed.
 - tapOn:
-    id: 'clients\.row\..*'
-    index: 0
+    id: clients.search
+- inputText: ${output.client.lastname}
+- hideKeyboard
+- tapOn:
+    id: clients.row.${output.client.id}
 - assertVisible:
     id: client.screen
+- assertVisible:
+    text: .*${output.client.lastname}.*

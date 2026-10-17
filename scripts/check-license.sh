@@ -26,7 +26,7 @@
 set -u
 cd "$(dirname "$0")/.." || exit 1
 
-FILES=$(find src e2e scripts eslint-rules deploy .github -type f \
+FILES=$(find src e2e scripts eslint-rules deploy plugins .github -type f \
   \( -name "*.ts" -o -name "*.tsx" -o -name "*.js" -o -name "*.mjs" -o -name "*.mts" -o -name "*.yml" -o -name "*.yaml" -o -name "*.sh" \) \
   -not -path "src/api/generated/*" 2>/dev/null)
 FILES="$FILES $(ls ./*.js ./*.ts ./*.mts 2>/dev/null)"

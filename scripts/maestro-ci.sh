@@ -31,8 +31,25 @@ adb install "$app" || exit 1
 # shellcheck source=lib/annotate.sh
 source "$(dirname "$0")/lib/annotate.sh"
 
+# The flows tagged `backend` sign in to the e2e stack (DOCS/E2E.md, "Native flows against the
+# stack"): the app's localhost:8080 reaches the host, where a relay forwards to the stack's HTTPS.
+API_URL=http://localhost:8080/fineract-provider/api
+adb reverse tcp:8080 tcp:8080 || exit 1
+socat TCP-LISTEN:8080,fork,reuseaddr OPENSSL:localhost:8443,verify=0 &
+relay=$!
+trap 'kill "$relay" 2>/dev/null' EXIT
+probe() {
+  curl -fsS -o /dev/null -u mifos:password -H 'Fineract-Platform-TenantId: default' \
+    "$API_URL/v1/offices" 2>&1
+}
+for _ in $(seq 1 10); do probe >/dev/null && break; sleep 1; done
+if ! why=$(probe); then
+  echo "$why" | annotate 'The relay to the e2e stack does not answer'
+  exit 1
+fi
+
 adb logcat -c
-maestro test e2e/native --exclude-tags=pending -e APP_ID="$APP_ID" 2>&1 | tee "$out"
+maestro test e2e/native --exclude-tags=pending -e APP_ID="$APP_ID" -e API_URL="$API_URL" 2>&1 | tee "$out"
 status=${PIPESTATUS[0]}
 
 if [ "$status" -ne 0 ]; then

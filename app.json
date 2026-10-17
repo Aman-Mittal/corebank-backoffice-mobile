@@ -32,7 +32,8 @@
       "expo-localization",
       "expo-secure-store",
       "expo-web-browser",
-      "expo-sharing"
+      "expo-sharing",
+      "./plugins/with-e2e-cleartext"
     ],
     "experiments": {
       "typedRoutes": true

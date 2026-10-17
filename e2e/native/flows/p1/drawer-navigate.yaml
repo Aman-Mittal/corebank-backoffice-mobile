@@ -17,7 +17,6 @@ appId: ${APP_ID}
 tags:
   - p1
   - backend
-  - pending
 ---
 - runFlow: ../../subflows/launch.yaml
 - runFlow: ../../subflows/sign-in.yaml

@@ -52,7 +52,8 @@ fi
 echo '::notice title=iOS stage::the release build is installed on the simulator'
 
 curl -fsSL "https://get.maestro.mobile.dev" | bash
-"$HOME/.maestro/bin/maestro" test e2e/native --exclude-tags=pending -e APP_ID="$APP_ID" 2>&1 | tee "$flows"
+# Only the flows that need no backend: the macOS runner has no docker for the e2e stack.
+"$HOME/.maestro/bin/maestro" test e2e/native --exclude-tags=pending,backend -e APP_ID="$APP_ID" 2>&1 | tee "$flows"
 status=${PIPESTATUS[0]}
 if [ "$status" -ne 0 ]; then
   { echo "maestro exited $status"; tail -n 40 "$flows"; } >"$DIAG/Maestro flows failed on iOS.txt"

@@ -13,7 +13,7 @@
 // limitations under the License.
 
 // Maestro runScript (GraalJS, on the host): an active client and a closure reason, through the
-// REST API of the e2e stack. Answers output.client.{lastname, reason}. API_URL defaults to the
+// REST API of the e2e stack. Answers output.client.{id, lastname, reason}. API_URL defaults to the
 // stack as the host sees it; the stack's demo credentials are its well-known defaults.
 var base =
   typeof API_URL !== 'undefined' ? API_URL : 'https://localhost:8443/fineract-provider/api';
@@ -43,7 +43,7 @@ if (
 }
 
 var lastname = 'E2E' + Date.now().toString(36);
-http.post(base + '/v1/clients', {
+var res = http.post(base + '/v1/clients', {
   headers: headers,
   body: JSON.stringify({
     officeId: 1,
@@ -57,5 +57,6 @@ http.post(base + '/v1/clients', {
     dateFormat: 'yyyy-MM-dd',
   }),
 });
+if (res.status !== 200) throw new Error('POST /clients answered ' + res.status + ': ' + res.body);
 
-output.client = { lastname: lastname, reason: reason };
+output.client = { id: json(res.body).clientId, lastname: lastname, reason: reason };

@@ -16,7 +16,6 @@ appId: ${APP_ID}
 tags:
   - p1
   - backend
-  - pending
 ---
 # Seeds an active client and a closure reason through the REST API (runs on the host, not the
 # device), so the flow does not depend on what the stack already holds.

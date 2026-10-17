@@ -26,6 +26,7 @@ on:
       - .github/workflows/nightly.yml
       - scripts/ios-ci.sh
       - scripts/lib/annotate.sh
+      - e2e/web/red-reporter.ts
 
 permissions:
   contents: read
@@ -52,6 +53,29 @@ jobs:
       # PENDING_PROBE turns every expected-red backend spec from fixme into test.fail(), so a spec
       # that has started passing fails this job and its id can leave expected-red.json.
       - run: npm run e2e:web -- --project=setup --project=backend
+        env:
+          PENDING_PROBE: '1'
+
+  # The two-factor specs need their own stack (2FA is process-wide), so they get their own runner.
+  two-factor-probe:
+    name: Two-factor specs against the 2FA stack
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+          cache-dependency-path: package.json
+      - run: npm install --no-audit --no-fund
+      - run: npm run setup
+      - run: npx playwright install --with-deps chromium
+      - run: bash scripts/e2e-stack-2fa.sh --fresh
+      - run: npm run web:export
+      - run: npm run e2e:web -- --project=two-factor
         env:
           PENDING_PROBE: '1'
 

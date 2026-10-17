@@ -17,8 +17,10 @@ appId: ${APP_ID}
 tags:
   - p1
   - backend
-  - pending
 ---
+# The stack starts with no staff: a loan officer is seeded through the REST API (on the host).
+- runScript:
+    file: ../../scripts/seed-staff.js
 - runFlow: ../../subflows/launch.yaml
 - runFlow: ../../subflows/sign-in.yaml
 - tapOn:
@@ -30,6 +32,6 @@ tags:
 - assertVisible:
     id: staff.screen
 - tapOn:
-    id: staff.row.1
+    id: staff.row.${output.staff.id}
 - assertVisible:
     id: staff-member.screen

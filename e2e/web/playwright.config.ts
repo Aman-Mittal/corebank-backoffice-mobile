@@ -42,7 +42,15 @@ export default defineConfig({
   workers: process.env.CI ? 1 : 2,
   // On CI, `github` turns each failure into a check annotation, which can be read without
   // access to the job logs.
-  reporter: process.env.CI ? [['list'], ['github'], ['html', { open: 'never' }]] : 'list',
+  // The pending probe also says why each expected-red spec is still red (red-reporter.ts).
+  reporter: process.env.CI
+    ? [
+        ['list'],
+        ['github'],
+        ['html', { open: 'never' }],
+        ...(process.env.PENDING_PROBE === '1' ? [['./red-reporter.ts'] as const] : []),
+      ]
+    : 'list',
   expect: { timeout: Number(process.env.E2E_ACTION_TIMEOUT ?? 10_000) },
   timeout: 30_000,
   use: {
