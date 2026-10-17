@@ -1,0 +1,33 @@
+{
+  "id": 3,
+  "accountNo": "000000003",
+  "externalId": "01a148c2-d5c8-770c-9c90-3f0009fa185a",
+  "status": {
+    "id": 300,
+    "code": "clientStatusType.active",
+    "value": "Active"
+  },
+  "active": true,
+  "activationDate": [2026, 10, 17],
+  "firstname": "Arif",
+  "lastname": "Arif",
+  "displayName": "Arif Arif",
+  "isStaff": false,
+  "officeId": 1,
+  "officeName": "Head Office",
+  "timeline": {
+    "submittedOnDate": [2026, 10, 17],
+    "activatedOnDate": [2026, 10, 17],
+    "activatedByUsername": "mifos",
+    "activatedByFirstname": "App",
+    "activatedByLastname": "Administrator"
+  },
+  "savingsProductName": "3",
+  "legalForm": {
+    "id": 1,
+    "code": "legalFormType.person",
+    "value": "Person"
+  },
+  "clientCollateralManagements": [],
+  "groups": []
+}

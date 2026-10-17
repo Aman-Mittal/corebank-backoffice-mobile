@@ -15,6 +15,7 @@
  */
 
 import { AUTH_API, type AuthApi } from '@/core/adapters/api/auth.api';
+import { CLIENT_API, type ClientApi } from '@/core/adapters/api/client.api';
 import { OFFICE_API, type OfficeApi } from '@/core/adapters/api/office.api';
 import { STAFF_API, type StaffApi } from '@/core/adapters/api/staff.api';
 import { TWO_FACTOR_API, type TwoFactorApi } from '@/core/adapters/api/two-factor.api';
@@ -67,6 +68,7 @@ export interface FakeAdapters {
   readonly authApi: AuthApi;
   readonly officeApi: OfficeApi;
   readonly staffApi: StaffApi;
+  readonly clientApi: ClientApi;
   readonly twoFactorApi: TwoFactorApi;
   readonly userDetailsApi: UserDetailsApi;
   /** No identity provider unless a test passes `deploymentConfig` overrides. */
@@ -153,6 +155,12 @@ export function createFakeAdapters(): FakeAdapters {
     create: unscripted('StaffApi.create'),
     update: unscripted('StaffApi.update'),
   };
+  const clientApi: ClientApi = {
+    list: unscripted('ClientApi.list'),
+    get: unscripted('ClientApi.get'),
+    create: unscripted('ClientApi.create'),
+    activate: unscripted('ClientApi.activate'),
+  };
 
   const twoFactorApi: TwoFactorApi = {
     methods: unscripted('TwoFactorApi.methods'),
@@ -172,6 +180,7 @@ export function createFakeAdapters(): FakeAdapters {
     provide(AUTH_API, authApi),
     provide(OFFICE_API, officeApi),
     provide(STAFF_API, staffApi),
+    provide(CLIENT_API, clientApi),
     provide(STORAGE, storage),
     provide(SECURE_STORAGE, secureStorage),
     provide(DOWNLOAD, download),
@@ -193,6 +202,7 @@ export function createFakeAdapters(): FakeAdapters {
     authApi,
     officeApi,
     staffApi,
+    clientApi,
     twoFactorApi,
     userDetailsApi,
     deploymentConfig,

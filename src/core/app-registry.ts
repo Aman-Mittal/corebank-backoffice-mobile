@@ -37,6 +37,8 @@ import { readServerConfig } from './config/runtime-config';
 import { AUTH_API } from './adapters/api/auth.api';
 import { HttpAuthApi } from './adapters/api/http-auth.api';
 import { HttpOfficeApi } from './adapters/api/http-office.api';
+import { CLIENT_API } from './adapters/api/client.api';
+import { HttpClientApi } from './adapters/api/http-client.api';
 import { OFFICE_API } from './adapters/api/office.api';
 import { HttpStaffApi } from './adapters/api/http-staff.api';
 import { STAFF_API } from './adapters/api/staff.api';
@@ -81,6 +83,7 @@ export function createAppRegistry(overrides: readonly AdapterOverride[] = []): A
     .register(AUTH_API, (r) => new HttpAuthApi(r.resolve(API_CLIENT)))
     .register(OFFICE_API, (r) => new HttpOfficeApi(r.resolve(API_CLIENT)))
     .register(STAFF_API, (r) => new HttpStaffApi(r.resolve(API_CLIENT)))
+    .register(CLIENT_API, (r) => new HttpClientApi(r.resolve(API_CLIENT)))
     .register(TWO_FACTOR_API, (r) => new HttpTwoFactorApi(r.resolve(API_CLIENT)))
     .register(USER_DETAILS_API, (r) => new HttpUserDetailsApi(r.resolve(API_CLIENT)))
     .register(DEPLOYMENT_CONFIG, () => createDeploymentConfigStore(readDeploymentSource))

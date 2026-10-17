@@ -1,0 +1,137 @@
+{
+  "totalFilteredRecords": 3,
+  "pageItems": [
+    {
+      "id": 3,
+      "accountNo": "000000003",
+      "externalId": "01a148c2-d5c8-770c-9c90-3f0009fa185a",
+      "status": {
+        "id": 300,
+        "code": "clientStatusType.active",
+        "value": "Active"
+      },
+      "subStatus": {
+        "active": false,
+        "mandatory": false
+      },
+      "active": true,
+      "activationDate": [2026, 10, 17],
+      "firstname": "Arif",
+      "lastname": "Arif",
+      "displayName": "Arif Arif",
+      "gender": {},
+      "clientType": {},
+      "clientClassification": {},
+      "isStaff": false,
+      "officeId": 1,
+      "officeName": "Head Office",
+      "timeline": {
+        "submittedOnDate": [2026, 10, 17],
+        "submittedByUsername": "mifos",
+        "submittedByFirstname": "App",
+        "submittedByLastname": "Administrator",
+        "activatedOnDate": [2026, 10, 17],
+        "activatedByUsername": "mifos",
+        "activatedByFirstname": "App",
+        "activatedByLastname": "Administrator"
+      },
+      "legalForm": {
+        "id": 1,
+        "code": "legalFormType.person",
+        "value": "Person"
+      },
+      "clientNonPersonDetails": {
+        "constitution": {},
+        "mainBusinessLine": {}
+      }
+    },
+    {
+      "id": 1,
+      "accountNo": "000000001",
+      "externalId": "2603fb44-d084-4d7a-b491-0c343dabb98a",
+      "status": {
+        "id": 300,
+        "code": "clientStatusType.active",
+        "value": "Active"
+      },
+      "subStatus": {
+        "active": false,
+        "mandatory": false
+      },
+      "active": true,
+      "activationDate": [2026, 10, 16],
+      "firstname": "Nadia",
+      "lastname": "Islam",
+      "displayName": "Nadia Islam",
+      "gender": {},
+      "clientType": {},
+      "clientClassification": {},
+      "isStaff": false,
+      "officeId": 1,
+      "officeName": "Head Office",
+      "timeline": {
+        "submittedOnDate": [2026, 10, 16],
+        "submittedByUsername": "mifos",
+        "submittedByFirstname": "App",
+        "submittedByLastname": "Administrator",
+        "activatedOnDate": [2026, 10, 16],
+        "activatedByUsername": "mifos",
+        "activatedByFirstname": "App",
+        "activatedByLastname": "Administrator"
+      },
+      "legalForm": {
+        "id": 1,
+        "code": "legalFormType.person",
+        "value": "Person"
+      },
+      "clientNonPersonDetails": {
+        "constitution": {},
+        "mainBusinessLine": {}
+      }
+    },
+    {
+      "id": 2,
+      "accountNo": "000000002",
+      "externalId": "01a148c2-c752-7201-951d-fb1d9bfc792c",
+      "status": {
+        "id": 300,
+        "code": "clientStatusType.active",
+        "value": "Active"
+      },
+      "subStatus": {
+        "active": false,
+        "mandatory": false
+      },
+      "active": true,
+      "activationDate": [2026, 10, 17],
+      "firstname": "Nusrat Jahan",
+      "lastname": "Chowdhury",
+      "displayName": "Nusrat Jahan Chowdhury",
+      "gender": {},
+      "clientType": {},
+      "clientClassification": {},
+      "isStaff": false,
+      "officeId": 1,
+      "officeName": "Head Office",
+      "timeline": {
+        "submittedOnDate": [2026, 10, 17],
+        "submittedByUsername": "mifos",
+        "submittedByFirstname": "App",
+        "submittedByLastname": "Administrator",
+        "activatedOnDate": [2026, 10, 17],
+        "activatedByUsername": "mifos",
+        "activatedByFirstname": "App",
+        "activatedByLastname": "Administrator"
+      },
+      "legalForm": {
+        "id": 1,
+        "code": "legalFormType.person",
+        "value": "Person"
+      },
+      "clientNonPersonDetails": {
+        "constitution": {},
+        "mainBusinessLine": {}
+      }
+    }
+  ]
+}
