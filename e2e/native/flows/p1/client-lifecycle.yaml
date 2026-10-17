@@ -34,18 +34,35 @@ tags:
 - tapOn:
     id: 'clients\.row\..*'
     index: 0
+# The actions, and their panel, are below the client's details: scroll to each.
+- scrollUntilVisible:
+    element:
+      id: client.action.close
+    direction: DOWN
 - tapOn:
     id: client.action.close
 - tapOn:
     id: client.action-reason
 - tapOn: ${output.client.reason}
+- scrollUntilVisible:
+    element:
+      id: client.action-confirm
+    direction: DOWN
 - tapOn:
     id: client.action-confirm
-- assertVisible:
-    id: client.action.reactivate
+- scrollUntilVisible:
+    element:
+      id: client.action.reactivate
+    direction: DOWN
 - tapOn:
     id: client.action.reactivate
+- scrollUntilVisible:
+    element:
+      id: client.action-confirm
+    direction: DOWN
 - tapOn:
     id: client.action-confirm
-- assertVisible:
-    id: client.action.activate
+- scrollUntilVisible:
+    element:
+      id: client.action.activate
+    direction: DOWN
