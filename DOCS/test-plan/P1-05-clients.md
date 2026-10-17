@@ -68,11 +68,11 @@ clients screen to render (the shell and RBAC specs) do not each mock it.
 
 | ID               | Scenario                                                                                                                                                                                      | Level          | Status |
 | ---------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------- | ------ |
-| P1-CLIENTS-003/1 | **Given** three clients, **then** the list requests `offset=0`, `limit=20` and no `legalForm`, and shows each with account number, office and status; the entity is listed with the people    | web            | red    |
-| P1-CLIENTS-003/2 | **When** "ada" is typed in the search box, **then** the list is requested with `displayName=ada` and only Ada Lovelace remains; **when** "zzz" is typed, **then** a no-match message is shown | web            | red    |
-| P1-CLIENTS-003/3 | **Given** 25 clients, **then** the first page shows 20 and "1–20 of 25"; Next requests `offset=20` and shows 5 with Next disabled; Previous returns to the first page                         | web            | red    |
-| P1-CLIENTS-003/4 | **Given** `clerk`, **then** there is no "New client" control; a row opens that client's page                                                                                                  | web            | red    |
-| P1-CLIENTS-003/5 | **The view** shows name, account number, status, office, legal form, external id, mobile, email, submitted-on and activation dates (from `[y, m, d]`)                                         | web            | red    |
+| P1-CLIENTS-003/1 | **Given** three clients, **then** the list requests `offset=0`, `limit=20` and no `legalForm`, and shows each with account number, office and status; the entity is listed with the people    | web            | green  |
+| P1-CLIENTS-003/2 | **When** "ada" is typed in the search box, **then** the list is requested with `displayName=ada` and only Ada Lovelace remains; **when** "zzz" is typed, **then** a no-match message is shown | web            | green  |
+| P1-CLIENTS-003/3 | **Given** 25 clients, **then** the first page shows 20 and "1–20 of 25"; Next requests `offset=20` and shows 5 with Next disabled; Previous returns to the first page                         | web            | green  |
+| P1-CLIENTS-003/4 | **Given** `clerk`, **then** there is no "New client" control; a row opens that client's page                                                                                                  | web            | green  |
+| P1-CLIENTS-003/5 | **The view** shows name, account number, status, office, legal form, external id, mobile, email, submitted-on and activation dates (from `[y, m, d]`)                                         | web            | green  |
 | P1-CLIENTS-003/6 | **On a device**, the clients list opens from the drawer and a client's page opens from the list                                                                                               | native-backend | red    |
 
 ## E2E scenarios: legal forms (P1-CLIENTS-005)
@@ -85,18 +85,18 @@ clients screen to render (the shell and RBAC specs) do not each mock it.
 
 | ID               | Scenario                                                                                                                       | Level | Status |
 | ---------------- | ------------------------------------------------------------------------------------------------------------------------------ | ----- | ------ |
-| P1-CLIENTS-006/1 | **When** a client id does not exist (404), **then** the page says so and links back to the list                                | web   | red    |
-| P1-CLIENTS-006/2 | **When** a client fails to load (500), **then** an error with "Try again" is shown, and trying again after recovery shows them | web   | red    |
-| P1-CLIENTS-006/3 | **When** the list fails to load (500), **then** an error with "Try again" is shown, and trying again after recovery lists them | web   | red    |
+| P1-CLIENTS-006/1 | **When** a client id does not exist (404), **then** the page says so and links back to the list                                | web   | green  |
+| P1-CLIENTS-006/2 | **When** a client fails to load (500), **then** an error with "Try again" is shown, and trying again after recovery shows them | web   | green  |
+| P1-CLIENTS-006/3 | **When** the list fails to load (500), **then** an error with "Try again" is shown, and trying again after recovery lists them | web   | green  |
 
 ## E2E scenarios: create (P1-CLIENTS-009)
 
 | ID               | Scenario                                                                                                                                                                                                                                        | Level       | Status |
 | ---------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- | ------ |
-| P1-CLIENTS-009/1 | **Given** `clientAdmin`, **when** a person is created with office, names and the default dates, **then** `POST /clients` carries `legalFormId: 1`, the names, ISO dates, `active`, `dateFormat`, `locale` and no blank optional; the page opens | web         | red    |
-| P1-CLIENTS-009/2 | **When** Entity is chosen, **then** the name fields become one "Name" field, and `POST /clients` carries `legalFormId: 2` and `fullname`, and no `firstname` or `lastname`                                                                      | web         | red    |
-| P1-CLIENTS-009/3 | **When** Active is unchecked, **then** the activation date is hidden, `POST /clients` carries `active: false` and no `activationDate`, and the new client's page shows Pending                                                                  | web         | red    |
-| P1-CLIENTS-009/4 | **When** the server answers 400 naming `externalId`, **then** the message is shown under the external id field and the typed values stay                                                                                                        | web         | red    |
+| P1-CLIENTS-009/1 | **Given** `clientAdmin`, **when** a person is created with office, names and the default dates, **then** `POST /clients` carries `legalFormId: 1`, the names, ISO dates, `active`, `dateFormat`, `locale` and no blank optional; the page opens | web         | green  |
+| P1-CLIENTS-009/2 | **When** Entity is chosen, **then** the name fields become one "Name" field, and `POST /clients` carries `legalFormId: 2` and `fullname`, and no `firstname` or `lastname`                                                                      | web         | green  |
+| P1-CLIENTS-009/3 | **When** Active is unchecked, **then** the activation date is hidden, `POST /clients` carries `active: false` and no `activationDate`, and the new client's page shows Pending                                                                  | web         | green  |
+| P1-CLIENTS-009/4 | **When** the server answers 400 naming `externalId`, **then** the message is shown under the external id field and the typed values stay                                                                                                        | web         | green  |
 | P1-CLIENTS-009/5 | **Given** `clerk`, **then** `/clients/new` by URL shows Access Denied naming `CREATE_CLIENT`                                                                                                                                                    | web         | green  |
 | P1-CLIENTS-009/6 | **Against** the docker stack, a person created through the form opens as Active and is found in the list                                                                                                                                        | web-backend | red    |
 
@@ -104,15 +104,15 @@ clients screen to render (the shell and RBAC specs) do not each mock it.
 
 | ID               | Scenario                                                                                                                                                                          | Level | Status |
 | ---------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----- | ------ |
-| P1-CLIENTS-010/1 | **While** the office or a required name is missing, **then** "Save" is disabled; it enables once they are given, for a person (first and last name) and for an entity (name)      | web   | red    |
-| P1-CLIENTS-010/2 | **When** the mobile number has non-digits, the email is malformed or a date is not a real `YYYY-MM-DD` date, **then** the field says why and "Save" is disabled until it is fixed | web   | red    |
+| P1-CLIENTS-010/1 | **While** the office or a required name is missing, **then** "Save" is disabled; it enables once they are given, for a person (first and last name) and for an entity (name)      | web   | green  |
+| P1-CLIENTS-010/2 | **When** the mobile number has non-digits, the email is malformed or a date is not a real `YYYY-MM-DD` date, **then** the field says why and "Save" is disabled until it is fixed | web   | green  |
 
 ## E2E scenarios: activate (P1-CLIENTS-011)
 
 | ID               | Scenario                                                                                                                                                                                        | Level | Status |
 | ---------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----- | ------ |
-| P1-CLIENTS-011/1 | **Given** `clientAdmin` and a pending client, **when** Activate is confirmed with the default date, **then** `POST /clients/3?command=activate` carries the ISO date, and the page shows Active | web   | red    |
-| P1-CLIENTS-011/2 | **Then** Activate is not offered for an active client, nor to `clerk` for a pending one                                                                                                         | web   | red    |
+| P1-CLIENTS-011/1 | **Given** `clientAdmin` and a pending client, **when** Activate is confirmed with the default date, **then** `POST /clients/3?command=activate` carries the ISO date, and the page shows Active | web   | green  |
+| P1-CLIENTS-011/2 | **Then** Activate is not offered for an active client, nor to `clerk` for a pending one                                                                                                         | web   | green  |
 
 ## Unit and component cases
 
@@ -137,5 +137,14 @@ clients screen to render (the shell and RBAC specs) do not each mock it.
 
 ## Status notes
 
-- Specified before implementation; every scenario starts red except P1-CLIENTS-009/5, which
-  route protection (P1-02) already satisfied: `/clients/new` was declared `CREATE_CLIENT` there.
+- **Specified first**, then implemented: every scenario started red except P1-CLIENTS-009/5, which
+  route protection (P1-02) already satisfied (`/clients/new` was declared `CREATE_CLIENT` there).
+- **Red, because they need the docker stack:** P1-CLIENTS-005/1 and P1-CLIENTS-009/6 (`backend`
+  project; the nightly pending probe reports when they pass). **Red, because it needs a device:**
+  P1-CLIENTS-003/6.
+- **Shell and RBAC specs** that used `/clients` as their example of an admitted module now expect
+  the clients screens; P1-SHELL-027/3 takes Notifications as its still-placeholder module.
+- **Captured shapes:** the mapper tests run on `GET /clients` and `GET /clients/{id}` payloads
+  captured from the community sandbox (`src/testing/fixtures/backend/README.md`). They showed that
+  list rows carry `legalForm` and `timeline` too, and that `status` sends `value`, not the
+  declared `description`.

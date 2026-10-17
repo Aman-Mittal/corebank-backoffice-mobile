@@ -17,8 +17,9 @@
 import { TID } from '../../../shared/testids';
 import { expect, spec, test } from '../../fixtures';
 import { signInAs } from '../../mocks/personas';
+import { ClientsPage } from '../../pages/clients.page';
 import { LoginPage } from '../../pages/login.page';
-import { PlaceholderPage, Shell } from '../../pages/shell.page';
+import { Shell } from '../../pages/shell.page';
 
 const PHONE = { width: 390, height: 844 };
 const DESKTOP = { width: 1280, height: 800 };
@@ -75,7 +76,7 @@ test.describe('shell at a phone viewport', () => {
     await (await shell.openNavItem(null, 'clients')).click();
     await expect(page).toHaveURL(/\/clients$/);
     await expect(shell.drawer).toBeHidden();
-    await expect(new PlaceholderPage(page).screen).toBeVisible();
+    await expect(new ClientsPage(page).screen).toBeVisible();
   });
 
   test('does not scroll sideways, and header controls are thumb-sized', async ({ page }) => {

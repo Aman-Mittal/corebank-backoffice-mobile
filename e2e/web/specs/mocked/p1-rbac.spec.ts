@@ -14,11 +14,22 @@
  * limitations under the License.
  */
 
+import type { Page } from '@playwright/test';
+
 import { TID } from '../../../shared/testids';
 import { expect, spec, test } from '../../fixtures';
 import { signInAs } from '../../mocks/personas';
+import { ClientFormPage, ClientsPage } from '../../pages/clients.page';
 import { LoginPage } from '../../pages/login.page';
 import { AccessDeniedPage, PlaceholderPage, Shell } from '../../pages/shell.page';
+
+/** What a route shows once admitted: the clients screens are built, the rest are placeholders. */
+const screenAt = (page: Page, path: string) =>
+  path === '/clients'
+    ? new ClientsPage(page).screen
+    : path === '/clients/new'
+      ? new ClientFormPage(page).screen
+      : new PlaceholderPage(page).screen;
 
 /** Gated routes sampled across modules, with the code each needs. */
 const GATED = [
@@ -64,7 +75,7 @@ test.describe('navigation follows permissions', () => {
     }
     await page.goto('/clients');
     await expect(denied.screen).toHaveCount(0);
-    await expect(new PlaceholderPage(page).screen).toBeVisible();
+    await expect(screenAt(page, '/clients')).toBeVisible();
   });
 
   test('a module chosen in the navigation opens; a later-phase module says which phase', async ({
@@ -72,9 +83,9 @@ test.describe('navigation follows permissions', () => {
   }) => {
     spec('P1-SHELL-027/3');
     await signInAs(page, 'clerk');
-    await new Shell(page).navItem('clients').click();
+    await new Shell(page).navItem('notifications').click();
     const placeholder = new PlaceholderPage(page);
-    await expect(placeholder.title).toContainText('Clients');
+    await expect(placeholder.title).toContainText('Notifications');
     await expect(placeholder.phase).toContainText('Phase 1');
   });
 });
@@ -95,7 +106,7 @@ test.describe('route protection', () => {
     }
     for (const [path] of GATED) {
       await page.goto(path);
-      await expect(new PlaceholderPage(page).screen).toBeVisible();
+      await expect(screenAt(page, path)).toBeVisible();
     }
   });
 
@@ -163,9 +174,7 @@ test.describe('route protection', () => {
       await expect(page.getByTestId(TID.home.screen)).toBeVisible();
       const shown = (await page.getByTestId(TID.shell.navItem(id)).count()) > 0;
       await page.goto(path);
-      await expect(
-        shown ? new PlaceholderPage(page).screen : new AccessDeniedPage(page).screen,
-      ).toBeVisible();
+      await expect(shown ? screenAt(page, path) : new AccessDeniedPage(page).screen).toBeVisible();
       await page.goto('/home');
     }
   });
@@ -196,7 +205,7 @@ test.describe('read-only and multi-code access', () => {
     spec('P1-SHELL-002/1');
     await signInAs(page, 'reader');
     await page.goto('/clients');
-    await expect(new PlaceholderPage(page).screen).toBeVisible();
+    await expect(screenAt(page, '/clients')).toBeVisible();
     await page.goto('/clients/new');
     await expect(new AccessDeniedPage(page).required).toContainText('CREATE_CLIENT');
   });
@@ -211,7 +220,7 @@ test.describe('read-only and multi-code access', () => {
       for (const path of ['/clients', '/clients/new']) {
         await page.goto(path);
         // Admitted means the screen renders, not merely that no refusal is shown.
-        await expect(new PlaceholderPage(page).screen).toBeVisible();
+        await expect(screenAt(page, path)).toBeVisible();
         await expect(new AccessDeniedPage(page).screen).toHaveCount(0);
       }
     }
@@ -241,6 +250,6 @@ test.describe('read-only and multi-code access', () => {
     await page.goto('/security/users');
     await expect(new AccessDeniedPage(page).screen).toBeVisible();
     await page.goto('/clients');
-    await expect(new PlaceholderPage(page).screen).toBeVisible();
+    await expect(screenAt(page, '/clients')).toBeVisible();
   });
 });
