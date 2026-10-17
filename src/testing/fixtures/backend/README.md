@@ -26,3 +26,7 @@ built from a generated type inherits the spec's blind spots.
   there: no reasons are set up, which the client lifecycle panel must handle (P1-CLIENTS-014/2).
   A reason has the server's `CodeValueData` shape (`id`, `name`, `position`, `active`,
   `mandatory`); **re-capture** a populated one from the e2e stack once reasons are seeded.
+- `client.identifiers.template.json` (`GET /v1/clients/3/identifiers/template`) was captured from
+  the community sandbox on 2026-10-17: its `allowedDocumentTypes` are the four seeded document
+  types. No client there had identifiers or notes to capture, so those payloads follow the
+  server's `ClientIdentifierData` and `NoteData` (P1-07); **re-capture** them from the e2e stack.

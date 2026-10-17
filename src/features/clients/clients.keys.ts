@@ -22,4 +22,7 @@ export const clientKeys = {
   list: (query: ClientQuery) => [...clientKeys.all, 'list', query] as const,
   detail: (clientId: number) => [...clientKeys.all, 'detail', clientId] as const,
   reasons: (command: ReasonedCommand) => [...clientKeys.all, 'reasons', command] as const,
+  identifiers: (clientId: number) => [...clientKeys.detail(clientId), 'identifiers'] as const,
+  documentTypes: (clientId: number) => [...clientKeys.detail(clientId), 'document-types'] as const,
+  notes: (clientId: number) => [...clientKeys.detail(clientId), 'notes'] as const,
 };

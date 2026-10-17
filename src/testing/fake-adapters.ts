@@ -16,6 +16,7 @@
 
 import { AUTH_API, type AuthApi } from '@/core/adapters/api/auth.api';
 import { CLIENT_API, type ClientApi } from '@/core/adapters/api/client.api';
+import { CLIENT_KYC_API, type ClientKycApi } from '@/core/adapters/api/client-kyc.api';
 import { OFFICE_API, type OfficeApi } from '@/core/adapters/api/office.api';
 import { STAFF_API, type StaffApi } from '@/core/adapters/api/staff.api';
 import { TWO_FACTOR_API, type TwoFactorApi } from '@/core/adapters/api/two-factor.api';
@@ -69,6 +70,7 @@ export interface FakeAdapters {
   readonly officeApi: OfficeApi;
   readonly staffApi: StaffApi;
   readonly clientApi: ClientApi;
+  readonly clientKycApi: ClientKycApi;
   readonly twoFactorApi: TwoFactorApi;
   readonly userDetailsApi: UserDetailsApi;
   /** No identity provider unless a test passes `deploymentConfig` overrides. */
@@ -162,6 +164,16 @@ export function createFakeAdapters(): FakeAdapters {
     command: unscripted('ClientApi.command'),
     reasons: unscripted('ClientApi.reasons'),
   };
+  const clientKycApi: ClientKycApi = {
+    identifiers: unscripted('ClientKycApi.identifiers'),
+    documentTypes: unscripted('ClientKycApi.documentTypes'),
+    addIdentifier: unscripted('ClientKycApi.addIdentifier'),
+    deleteIdentifier: unscripted('ClientKycApi.deleteIdentifier'),
+    notes: unscripted('ClientKycApi.notes'),
+    addNote: unscripted('ClientKycApi.addNote'),
+    updateNote: unscripted('ClientKycApi.updateNote'),
+    deleteNote: unscripted('ClientKycApi.deleteNote'),
+  };
 
   const twoFactorApi: TwoFactorApi = {
     methods: unscripted('TwoFactorApi.methods'),
@@ -182,6 +194,7 @@ export function createFakeAdapters(): FakeAdapters {
     provide(OFFICE_API, officeApi),
     provide(STAFF_API, staffApi),
     provide(CLIENT_API, clientApi),
+    provide(CLIENT_KYC_API, clientKycApi),
     provide(STORAGE, storage),
     provide(SECURE_STORAGE, secureStorage),
     provide(DOWNLOAD, download),
@@ -204,6 +217,7 @@ export function createFakeAdapters(): FakeAdapters {
     officeApi,
     staffApi,
     clientApi,
+    clientKycApi,
     twoFactorApi,
     userDetailsApi,
     deploymentConfig,

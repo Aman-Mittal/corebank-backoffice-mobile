@@ -1,0 +1,8 @@
+{
+  "allowedDocumentTypes": [
+    { "id": 1, "name": "Passport", "position": 1, "active": true, "mandatory": false },
+    { "id": 2, "name": "Id", "position": 2, "active": true, "mandatory": false },
+    { "id": 3, "name": "Drivers License", "position": 3, "active": true, "mandatory": false },
+    { "id": 4, "name": "Any Other Id Type", "position": 4, "active": true, "mandatory": false }
+  ]
+}

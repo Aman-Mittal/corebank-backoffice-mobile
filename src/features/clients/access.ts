@@ -27,4 +27,11 @@ export const CLIENT_ACCESS = {
   reactivate: { anyOf: ['REACTIVATE_CLIENT'] },
   undoRejection: { anyOf: ['UNDOREJECT_CLIENT'] },
   undoWithdrawal: { anyOf: ['UNDOWITHDRAWAL_CLIENT'] },
+  readIdentifiers: { anyOf: ['READ_CLIENTIDENTIFIER'] },
+  createIdentifier: { anyOf: ['CREATE_CLIENTIDENTIFIER'] },
+  deleteIdentifier: { anyOf: ['DELETE_CLIENTIDENTIFIER'] },
+  readNotes: { anyOf: ['READ_CLIENTNOTE'] },
+  createNote: { anyOf: ['CREATE_CLIENTNOTE'] },
+  updateNote: { anyOf: ['UPDATE_CLIENTNOTE'] },
+  deleteNote: { anyOf: ['DELETE_CLIENTNOTE'] },
 } as const satisfies Record<string, Access>;
