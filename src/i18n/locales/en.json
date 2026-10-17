@@ -336,6 +336,15 @@
       "NO_REASONS": "No reasons are set up for this action. An administrator adds them to the code {{code}}.",
       "REASONS_FAILED": "The reasons could not be loaded.",
       "CANCEL": "Cancel"
+    },
+    "STAFF": {
+      "LABEL": "Loan officer",
+      "ASSIGN": "Assign staff",
+      "ASSIGN_CONFIRM": "Confirm assignment",
+      "UNASSIGN": "Unassign staff",
+      "PLACEHOLDER": "Choose a member of staff",
+      "NONE": "This office has no staff to assign.",
+      "CONFIRM_UNASSIGN": "Unassign {{name}} from this client?"
     }
   },
   "KYC": {
