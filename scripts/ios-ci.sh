@@ -28,7 +28,9 @@ build=$(mktemp)
 flows=$(mktemp)
 
 npx expo run:ios --configuration Release --no-bundler 2>&1 | tee "$build"
-if [ "${PIPESTATUS[0]}" -ne 0 ]; then
+status=${PIPESTATUS[0]}
+if [ "$status" -ne 0 ]; then
+  echo "::error title=iOS build exited ${status}::see the next annotation for its output"
   { xcodebuild -version; xcrun simctl list devices booted; echo '...'; grep -E 'error|Error|failed' "$build" | tail -n 30; echo '...'; tail -n 30 "$build"; } |
     annotate 'iOS build failed'
   exit 1

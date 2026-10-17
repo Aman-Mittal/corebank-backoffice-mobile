@@ -16,8 +16,15 @@
 # failing step posts what it needs to be diagnosed as an annotation.
 
 # Prints stdin as one error annotation titled $1: colour codes stripped, escaped as workflow
-# commands require, lines joined with %0A. The title must not contain ':' or ','.
+# commands require, lines joined with %0A. The title must not contain ':' or ','. Perl rather than
+# sed, which differs on macOS (BSD sed reads `\r` as a plain `r`), and capped well under the 64 KB
+# an annotation may hold.
 annotate() {
-  sed -e 's/\x1b\[[0-9;]*[A-Za-z]//g' -e 's/%/%25/g' -e 's/\r/%0D/g' |
-    awk -v title="$1" 'BEGIN { printf "::error title=%s::", title } { printf "%s%%0A", $0 } END { print "" }'
+  perl -e '
+    local $/; my $s = <STDIN> // "";
+    $s =~ s/\e\[[0-9;?]*[A-Za-z]//g; $s =~ s/[^\n\t\x20-\x7e]//g;
+    $s = substr($s, -12000) if length($s) > 12000;
+    $s =~ s/%/%25/g; $s =~ s/\n/%0A/g;
+    print "::error title=$ARGV[0]::$s\n";
+  ' "$1"
 }
