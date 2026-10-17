@@ -98,7 +98,7 @@ show the server's refusal.
 | ---------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- | ------ |
 | P1-CLIENTS-014/1 | **Given** a pending client, **when** Reject is chosen, **then** the reasons come from `GET /clients/template?commandParam=reject` and Confirm is disabled until one is chosen; **when** confirmed, `POST /clients/3?command=reject` carries `rejectionDate` and `rejectionReasonId`; the page shows Rejected and offers Undo rejection | web         | green  |
 | P1-CLIENTS-014/2 | **When** no rejection reasons are set up, **then** the panel says so and names `ClientRejectReason`, and Confirm stays disabled                                                                                                                                                                                                        | web         | green  |
-| P1-CLIENTS-014/3 | **Against** the docker stack, a pending client is rejected with a seeded reason and opens as Rejected                                                                                                                                                                                                                                  | web-backend | red    |
+| P1-CLIENTS-014/3 | **Against** the docker stack, a pending client is rejected with a seeded reason and opens as Rejected                                                                                                                                                                                                                                  | web-backend | green  |
 
 ## E2E scenarios: undo rejection (P1-CLIENTS-015)
 
@@ -140,8 +140,13 @@ show the server's refusal.
 ## Status notes
 
 - **Specified first**, then implemented: every scenario started red. The web scenarios are
-  green; P1-CLIENTS-014/3 and P1-CLIENTS-017/5 need the docker stack (`backend` project; the
-  nightly pending probe reports when they pass), and P1-CLIENTS-017/6 needs a device.
+  green, and P1-CLIENTS-014/3 turned green when the nightly pending probe of 2026-10-17 reported
+  it passing against the docker stack. P1-CLIENTS-017/5 (docker stack) and P1-CLIENTS-017/6 (a
+  device) stay red.
+- **A race the stack found:** P1-CLIENTS-017/5 was flaky in that probe. The reload after a command
+  lands before the command settles, so the next status's buttons appeared while the panel was
+  still busy: Reactivate, pressed then, opened a panel the settling Close then shut. The buttons
+  are now disabled while a command runs, and a command closes only its own panel.
 - **Activate** keeps its P1-05 scenarios (P1-CLIENTS-011); its control moves into the shared
   panel, so its test ids become `client.action.activate`, `client.action-date` and
   `client.action-confirm`.

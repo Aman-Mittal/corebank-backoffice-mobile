@@ -147,7 +147,9 @@ function ClientActions({ client }: { readonly client: Client }) {
     setError(null);
     try {
       await run.mutateAsync({ command, input: { date, reasonId } });
-      setOpen(null);
+      // The reload (onSettled) lands before this resolves, so the next status's buttons are
+      // already on screen; close only this command's panel, never one opened since.
+      setOpen((current) => (current === command ? null : current));
     } catch (e) {
       setError(formFailure(e, {}, t('FORM.SAVE_FAILED')).form);
     }
@@ -164,6 +166,7 @@ function ClientActions({ client }: { readonly client: Client }) {
               testID={TID.client.action(command)}
               label={t(ACTION_KEYS[command].label)}
               variant={command === actions[0] ? 'primary' : 'secondary'}
+              disabled={run.isPending}
               onPress={() => choose(command)}
             />
           ))}
