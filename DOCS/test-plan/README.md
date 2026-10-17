@@ -51,4 +51,5 @@ out of date.
 | [P1-05-clients.md](P1-05-clients.md)                   | Clients: list, page, create and activate                       |
 | [P1-06-client-lifecycle.md](P1-06-client-lifecycle.md) | Client lifecycle: reject, withdraw, undo, close, reactivate    |
 | [P1-07-client-kyc.md](P1-07-client-kyc.md)             | Client identifiers and notes                                   |
+| [P1-08-client-staff.md](P1-08-client-staff.md)         | Client staff assignment                                        |
 | [unit-test-catalogue.md](unit-test-catalogue.md)       | Generated list of every unit and component test                |

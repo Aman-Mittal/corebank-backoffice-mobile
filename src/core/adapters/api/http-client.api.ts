@@ -30,6 +30,7 @@ import type {
   ClientStatus,
   LegalForm,
   ReasonedCommand,
+  StaffOption,
 } from './client.api';
 import { required } from './required';
 
@@ -47,6 +48,7 @@ export type ClientPayload = Omit<ClientData, 'activationDate' | 'timeline' | 'st
   readonly middlename?: string;
   readonly fullname?: string;
   readonly mobileNo?: string;
+  readonly staffName?: string;
   readonly legalForm?: { readonly id?: number; readonly code?: string; readonly value?: string };
 };
 
@@ -95,6 +97,8 @@ export function mapClient(payload: ClientPayload): Client {
     submittedOnDate: toIsoApiDate(payload.timeline?.submittedOnDate),
     activationDate: toIsoApiDate(payload.activationDate),
     closedOnDate: toIsoApiDate(payload.timeline?.closedOnDate),
+    staffId: payload.staffId ?? null,
+    staffName: orNull(payload.staffName),
   };
 }
 
@@ -147,6 +151,12 @@ export function commandBody(command: ClientCommand, input: ClientCommandInput) {
   };
 }
 
+/** A member of staff as the client template sends it (`StaffData`). */
+interface StaffPayload {
+  readonly id?: number;
+  readonly displayName?: string;
+}
+
 /** A code value as the command template sends it (`CodeValueData`). */
 interface Narration {
   readonly id?: number;
@@ -196,6 +206,36 @@ export class HttpClientApi implements ClientApi {
       this.client.POST('/v1/clients/{clientId}', {
         params: { path: { clientId }, query: { command } },
         body: commandBody(command, input),
+      }),
+    );
+  }
+
+  async staffOptions(officeId: number): Promise<readonly StaffOption[]> {
+    // Without `staffInSelectedOfficeOnly`: it would hide head-office staff, whom the server
+    // assigns to a branch client all the same.
+    const template = await call(
+      this.client.GET('/v1/clients/template', { params: { query: { officeId } } }),
+    );
+    const staff = ((template as { staffOptions?: StaffPayload[] } | undefined)?.staffOptions ??
+      []) as StaffPayload[];
+    return staff
+      .filter((m) => m.id !== undefined)
+      .map((m) => ({ id: required(m.id, 'staff option', 'id'), name: m.displayName ?? '' }));
+  }
+
+  async assignStaff(clientId: number, staffId: number): Promise<void> {
+    await this.staffCommand(clientId, 'assignStaff', staffId);
+  }
+
+  async unassignStaff(clientId: number, staffId: number): Promise<void> {
+    await this.staffCommand(clientId, 'unassignStaff', staffId);
+  }
+
+  private async staffCommand(clientId: number, command: string, staffId: number) {
+    await call(
+      this.client.POST('/v1/clients/{clientId}', {
+        params: { path: { clientId }, query: { command } },
+        body: { staffId },
       }),
     );
   }

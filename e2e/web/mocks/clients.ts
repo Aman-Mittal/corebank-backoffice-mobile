@@ -17,7 +17,7 @@
 import type { Request } from '@playwright/test';
 
 import type { Handler } from './api';
-import { OFFICES } from './organization';
+import { fieldRejection, OFFICES } from './organization';
 
 const PERSON = { id: 1, code: 'legalFormType.person', value: 'Person' };
 const ENTITY = { id: 2, code: 'legalFormType.entity', value: 'Entity' };
@@ -56,6 +56,8 @@ export const CLIENTS = [
     externalId: 'EXT-ADA',
     mobileNo: '0772000001',
     emailAddress: 'ada@example.org',
+    staffId: 1,
+    staffName: 'Director, Program',
     legalForm: PERSON,
     timeline: { submittedOnDate: [2024, 2, 20], activatedOnDate: [2024, 3, 1] },
   },
@@ -139,6 +141,12 @@ export const REASONS = {
   ],
 };
 
+/** The members of staff `GET /clients/template?officeId=…` offers (`StaffData`). */
+export const STAFF_OPTIONS = [
+  { id: 1, displayName: 'Director, Program', officeId: 1, isLoanOfficer: true, isActive: true },
+  { id: 4, displayName: 'Officer, Probe', officeId: 1, isLoanOfficer: true, isActive: true },
+];
+
 /**
  * The server's state machine: the status a command needs, the status it leaves, and the date
  * field it reads. Anything else is refused as the server refuses it.
@@ -215,6 +223,8 @@ export function clientsHandlers(
     failOneOnce?: boolean;
     /** Every command template answers no reasons, as the community sandbox does. */
     noReasons?: boolean;
+    /** The office template offers no staff. */
+    noStaff?: boolean;
     /** The next command answers this instead of running. */
     refuseCommand?: NonNullable<ReturnType<Handler>>;
     /** The server's status for a client, applied before its next command: another user acted. */
@@ -230,7 +240,11 @@ export function clientsHandlers(
   const handlers: Record<string, Handler> = {
     'GET /v1/offices': () => ({ status: 200, body: OFFICES }),
     'GET /v1/clients/template': (req) => {
-      const command = new URL(req.url()).searchParams.get('commandParam') as keyof typeof REASONS;
+      const q = new URL(req.url()).searchParams;
+      if (q.has('officeId')) {
+        return { status: 200, body: { staffOptions: options.noStaff ? [] : STAFF_OPTIONS } };
+      }
+      const command = q.get('commandParam') as keyof typeof REASONS;
       const narrations = options.noReasons ? [] : (REASONS[command] ?? []);
       return { status: 200, body: { isStaff: false, narrations } };
     },
@@ -303,6 +317,7 @@ export function clientsHandlers(
       elsewhere.delete(String(found.id));
     }
     const name = new URL(req.url()).searchParams.get('command') ?? '';
+    if (name === 'assignStaff' || name === 'unassignStaff') return staffCommand(found, name, req);
     const transition = TRANSITIONS[name];
     if (!transition) return boom;
     if ((found.status as { code: string }).code !== STATUSES[transition.from].code) {
@@ -323,6 +338,23 @@ export function clientsHandlers(
       timeline,
     });
     return { status: 200, body: { clientId: found.id, resourceId: found.id } };
+  };
+  const staffCommand = (found: Record<string, unknown>, name: string, req: Request) => {
+    const { staffId } = (req.postDataJSON() ?? {}) as { staffId?: number };
+    if (staffId === undefined) {
+      return fieldRejection('staffId', 'The parameter `staffId` is mandatory.');
+    }
+    const member = STAFF_OPTIONS.find((m) => m.id === staffId);
+    Object.assign(
+      found,
+      name === 'assignStaff'
+        ? { staffId, staffName: member?.displayName }
+        : { staffId: undefined, staffName: undefined },
+    );
+    return {
+      status: 200,
+      body: { clientId: found.id, resourceId: found.id, changes: { staffId } },
+    };
   };
   for (const id of [1, 2, 3, 4, 5, 6, 7, 10, 11, 12, 13, 99, ...manyClients(25).map((c) => c.id)]) {
     handlers[`GET /v1/clients/${id}`] = one;
