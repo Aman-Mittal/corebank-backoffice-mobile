@@ -17,6 +17,8 @@
 import one from '@/testing/fixtures/backend/client.one.json';
 import page from '@/testing/fixtures/backend/clients.page.json';
 import sandboxTemplate from '@/testing/fixtures/backend/client.template.reject.json';
+import stackOffice from '@/testing/fixtures/backend/stack.client.template.office.json';
+import stackReject from '@/testing/fixtures/backend/stack.client.template.reject.json';
 import { fakeApi } from '@/testing/fake-api';
 
 import {
@@ -274,6 +276,19 @@ describe('HttpClientApi', () => {
     ]);
     const none = fakeApi({ 'GET /v1/clients/template': [200, { isStaff: false }] });
     expect(await new HttpClientApi(none.client).staffOptions(1)).toEqual([]);
+  });
+
+  it('reads the templates captured from the e2e stack: a seeded reason, and staff options', async () => {
+    const reject = fakeApi({ 'GET /v1/clients/template': [200, stackReject] });
+    expect(await new HttpClientApi(reject.client).reasons('reject')).toEqual([
+      { id: 23, name: 'E2E rejection reason' },
+    ]);
+    // Here `joiningDate` arrives as [y, m, d], unlike GET /staff; only the id and name are read.
+    const office = fakeApi({ 'GET /v1/clients/template': [200, stackOffice] });
+    expect(await new HttpClientApi(office.client).staffOptions(1)).toEqual([
+      { id: 1, name: 'Officer, Loan' },
+      { id: 2, name: 'Clerk, Ada' },
+    ]);
   });
 
   it('assigns and unassigns staff with their commands and the staff id', async () => {
