@@ -14,7 +14,11 @@
  * limitations under the License.
  */
 
-import { createEntityClient } from '../../../shared/factories/clients';
+import {
+  createEntityClient,
+  createPersonClient,
+  ensureCodeValue,
+} from '../../../shared/factories/clients';
 import { runId } from '../../../shared/fineract-api';
 import { expect, spec, test } from '../../fixtures';
 import { ClientFormPage, ClientPage, ClientsPage } from '../../pages/clients.page';
@@ -60,5 +64,39 @@ test.describe('clients against the backend', () => {
     await list.open();
     await list.search.fill(lastname);
     await expect(list.rows).toHaveCount(1);
+  });
+
+  test('a pending client is rejected with a reason', async ({ page, request }) => {
+    spec('P1-CLIENTS-014/3');
+    await ensureCodeValue(request, 'ClientRejectReason', 'E2E rejection reason');
+    const { clientId } = await createPersonClient(request, { active: false });
+    const view = new ClientPage(page);
+    await view.open(clientId);
+    await expect(view.status).toContainText('Pending');
+    await view.action('reject').click();
+    await view.actionDate.fill('2026-01-06');
+    await view.actionReason.trigger.click();
+    await page.getByText('E2E rejection reason').filter({ visible: true }).click();
+    await view.actionConfirm.click();
+    await expect(view.status).toContainText('Rejected');
+  });
+
+  test('an active client is closed, then reactivated', async ({ page, request }) => {
+    spec('P1-CLIENTS-017/5');
+    await ensureCodeValue(request, 'ClientClosureReason', 'E2E closure reason');
+    const { clientId } = await createPersonClient(request, { active: true });
+    const view = new ClientPage(page);
+    await view.open(clientId);
+    await expect(view.status).toContainText('Active');
+    await view.action('close').click();
+    await view.actionDate.fill('2026-01-07');
+    await view.actionReason.trigger.click();
+    await page.getByText('E2E closure reason').filter({ visible: true }).click();
+    await view.actionConfirm.click();
+    await expect(view.status).toContainText('Closed');
+    await view.action('reactivate').click();
+    await view.actionDate.fill('2026-01-08');
+    await view.actionConfirm.click();
+    await expect(view.status).toContainText('Pending');
   });
 });

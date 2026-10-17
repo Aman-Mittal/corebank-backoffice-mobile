@@ -23,6 +23,19 @@ const PERSON = { id: 1, code: 'legalFormType.person', value: 'Person' };
 const ENTITY = { id: 2, code: 'legalFormType.entity', value: 'Entity' };
 const ACTIVE = { id: 300, code: 'clientStatusType.active', value: 'Active' };
 const PENDING = { id: 100, code: 'clientStatusType.pending', value: 'Pending' };
+const STATUSES = {
+  pending: PENDING,
+  active: ACTIVE,
+  transferInProgress: {
+    id: 303,
+    code: 'clientStatusType.transfer.in.progress',
+    value: 'Transfer in progress',
+  },
+  withdrawn: { id: 400, code: 'clientStatusType.withdraw', value: 'Withdrawn' },
+  rejected: { id: 500, code: 'clientStatusType.rejected', value: 'Rejected' },
+  closed: { id: 600, code: 'clientStatusType.closed', value: 'Closed' },
+} as const;
+type MockStatus = keyof typeof STATUSES;
 
 /**
  * Clients in the shapes the server sends (DOCS/test-plan/P1-05-clients.md): dates as `[y, m, d]`,
@@ -74,6 +87,93 @@ export const CLIENTS = [
   },
 ];
 
+const person = (id: number, firstname: string, lastname: string, status: MockStatus) => ({
+  id,
+  accountNo: String(id).padStart(9, '0'),
+  status: STATUSES[status],
+  active: status === 'active',
+  firstname,
+  lastname,
+  displayName: `${firstname} ${lastname}`,
+  officeId: 1,
+  officeName: 'Head Office',
+  legalForm: PERSON,
+});
+
+/**
+ * One client in each status the lifecycle scenarios start from (DOCS/test-plan/
+ * P1-06-client-lifecycle.md). Passed with `CLIENTS`, so the P1-05 specs keep their three.
+ */
+export const LIFECYCLE_CLIENTS = [
+  { ...person(4, 'Mary', 'Shelley', 'rejected'), timeline: { submittedOnDate: [2026, 9, 1] } },
+  {
+    ...person(5, 'Alan', 'Turing', 'closed'),
+    activationDate: [2025, 1, 2],
+    timeline: {
+      submittedOnDate: [2025, 1, 2],
+      activatedOnDate: [2025, 1, 2],
+      closedOnDate: [2026, 9, 30],
+    },
+  },
+  { ...person(6, 'Emmy', 'Noether', 'withdrawn'), timeline: { submittedOnDate: [2026, 9, 2] } },
+  {
+    ...person(7, 'Kurt', 'Godel', 'transferInProgress'),
+    activationDate: [2025, 5, 5],
+    timeline: { submittedOnDate: [2025, 5, 5], activatedOnDate: [2025, 5, 5] },
+  },
+];
+
+/** The reasons each command's template offers, as `CodeValueData`. */
+export const REASONS = {
+  reject: [
+    { id: 31, name: 'Incomplete documents', position: 1, active: true, mandatory: false },
+    { id: 32, name: 'Duplicate application', position: 2, active: true, mandatory: false },
+  ],
+  withdraw: [
+    { id: 41, name: 'Client changed their mind', position: 1, active: true, mandatory: false },
+    { id: 42, name: 'Moved away', position: 2, active: true, mandatory: false },
+  ],
+  close: [
+    { id: 51, name: 'Relocated', position: 1, active: true, mandatory: false },
+    { id: 52, name: 'Deceased', position: 2, active: true, mandatory: false },
+  ],
+};
+
+/**
+ * The server's state machine: the status a command needs, the status it leaves, and the date
+ * field it reads. Anything else is refused as the server refuses it.
+ */
+const TRANSITIONS: Record<string, { from: MockStatus; to: MockStatus; date: string }> = {
+  activate: { from: 'pending', to: 'active', date: 'activationDate' },
+  reject: { from: 'pending', to: 'rejected', date: 'rejectionDate' },
+  withdraw: { from: 'pending', to: 'withdrawn', date: 'withdrawalDate' },
+  close: { from: 'active', to: 'closed', date: 'closureDate' },
+  reactivate: { from: 'closed', to: 'pending', date: 'reactivationDate' },
+  undoRejection: { from: 'rejected', to: 'pending', date: 'reopenedDate' },
+  undoWithdrawal: { from: 'withdrawn', to: 'pending', date: 'reopenedDate' },
+};
+
+/** A domain-rule refusal, in the server's shape (`InvalidClientStateTransitionException`). */
+export function domainRefusal(code: string, message: string) {
+  return {
+    status: 403,
+    body: {
+      developerMessage: message,
+      httpStatusCode: '403',
+      defaultUserMessage: message,
+      userMessageGlobalisationCode: 'validation.msg.domain.rule.violation',
+      errors: [
+        {
+          developerMessage: message,
+          defaultUserMessage: message,
+          userMessageGlobalisationCode: code,
+          parameterName: 'id',
+        },
+      ],
+    },
+  };
+}
+
 /** `n` active people, for paging: `Client 01` … `Client n`. */
 export function manyClients(n: number) {
   return Array.from({ length: n }, (_, i) => {
@@ -113,14 +213,27 @@ export function clientsHandlers(
     clients?: Record<string, unknown>[];
     failListOnce?: boolean;
     failOneOnce?: boolean;
+    /** Every command template answers no reasons, as the community sandbox does. */
+    noReasons?: boolean;
+    /** The next command answers this instead of running. */
+    refuseCommand?: NonNullable<ReturnType<Handler>>;
+    /** The server's status for a client, applied before its next command: another user acted. */
+    changedElsewhere?: Record<number, MockStatus>;
   } = {},
 ): Record<string, Handler> {
   const clients: Record<string, unknown>[] = (options.clients ?? CLIENTS).map((c) => ({ ...c }));
   let listFailures = options.failListOnce ? 1 : 0;
   let oneFailures = options.failOneOnce ? 1 : 0;
+  let refusal = options.refuseCommand;
+  const elsewhere = new Map(Object.entries(options.changedElsewhere ?? {}));
 
   const handlers: Record<string, Handler> = {
     'GET /v1/offices': () => ({ status: 200, body: OFFICES }),
+    'GET /v1/clients/template': (req) => {
+      const command = new URL(req.url()).searchParams.get('commandParam') as keyof typeof REASONS;
+      const narrations = options.noReasons ? [] : (REASONS[command] ?? []);
+      return { status: 200, body: { isStaff: false, narrations } };
+    },
     'GET /v1/clients': (req) => {
       if (listFailures > 0) {
         listFailures -= 1;
@@ -179,16 +292,39 @@ export function clientsHandlers(
   const command: Handler = (req) => {
     const found = clients.find((c) => String(c.id) === idOf(req));
     if (!found) return notFound(idOf(req));
-    if (new URL(req.url()).searchParams.get('command') !== 'activate') return boom;
-    const body = req.postDataJSON() as { activationDate: string };
+    if (refusal) {
+      const answer = refusal;
+      refusal = undefined;
+      return answer;
+    }
+    const later = elsewhere.get(String(found.id));
+    if (later) {
+      Object.assign(found, { status: STATUSES[later], active: later === 'active' });
+      elsewhere.delete(String(found.id));
+    }
+    const name = new URL(req.url()).searchParams.get('command') ?? '';
+    const transition = TRANSITIONS[name];
+    if (!transition) return boom;
+    if ((found.status as { code: string }).code !== STATUSES[transition.from].code) {
+      return domainRefusal(
+        `error.msg.client.${name}.on.account.not.in.${transition.from}.status`,
+        `Only ${transition.from} clients may be ${name === 'close' ? 'closed' : `given ${name}`}.`,
+      );
+    }
+    const body = req.postDataJSON() as Record<string, unknown>;
+    const date = isoToArray(body[transition.date]);
+    const timeline = { ...(found.timeline as object) };
+    if (transition.to === 'closed') Object.assign(timeline, { closedOnDate: date });
+    if (transition.to === 'pending') Object.assign(timeline, { closedOnDate: undefined });
     Object.assign(found, {
-      status: ACTIVE,
-      active: true,
-      activationDate: isoToArray(body.activationDate),
+      status: STATUSES[transition.to],
+      active: transition.to === 'active',
+      ...(transition.to === 'active' ? { activationDate: date } : {}),
+      timeline,
     });
     return { status: 200, body: { clientId: found.id, resourceId: found.id } };
   };
-  for (const id of [1, 2, 3, 10, 11, 12, 13, 99, ...manyClients(25).map((c) => c.id)]) {
+  for (const id of [1, 2, 3, 4, 5, 6, 7, 10, 11, 12, 13, 99, ...manyClients(25).map((c) => c.id)]) {
     handlers[`GET /v1/clients/${id}`] = one;
     handlers[`POST /v1/clients/${id}`] = command;
   }

@@ -63,9 +63,16 @@ export class ClientPage {
   readonly email: Locator;
   readonly submittedOn: Locator;
   readonly activationDate: Locator;
+  readonly closedOn: Locator;
   readonly activate: Locator;
-  readonly activateDate: Locator;
-  readonly activateConfirm: Locator;
+  readonly actionDate: Locator;
+  readonly actionReason: Select;
+  readonly actionNoReasons: Locator;
+  readonly actionConfirm: Locator;
+  readonly actionCancel: Locator;
+  readonly actionError: Locator;
+  /** Every lifecycle action button on the page. */
+  readonly actions: Locator;
 
   constructor(private readonly page: Page) {
     const t = TID.client;
@@ -80,9 +87,20 @@ export class ClientPage {
     this.email = byId(page, t.email);
     this.submittedOn = byId(page, t.submittedOn);
     this.activationDate = byId(page, t.activationDate);
-    this.activate = byId(page, t.activate);
-    this.activateDate = byId(page, t.activateDate);
-    this.activateConfirm = byId(page, t.activateConfirm);
+    this.closedOn = byId(page, t.closedOn);
+    this.activate = byId(page, t.action('activate'));
+    this.actionDate = byId(page, t.actionDate);
+    this.actionReason = new Select(page, t.actionReason);
+    this.actionNoReasons = byId(page, t.actionNoReasons);
+    this.actionConfirm = byId(page, t.actionConfirm);
+    this.actionCancel = byId(page, t.actionCancel);
+    this.actionError = byId(page, t.actionError);
+    this.actions = page.locator('[data-testid^="client.action."]').filter({ visible: true });
+  }
+
+  /** The button for one command: `activate`, `reject`, `undoRejection`, … */
+  action(command: string): Locator {
+    return byId(this.page, TID.client.action(command));
   }
 
   async open(id: number): Promise<void> {

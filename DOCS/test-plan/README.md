@@ -41,12 +41,13 @@ out of date.
 
 ## Documents
 
-| Document                                             | Slice                                                          |
-| ---------------------------------------------------- | -------------------------------------------------------------- |
-| [P0-foundation.md](P0-foundation.md)                 | Harness smoke test, About and disclaimer                       |
-| [P1-01-sign-in.md](P1-01-sign-in.md)                 | Sign-in, session, sign-out reasons                             |
-| [P1-02-shell-rbac.md](P1-02-shell-rbac.md)           | Navigation shell, permissions, route protection, Access Denied |
-| [P1-03-two-factor-oidc.md](P1-03-two-factor-oidc.md) | Two-factor and identity-provider sign-in                       |
-| [P1-04-offices-staff.md](P1-04-offices-staff.md)     | Offices and staff: lists, views, create and edit               |
-| [P1-05-clients.md](P1-05-clients.md)                 | Clients: list, page, create and activate                       |
-| [unit-test-catalogue.md](unit-test-catalogue.md)     | Generated list of every unit and component test                |
+| Document                                               | Slice                                                          |
+| ------------------------------------------------------ | -------------------------------------------------------------- |
+| [P0-foundation.md](P0-foundation.md)                   | Harness smoke test, About and disclaimer                       |
+| [P1-01-sign-in.md](P1-01-sign-in.md)                   | Sign-in, session, sign-out reasons                             |
+| [P1-02-shell-rbac.md](P1-02-shell-rbac.md)             | Navigation shell, permissions, route protection, Access Denied |
+| [P1-03-two-factor-oidc.md](P1-03-two-factor-oidc.md)   | Two-factor and identity-provider sign-in                       |
+| [P1-04-offices-staff.md](P1-04-offices-staff.md)       | Offices and staff: lists, views, create and edit               |
+| [P1-05-clients.md](P1-05-clients.md)                   | Clients: list, page, create and activate                       |
+| [P1-06-client-lifecycle.md](P1-06-client-lifecycle.md) | Client lifecycle: reject, withdraw, undo, close, reactivate    |
+| [unit-test-catalogue.md](unit-test-catalogue.md)       | Generated list of every unit and component test                |

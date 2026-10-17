@@ -33,7 +33,19 @@ export const PERSONAS = {
   officeReader: ['READ_OFFICE'],
   staffAdmin: ['READ_STAFF', 'CREATE_STAFF', 'UPDATE_STAFF', 'READ_OFFICE'],
   staffReader: ['READ_STAFF'],
-  clientAdmin: ['READ_CLIENT', 'CREATE_CLIENT', 'ACTIVATE_CLIENT', 'READ_OFFICE'],
+  clientAdmin: [
+    'READ_CLIENT',
+    'CREATE_CLIENT',
+    'ACTIVATE_CLIENT',
+    'REJECT_CLIENT',
+    'WITHDRAW_CLIENT',
+    'CLOSE_CLIENT',
+    'REACTIVATE_CLIENT',
+    'UNDOREJECT_CLIENT',
+    'UNDOWITHDRAWAL_CLIENT',
+    'READ_OFFICE',
+  ],
+  clientRejecter: ['READ_CLIENT', 'REJECT_CLIENT'],
 } as const satisfies Record<string, readonly string[]>;
 
 export type Persona = keyof typeof PERSONAS;

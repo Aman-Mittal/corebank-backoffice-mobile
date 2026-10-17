@@ -315,8 +315,8 @@ test.describe('client activation', () => {
     await expect(view.status).toContainText('Pending');
     await view.activate.click();
     const today = await browserToday(page);
-    await expect(view.activateDate).toHaveValue(today);
-    await view.activateConfirm.click();
+    await expect(view.actionDate).toHaveValue(today);
+    await view.actionConfirm.click();
     await expect(view.status).toContainText('Active');
     await expect(view.activate).toHaveCount(0);
     const post = api.calls.find((c) => c.method === 'POST' && c.path === '/v1/clients/3')!;

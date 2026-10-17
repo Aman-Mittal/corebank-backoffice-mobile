@@ -16,7 +16,7 @@
 
 import type { APIRequestContext } from '@playwright/test';
 
-import { fineractPost, runId } from '../fineract-api';
+import { fineractGet, fineractPost, runId } from '../fineract-api';
 
 /**
  * Creates an entity client (legal form 2) in the head office through the REST API, pending, so
@@ -34,4 +34,65 @@ export async function createEntityClient(request: APIRequestContext) {
   });
   if (!res.ok()) throw new Error(`POST /clients answered ${res.status()}: ${await res.text()}`);
   return { fullname, clientId: (await res.json()).clientId as number };
+}
+
+async function ok(res: Awaited<ReturnType<typeof fineractPost>>, what: string) {
+  if (!res.ok()) throw new Error(`${what} answered ${res.status()}: ${await res.text()}`);
+  return res.json();
+}
+
+/**
+ * Creates a person in the head office through the REST API: pending, or active on the day it was
+ * submitted. Answers the name the list searches by. Written for this project.
+ */
+export async function createPersonClient(
+  request: APIRequestContext,
+  { active }: { active: boolean },
+) {
+  const lastname = `E2E${runId()}`;
+  const date = '2026-01-05';
+  const body = await ok(
+    await fineractPost(request, '/v1/clients', {
+      officeId: 1,
+      legalFormId: 1,
+      firstname: 'Life',
+      lastname,
+      submittedOnDate: date,
+      active,
+      ...(active ? { activationDate: date } : {}),
+      locale: 'en',
+      dateFormat: 'yyyy-MM-dd',
+    }),
+    'POST /clients',
+  );
+  return { displayName: `Life ${lastname}`, clientId: body.clientId as number };
+}
+
+/**
+ * Makes sure the code `codeName` (`ClientRejectReason`, `ClientClosureReason`, …) has a value
+ * named `name`, and answers its id. The stack ships these codes empty, and the server requires a
+ * reason for reject, withdraw and close.
+ */
+export async function ensureCodeValue(request: APIRequestContext, codeName: string, name: string) {
+  const codes = (await (await fineractGet(request, '/v1/codes')).json()) as {
+    id: number;
+    name: string;
+  }[];
+  const code = codes.find((c) => c.name === codeName);
+  if (!code) throw new Error(`no code named ${codeName}`);
+  const values = (await (await fineractGet(request, `/v1/codes/${code.id}/codevalues`)).json()) as {
+    id: number;
+    name: string;
+  }[];
+  const existing = values.find((v) => v.name === name);
+  if (existing) return existing.id;
+  const body = await ok(
+    await fineractPost(request, `/v1/codes/${code.id}/codevalues`, {
+      name,
+      position: values.length + 1,
+      isActive: true,
+    }),
+    `POST /codes/${code.id}/codevalues`,
+  );
+  return body.subResourceId as number;
 }

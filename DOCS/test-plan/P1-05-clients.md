@@ -79,7 +79,7 @@ clients screen to render (the shell and RBAC specs) do not each mock it.
 
 | ID               | Scenario                                                                                                                       | Level       | Status |
 | ---------------- | ------------------------------------------------------------------------------------------------------------------------------ | ----------- | ------ |
-| P1-CLIENTS-005/1 | **Against** the docker stack, an entity client created through the API is found in the list by its name, with its page opening | web-backend | red    |
+| P1-CLIENTS-005/1 | **Against** the docker stack, an entity client created through the API is found in the list by its name, with its page opening | web-backend | green  |
 
 ## E2E scenarios: load errors (P1-CLIENTS-006)
 
@@ -98,7 +98,7 @@ clients screen to render (the shell and RBAC specs) do not each mock it.
 | P1-CLIENTS-009/3 | **When** Active is unchecked, **then** the activation date is hidden, `POST /clients` carries `active: false` and no `activationDate`, and the new client's page shows Pending                                                                  | web         | green  |
 | P1-CLIENTS-009/4 | **When** the server answers 400 naming `externalId`, **then** the message is shown under the external id field and the typed values stay                                                                                                        | web         | green  |
 | P1-CLIENTS-009/5 | **Given** `clerk`, **then** `/clients/new` by URL shows Access Denied naming `CREATE_CLIENT`                                                                                                                                                    | web         | green  |
-| P1-CLIENTS-009/6 | **Against** the docker stack, a person created through the form opens as Active and is found in the list                                                                                                                                        | web-backend | red    |
+| P1-CLIENTS-009/6 | **Against** the docker stack, a person created through the form opens as Active and is found in the list                                                                                                                                        | web-backend | green  |
 
 ## E2E scenarios: create validation (P1-CLIENTS-010)
 
@@ -139,9 +139,9 @@ clients screen to render (the shell and RBAC specs) do not each mock it.
 
 - **Specified first**, then implemented: every scenario started red except P1-CLIENTS-009/5, which
   route protection (P1-02) already satisfied (`/clients/new` was declared `CREATE_CLIENT` there).
-- **Red, because they need the docker stack:** P1-CLIENTS-005/1 and P1-CLIENTS-009/6 (`backend`
-  project; the nightly pending probe reports when they pass). **Red, because it needs a device:**
-  P1-CLIENTS-003/6.
+- **Against the docker stack:** P1-CLIENTS-005/1 and P1-CLIENTS-009/6 started red (`backend`
+  project) and turned green when the nightly pending probe of 2026-10-17 reported them passing.
+  **Red, because it needs a device:** P1-CLIENTS-003/6.
 - **Shell and RBAC specs** that used `/clients` as their example of an admitted module now expect
   the clients screens; P1-SHELL-027/3 takes Notifications as its still-placeholder module.
 - **Captured shapes:** the mapper tests run on `GET /clients` and `GET /clients/{id}` payloads
