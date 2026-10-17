@@ -28,12 +28,8 @@ out=$(mktemp)
 
 adb install "$app" || exit 1
 
-# Prints stdin as one annotation: colour codes stripped, escaped as workflow commands require,
-# lines joined with %0A.
-annotate() {
-  sed -e 's/\x1b\[[0-9;]*[A-Za-z]//g' -e 's/%/%25/g' -e 's/\r/%0D/g' |
-    awk -v title="$1" 'BEGIN { printf "::error title=%s::", title } { printf "%s%%0A", $0 } END { print "" }'
-}
+# shellcheck source=lib/annotate.sh
+source "$(dirname "$0")/lib/annotate.sh"
 
 adb logcat -c
 maestro test e2e/native --exclude-tags=pending -e APP_ID="$APP_ID" 2>&1 | tee "$out"

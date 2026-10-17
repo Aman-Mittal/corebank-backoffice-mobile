@@ -19,6 +19,13 @@ on:
   schedule:
     - cron: '30 1 * * *'
   workflow_dispatch:
+  # A change to this workflow or its scripts is checked straight away, not the next night.
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/nightly.yml
+      - scripts/ios-ci.sh
+      - scripts/lib/annotate.sh
 
 permissions:
   contents: read
@@ -63,7 +70,4 @@ jobs:
           cache-dependency-path: package.json
       - run: npm install --no-audit --no-fund
       - run: npm run setup
-      - run: npx expo run:ios --configuration Release --no-bundler
-      - run: |
-          curl -fsSL "https://get.maestro.mobile.dev" | bash
-          "$HOME/.maestro/bin/maestro" test e2e/native --exclude-tags=pending -e APP_ID=io.github.amanmittal.mfibackoffice
+      - run: bash scripts/ios-ci.sh

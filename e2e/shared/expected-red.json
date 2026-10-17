@@ -1,9 +1,7 @@
 {
   "$comment": "Spec ids written ahead of their implementation (e2e-first). An id may leave this list in any PR; it may only join it in a PR labelled e2e-spec-first that changes no src/ files. scripts/check-expected-red.mjs enforces both directions.",
   "ids": [
-    "P1-ORG-001/12",
     "P1-ORG-001/13",
-    "P1-ORG-002/11",
     "P1-ORG-002/12",
     "P1-SHELL-003/2@native",
     "P1-SHELL-020/1@native",
