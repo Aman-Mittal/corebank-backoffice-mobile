@@ -337,5 +337,25 @@
       "REASONS_FAILED": "The reasons could not be loaded.",
       "CANCEL": "Cancel"
     }
+  },
+  "KYC": {
+    "IDENTIFIERS": "Identifiers",
+    "NOTES": "Notes",
+    "BACK": "Back to the client",
+    "ADD_IDENTIFIER": "Add identifier",
+    "NO_IDENTIFIERS": "This client has no identifiers yet.",
+    "DOCUMENT_TYPE": "Document type",
+    "DOCUMENT_TYPE_PLACEHOLDER": "Choose a document type",
+    "DOCUMENT_KEY": "Document number",
+    "DESCRIPTION": "Description",
+    "STATUS_UNKNOWN": "Unknown status",
+    "DELETE": "Delete",
+    "CONFIRM_DELETE": "Confirm delete",
+    "CONFIRM_DELETE_IDENTIFIER": "Delete this identifier?",
+    "CONFIRM_DELETE_NOTE": "Delete this note?",
+    "NO_NOTES": "There are no notes yet.",
+    "NEW_NOTE": "New note",
+    "ADD_NOTE": "Add note",
+    "EDIT_NOTE": "Note"
   }
 }

@@ -337,5 +337,25 @@
       "REASONS_FAILED": "कारण लोड नहीं हो सके।",
       "CANCEL": "रद्द करें"
     }
+  },
+  "KYC": {
+    "IDENTIFIERS": "पहचान दस्तावेज़",
+    "NOTES": "नोट्स",
+    "BACK": "ग्राहक पर वापस जाएँ",
+    "ADD_IDENTIFIER": "पहचान दस्तावेज़ जोड़ें",
+    "NO_IDENTIFIERS": "इस ग्राहक का अभी कोई पहचान दस्तावेज़ नहीं है।",
+    "DOCUMENT_TYPE": "दस्तावेज़ का प्रकार",
+    "DOCUMENT_TYPE_PLACEHOLDER": "दस्तावेज़ का प्रकार चुनें",
+    "DOCUMENT_KEY": "दस्तावेज़ संख्या",
+    "DESCRIPTION": "विवरण",
+    "STATUS_UNKNOWN": "अज्ञात स्थिति",
+    "DELETE": "हटाएँ",
+    "CONFIRM_DELETE": "हटाने की पुष्टि करें",
+    "CONFIRM_DELETE_IDENTIFIER": "यह पहचान दस्तावेज़ हटाएँ?",
+    "CONFIRM_DELETE_NOTE": "यह नोट हटाएँ?",
+    "NO_NOTES": "अभी कोई नोट नहीं है।",
+    "NEW_NOTE": "नया नोट",
+    "ADD_NOTE": "नोट जोड़ें",
+    "EDIT_NOTE": "नोट"
   }
 }

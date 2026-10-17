@@ -23,7 +23,7 @@ import type { Client, ClientCommand } from '@/core/adapters/api/client.api';
 import { CLOCK } from '@/core/adapters/clock/clock.adapter';
 import { useI18n } from '@/core/adapters/i18n/useI18n';
 import { permissionsSatisfy } from '@/core/auth/permissions';
-import { useGranted } from '@/core/auth/usePermission';
+import { useGranted, usePermission } from '@/core/auth/usePermission';
 import { isRealIsoDate, todayIso } from '@/core/forms/date';
 import { formFailure } from '@/core/http/field-errors';
 import { href } from '@/core/navigation/href';
@@ -45,6 +45,8 @@ export function ClientViewScreen({ clientId }: { readonly clientId: number }) {
   const router = useRouter();
   const valid = Number.isInteger(clientId) && clientId > 0;
   const client = useClient(clientId, { enabled: valid });
+  const canReadIdentifiers = usePermission(CLIENT_ACCESS.readIdentifiers);
+  const canReadNotes = usePermission(CLIENT_ACCESS.readNotes);
 
   if (!valid || (client.isError && isNotFound(client.error))) {
     return (
@@ -97,6 +99,26 @@ export function ClientViewScreen({ clientId }: { readonly clientId: number }) {
         </DetailRow>
       ) : null}
       <ClientActions key={c.id} client={c} />
+      <View style={styles.links}>
+        {canReadIdentifiers ? (
+          <Button
+            testID={TID.client.identifiersLink}
+            label={t('KYC.IDENTIFIERS')}
+            variant="secondary"
+            role="link"
+            onPress={() => router.push(href(`/clients/${c.id}/identifiers`))}
+          />
+        ) : null}
+        {canReadNotes ? (
+          <Button
+            testID={TID.client.notesLink}
+            label={t('KYC.NOTES')}
+            variant="secondary"
+            role="link"
+            onPress={() => router.push(href(`/clients/${c.id}/notes`))}
+          />
+        ) : null}
+      </View>
     </Page>
   );
 }
@@ -266,6 +288,7 @@ function ReasonField({
 
 const styles = StyleSheet.create({
   actions: { gap: spacing.sm, paddingTop: spacing.sm },
+  links: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm, paddingTop: spacing.sm },
   buttons: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm },
   panel: { gap: spacing.sm },
   error: { fontSize: 14, color: colors.danger },
