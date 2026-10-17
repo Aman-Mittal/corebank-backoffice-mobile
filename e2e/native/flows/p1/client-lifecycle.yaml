@@ -41,8 +41,16 @@ tags:
     direction: DOWN
 - tapOn:
     id: client.action.close
+- scrollUntilVisible:
+    element:
+      id: client.action-reason
+    direction: DOWN
 - tapOn:
     id: client.action-reason
+- scrollUntilVisible:
+    element:
+      text: ${output.client.reason}
+    direction: DOWN
 - tapOn: ${output.client.reason}
 - scrollUntilVisible:
     element:
