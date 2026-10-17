@@ -27,6 +27,8 @@ export const CLIENT_ACCESS = {
   reactivate: { anyOf: ['REACTIVATE_CLIENT'] },
   undoRejection: { anyOf: ['UNDOREJECT_CLIENT'] },
   undoWithdrawal: { anyOf: ['UNDOWITHDRAWAL_CLIENT'] },
+  assignStaff: { anyOf: ['ASSIGNSTAFF_CLIENT'] },
+  unassignStaff: { anyOf: ['UNASSIGNSTAFF_CLIENT'] },
   readIdentifiers: { anyOf: ['READ_CLIENTIDENTIFIER'] },
   createIdentifier: { anyOf: ['CREATE_CLIENTIDENTIFIER'] },
   deleteIdentifier: { anyOf: ['DELETE_CLIENTIDENTIFIER'] },

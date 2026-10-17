@@ -19,6 +19,7 @@ import {
   createPersonClient,
   ensureCodeValue,
 } from '../../../shared/factories/clients';
+import { createLoanOfficer } from '../../../shared/factories/staff';
 import { runId } from '../../../shared/fineract-api';
 import { expect, spec, test } from '../../fixtures';
 import { ClientFormPage, ClientPage, ClientsPage } from '../../pages/clients.page';
@@ -120,5 +121,17 @@ test.describe('clients against the backend', () => {
     await notes.add.click();
     await expect(notes.rows).toHaveCount(1);
     await expect(notes.rows.first()).toContainText('Met at the branch');
+  });
+
+  test('a loan officer is assigned to a new client', async ({ page, request }) => {
+    spec('P1-CLIENTS-007/6');
+    const officer = await createLoanOfficer(request);
+    const { clientId } = await createPersonClient(request, { active: true });
+    const view = new ClientPage(page);
+    await view.open(clientId);
+    await view.assignStaff.click();
+    await view.staffSelect.choose(officer.staffId);
+    await view.staffConfirm.click();
+    await expect(view.staff).toContainText(officer.displayName);
   });
 });

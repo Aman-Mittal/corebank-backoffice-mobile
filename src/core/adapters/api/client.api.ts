@@ -58,6 +58,15 @@ export interface Client {
   readonly activationDate: string | null;
   /** When it was closed; `null` for a client that is not closed. */
   readonly closedOnDate: string | null;
+  /** The assigned member of staff (loan officer); both `null` when no one is. */
+  readonly staffId: number | null;
+  readonly staffName: string | null;
+}
+
+/** A member of staff a client may be assigned to. */
+export interface StaffOption {
+  readonly id: number;
+  readonly name: string;
 }
 
 /** One page of a client query. */
@@ -125,6 +134,11 @@ export interface ClientApi {
   command(clientId: number, command: ClientCommand, input: ClientCommandInput): Promise<void>;
   /** The active reasons a command may give, in the administrator's order. */
   reasons(command: ReasonedCommand): Promise<readonly ClientReason[]>;
+  /** The staff a client in `officeId` may be assigned to. */
+  staffOptions(officeId: number): Promise<readonly StaffOption[]>;
+  assignStaff(clientId: number, staffId: number): Promise<void>;
+  /** The server wants the current holder's id to unassign them. */
+  unassignStaff(clientId: number, staffId: number): Promise<void>;
 }
 
 export const CLIENT_API = token<ClientApi>('ClientApi');

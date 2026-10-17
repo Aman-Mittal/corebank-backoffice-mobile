@@ -75,6 +75,15 @@ export class ClientPage {
   readonly actions: Locator;
   readonly identifiersLink: Locator;
   readonly notesLink: Locator;
+  readonly staff: Locator;
+  readonly assignStaff: Locator;
+  readonly unassignStaff: Locator;
+  readonly staffSelect: Select;
+  readonly staffNone: Locator;
+  readonly staffConfirm: Locator;
+  readonly staffCancel: Locator;
+  readonly unassignConfirm: Locator;
+  readonly unassignCancel: Locator;
 
   constructor(private readonly page: Page) {
     const t = TID.client;
@@ -100,6 +109,15 @@ export class ClientPage {
     this.actions = page.locator('[data-testid^="client.action."]').filter({ visible: true });
     this.identifiersLink = byId(page, t.identifiersLink);
     this.notesLink = byId(page, t.notesLink);
+    this.staff = byId(page, t.staff);
+    this.assignStaff = byId(page, t.assignStaff);
+    this.unassignStaff = byId(page, t.unassignStaff);
+    this.staffSelect = new Select(page, t.staffSelect);
+    this.staffNone = byId(page, t.staffNone);
+    this.staffConfirm = byId(page, t.staffConfirm);
+    this.staffCancel = byId(page, t.staffCancel);
+    this.unassignConfirm = byId(page, t.unassignConfirm);
+    this.unassignCancel = byId(page, t.unassignCancel);
   }
 
   /** The button for one command: `activate`, `reject`, `undoRejection`, … */

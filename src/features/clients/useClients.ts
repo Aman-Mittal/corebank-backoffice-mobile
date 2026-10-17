@@ -78,3 +78,23 @@ export function useClientReasons(command: ReasonedCommand | null) {
     enabled: command !== null,
   });
 }
+
+export function useStaffOptions(officeId: number | null) {
+  const api = useAdapter(CLIENT_API);
+  return useQuery({
+    queryKey: clientKeys.staffOptions(officeId ?? 0),
+    queryFn: () => api.staffOptions(officeId ?? 0),
+    enabled: officeId !== null,
+  });
+}
+
+/** Assigns or unassigns the client's officer; reloads the client either way, as commands do. */
+export function useStaffCommand(clientId: number) {
+  const api = useAdapter(CLIENT_API);
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ assign, staffId }: { assign: boolean; staffId: number }) =>
+      assign ? api.assignStaff(clientId, staffId) : api.unassignStaff(clientId, staffId),
+    onSettled: () => queryClient.invalidateQueries({ queryKey: clientKeys.all }),
+  });
+}
