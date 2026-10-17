@@ -49,6 +49,8 @@ describe('mapClient (captured shape)', () => {
       submittedOnDate: '2026-10-17',
       activationDate: '2026-10-17',
       closedOnDate: null,
+      staffId: null,
+      staffName: null,
     });
   });
 
@@ -72,6 +74,13 @@ describe('mapClient (captured shape)', () => {
       'Ada Lovelace',
     );
     expect(mapClient({ id: 9 })).toMatchObject({ legalForm: null, status: 'unknown' });
+  });
+
+  it('reads the assigned member of staff', () => {
+    expect(mapClient({ id: 5, staffId: 4, staffName: 'Officer, Probe' })).toMatchObject({
+      staffId: 4,
+      staffName: 'Officer, Probe',
+    });
   });
 
   it('reads the closure date from the timeline', () => {
@@ -243,6 +252,39 @@ describe('HttpClientApi', () => {
   it('answers no reasons for the captured sandbox template, which has none', async () => {
     const api = fakeApi({ 'GET /v1/clients/template': [200, sandboxTemplate] });
     expect(await new HttpClientApi(api.client).reasons('reject')).toEqual([]);
+  });
+
+  it('reads staff options from the office template, without restricting to that office', async () => {
+    const api = fakeApi({
+      'GET /v1/clients/template': [
+        200,
+        {
+          staffOptions: [
+            { id: 1, displayName: 'Director, Program', officeId: 1 },
+            { id: 4, displayName: 'Officer, Probe', officeId: 1 },
+          ],
+        },
+      ],
+    });
+    const staff = await new HttpClientApi(api.client).staffOptions(2);
+    expect(Object.fromEntries(api.requests[0]!.query)).toEqual({ officeId: '2' });
+    expect(staff).toEqual([
+      { id: 1, name: 'Director, Program' },
+      { id: 4, name: 'Officer, Probe' },
+    ]);
+    const none = fakeApi({ 'GET /v1/clients/template': [200, { isStaff: false }] });
+    expect(await new HttpClientApi(none.client).staffOptions(1)).toEqual([]);
+  });
+
+  it('assigns and unassigns staff with their commands and the staff id', async () => {
+    const api = fakeApi({ 'POST /v1/clients/3': [200, { clientId: 3, resourceId: 3 }] });
+    const http = new HttpClientApi(api.client);
+    await http.assignStaff(3, 4);
+    await http.unassignStaff(3, 4);
+    expect(api.requests.map((r) => [Object.fromEntries(r.query), r.body])).toEqual([
+      [{ command: 'assignStaff' }, { staffId: 4 }],
+      [{ command: 'unassignStaff' }, { staffId: 4 }],
+    ]);
   });
 
   it('rejects with an AppError carrying the field the server named', async () => {

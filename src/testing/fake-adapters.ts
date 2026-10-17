@@ -163,6 +163,9 @@ export function createFakeAdapters(): FakeAdapters {
     create: unscripted('ClientApi.create'),
     command: unscripted('ClientApi.command'),
     reasons: unscripted('ClientApi.reasons'),
+    staffOptions: unscripted('ClientApi.staffOptions'),
+    assignStaff: unscripted('ClientApi.assignStaff'),
+    unassignStaff: unscripted('ClientApi.unassignStaff'),
   };
   const clientKycApi: ClientKycApi = {
     identifiers: unscripted('ClientKycApi.identifiers'),

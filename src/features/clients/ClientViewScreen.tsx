@@ -38,6 +38,7 @@ import { TID } from '../../../e2e/shared/testids';
 import { CLIENT_ACCESS } from './access';
 import { ACTION_KEYS, clientActions, isReasoned, REASON_CODES } from './client-actions';
 import { LEGAL_FORM_KEYS, statusText } from './client-labels';
+import { ClientStaff } from './ClientStaff';
 import { useClient, useClientCommand, useClientReasons } from './useClients';
 
 export function ClientViewScreen({ clientId }: { readonly clientId: number }) {
@@ -98,7 +99,13 @@ export function ClientViewScreen({ clientId }: { readonly clientId: number }) {
           {c.closedOnDate}
         </DetailRow>
       ) : null}
+      {c.staffName ? (
+        <DetailRow label={t('CLIENTS.STAFF.LABEL')} testID={TID.client.staff}>
+          {c.staffName}
+        </DetailRow>
+      ) : null}
       <ClientActions key={c.id} client={c} />
+      <ClientStaff key={`staff-${c.id}`} client={c} />
       <View style={styles.links}>
         {canReadIdentifiers ? (
           <Button
