@@ -61,15 +61,15 @@ client.
 
 | ID                | Scenario                                                                                                                                                                                                                                                   | Level       | Status |
 | ----------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- | ------ |
-| P1-CLIENTS-020/1  | **Given** `kycAdmin`, **when** "Identifiers" is chosen on Ada's page, **then** the identifiers screen lists Passport `P-ADA-1` with its description and Active; Acme's says it has none                                                                    | web         | red    |
-| P1-CLIENTS-020/2  | **When** an identifier is added, **then** the types come from the template, "Save" is disabled until a type and a key are given, `POST` carries `documentTypeId`, the trimmed `documentKey`, `status: "Active"` and no blank description, and it is listed | web         | red    |
-| P1-CLIENTS-020/3  | **When** the server refuses a duplicate key, **then** the message is shown under the key and the typed values stay                                                                                                                                         | web         | red    |
-| P1-CLIENTS-020/4  | **When** Delete is pressed, **then** it asks to confirm; Cancel keeps the identifier; Confirm sends `DELETE` and it leaves the list                                                                                                                        | web         | red    |
-| P1-CLIENTS-020/5  | **The notes screen** lists Ada's notes newest first with author and day; **when** a note is added, `POST` carries the trimmed `{ note }`, it appears at the top without a reload, and "Add note" is disabled for a blank note                              | web         | red    |
-| P1-CLIENTS-020/6  | **When** a note is edited, **then** `PUT` carries the new text and the note shows it; **when** an edit is cancelled, the old text stays and nothing is sent                                                                                                | web         | red    |
-| P1-CLIENTS-020/7  | **When** a note's Delete is confirmed, **then** `DELETE` is sent and the note leaves the list                                                                                                                                                              | web         | red    |
-| P1-CLIENTS-020/8  | **Given** `clerk`, **then** the client's page has no Identifiers or Notes link, and `/clients/1/notes` by URL shows Access Denied naming `READ_CLIENTNOTE`; **given** `kycReader`, both screens list but offer no add, edit or delete                      | web         | red    |
-| P1-CLIENTS-020/9  | **When** the notes fail to load (500), **then** an error with "Try again" is shown, and trying again after recovery lists them                                                                                                                             | web         | red    |
+| P1-CLIENTS-020/1  | **Given** `kycAdmin`, **when** "Identifiers" is chosen on Ada's page, **then** the identifiers screen lists Passport `P-ADA-1` with its description and Active; Acme's says it has none                                                                    | web         | green  |
+| P1-CLIENTS-020/2  | **When** an identifier is added, **then** the types come from the template, "Save" is disabled until a type and a key are given, `POST` carries `documentTypeId`, the trimmed `documentKey`, `status: "Active"` and no blank description, and it is listed | web         | green  |
+| P1-CLIENTS-020/3  | **When** the server refuses a duplicate key, **then** the message is shown under the key and the typed values stay                                                                                                                                         | web         | green  |
+| P1-CLIENTS-020/4  | **When** Delete is pressed, **then** it asks to confirm; Cancel keeps the identifier; Confirm sends `DELETE` and it leaves the list                                                                                                                        | web         | green  |
+| P1-CLIENTS-020/5  | **The notes screen** lists Ada's notes newest first with author and day; **when** a note is added, `POST` carries the trimmed `{ note }`, it appears at the top without a reload, and "Add note" is disabled for a blank note                              | web         | green  |
+| P1-CLIENTS-020/6  | **When** a note is edited, **then** `PUT` carries the new text and the note shows it; **when** an edit is cancelled, the old text stays and nothing is sent                                                                                                | web         | green  |
+| P1-CLIENTS-020/7  | **When** a note's Delete is confirmed, **then** `DELETE` is sent and the note leaves the list                                                                                                                                                              | web         | green  |
+| P1-CLIENTS-020/8  | **Given** `clerk`, **then** the client's page has no Identifiers or Notes link, and `/clients/1/notes` by URL shows Access Denied naming `READ_CLIENTNOTE`; **given** `kycReader`, both screens list but offer no add, edit or delete                      | web         | green  |
+| P1-CLIENTS-020/9  | **When** the notes fail to load (500), **then** an error with "Try again" is shown, and trying again after recovery lists them                                                                                                                             | web         | green  |
 | P1-CLIENTS-020/10 | **Against** the docker stack, a Passport identifier and a note added to a new client are listed                                                                                                                                                            | web-backend | red    |
 
 ## Unit and component cases
@@ -87,7 +87,11 @@ client.
 
 ## Status notes
 
-- **Specified first.** Every scenario starts red.
+- **Specified first**, then implemented: every scenario started red. The web scenarios are
+  green; P1-CLIENTS-020/10 needs the docker stack (`backend` project; the nightly pending probe
+  reports when it passes).
+- **Edit boxes are text areas** on web, whose text is what was typed: a spec waits for the box
+  to close before reading the saved note, or it reads the draft.
 - **Captured shapes:** only the template could be captured (the community sandbox has no
   identifiers or notes on any client, 2026-10-17). Identifier and note payloads follow the
   server's `ClientIdentifierData` and `NoteData`; **re-capture** them from the e2e stack.
