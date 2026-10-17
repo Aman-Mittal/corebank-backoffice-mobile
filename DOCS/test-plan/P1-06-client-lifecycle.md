@@ -80,11 +80,12 @@ show the server's refusal.
 
 ## E2E scenarios: available actions and refusals (P1-CLIENTS-012)
 
-| ID               | Scenario                                                                                                                                                                                                                        | Level | Status |
-| ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----- | ------ |
-| P1-CLIENTS-012/1 | **Given** `clientAdmin`, **then** each status offers exactly its actions: pending Activate, Reject and Withdraw; active Close; closed Reactivate; rejected Undo rejection; withdrawn Undo withdrawal; transfer in progress none | web   | green  |
-| P1-CLIENTS-012/2 | **Given** `clientRejecter`, **then** a pending client offers Reject only, and an active one nothing; **given** `clerk`, nothing at all                                                                                          | web   | green  |
-| P1-CLIENTS-012/3 | **When** the client was activated elsewhere and Reject is confirmed, **then** the server's refusal is shown in the panel, and the page reloads to show the client as Active with Close offered                                  | web   | green  |
+| ID               | Scenario                                                                                                                                                                                                                        | Level       | Status |
+| ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- | ------ |
+| P1-CLIENTS-012/1 | **Given** `clientAdmin`, **then** each status offers exactly its actions: pending Activate, Reject and Withdraw; active Close; closed Reactivate; rejected Undo rejection; withdrawn Undo withdrawal; transfer in progress none | web         | green  |
+| P1-CLIENTS-012/2 | **Given** `clientRejecter`, **then** a pending client offers Reject only, and an active one nothing; **given** `clerk`, nothing at all                                                                                          | web         | green  |
+| P1-CLIENTS-012/3 | **When** the client was activated elsewhere and Reject is confirmed, **then** the server's refusal is shown in the panel, and the page reloads to show the client as Active with Close offered                                  | web         | green  |
+| P1-CLIENTS-012/4 | **Against** the docker stack, a client activated through the API after its page opened is refused Reject with the server's reason, and the page reloads as Active                                                               | web-backend | green  |
 
 ## E2E scenarios: reactivate (P1-CLIENTS-013)
 
@@ -102,16 +103,18 @@ show the server's refusal.
 
 ## E2E scenarios: undo rejection (P1-CLIENTS-015)
 
-| ID               | Scenario                                                                                                                                                                                                    | Level | Status |
-| ---------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----- | ------ |
-| P1-CLIENTS-015/1 | **Given** a rejected client, **when** Undo rejection is confirmed, **then** `POST /clients/4?command=undoRejection` carries `reopenedDate`; the page shows Pending and offers Activate, Reject and Withdraw | web   | green  |
+| ID               | Scenario                                                                                                                                                                                                    | Level       | Status |
+| ---------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- | ------ |
+| P1-CLIENTS-015/1 | **Given** a rejected client, **when** Undo rejection is confirmed, **then** `POST /clients/4?command=undoRejection` carries `reopenedDate`; the page shows Pending and offers Activate, Reject and Withdraw | web         | green  |
+| P1-CLIENTS-015/2 | **Against** the docker stack, a client rejected through the API is reopened with Undo rejection and opens as Pending                                                                                        | web-backend | green  |
 
 ## E2E scenarios: withdraw (P1-CLIENTS-016)
 
-| ID               | Scenario                                                                                                                                                                                                                     | Level | Status |
-| ---------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----- | ------ |
-| P1-CLIENTS-016/1 | **Given** a pending client, **when** Withdraw is confirmed with a reason, **then** `POST /clients/3?command=withdraw` carries `withdrawalDate` and `withdrawalReasonId`; the page shows Withdrawn and offers Undo withdrawal | web   | green  |
-| P1-CLIENTS-016/2 | **Given** a withdrawn client, **when** Undo withdrawal is confirmed, **then** `POST /clients/6?command=undoWithdrawal` carries `reopenedDate`, and the page shows Pending                                                    | web   | green  |
+| ID               | Scenario                                                                                                                                                                                                                     | Level       | Status |
+| ---------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- | ------ |
+| P1-CLIENTS-016/1 | **Given** a pending client, **when** Withdraw is confirmed with a reason, **then** `POST /clients/3?command=withdraw` carries `withdrawalDate` and `withdrawalReasonId`; the page shows Withdrawn and offers Undo withdrawal | web         | green  |
+| P1-CLIENTS-016/2 | **Given** a withdrawn client, **when** Undo withdrawal is confirmed, **then** `POST /clients/6?command=undoWithdrawal` carries `reopenedDate`, and the page shows Pending                                                    | web         | green  |
+| P1-CLIENTS-016/3 | **Against** the docker stack, a pending client is withdrawn with a seeded reason, then reopened with Undo withdrawal                                                                                                         | web-backend | green  |
 
 ## E2E scenarios: close (P1-CLIENTS-017)
 
@@ -121,8 +124,8 @@ show the server's refusal.
 | P1-CLIENTS-017/2 | **While** the date is not a real date or no reason is chosen, **then** Confirm is disabled and the date says why                                                                                                                                            | web            | green  |
 | P1-CLIENTS-017/3 | **When** Cancel is pressed, **then** the panel closes, no command is sent and the client stays Active                                                                                                                                                       | web            | green  |
 | P1-CLIENTS-017/4 | **When** the server refuses because the client has open loans, **then** its message is shown in the panel, the chosen reason and date stay, and the client stays Active                                                                                     | web            | green  |
-| P1-CLIENTS-017/5 | **Against** the docker stack, an active client is closed with a seeded reason, then reactivated, and opens as Pending                                                                                                                                       | web-backend    | red    |
-| P1-CLIENTS-017/6 | **On a device**, an active client is closed and reactivated from its page                                                                                                                                                                                   | native-backend | red    |
+| P1-CLIENTS-017/5 | **Against** the docker stack, an active client is closed with a seeded reason, then reactivated, and opens as Pending                                                                                                                                       | web-backend    | green  |
+| P1-CLIENTS-017/6 | **On a device**, an active client is closed and reactivated from its page                                                                                                                                                                                   | native-backend | green  |
 
 ## Unit and component cases
 
@@ -141,8 +144,8 @@ show the server's refusal.
 
 - **Specified first**, then implemented: every scenario started red. The web scenarios are
   green, and P1-CLIENTS-014/3 turned green when the nightly pending probe of 2026-10-17 reported
-  it passing against the docker stack. P1-CLIENTS-017/5 (docker stack) and P1-CLIENTS-017/6 (a
-  device) stay red.
+  it passing against the docker stack, and P1-CLIENTS-017/5 once the race below was fixed.
+  P1-CLIENTS-017/6 runs on every PR in the Android e2e job (an emulator signed in to the docker stack).
 - **A race the stack found:** P1-CLIENTS-017/5 was flaky in that probe. The reload after a command
   lands before the command settles, so the next status's buttons appeared while the panel was
   still busy: Reactivate, pressed then, opened a panel the settling Close then shut. The buttons
@@ -150,6 +153,6 @@ show the server's refusal.
 - **Activate** keeps its P1-05 scenarios (P1-CLIENTS-011); its control moves into the shared
   panel, so its test ids become `client.action.activate`, `client.action-date` and
   `client.action-confirm`.
-- **Reasons** could not be captured with values: the community sandbox has none set up for any
-  of the three codes (2026-10-17), which is why the no-reasons case is a scenario. The value shape
-  (`id`, `name`, `position`, `active`, `mandatory`) is the server's `CodeValueData`.
+- **Reasons:** the community sandbox has none set up for any of the three codes (2026-10-17),
+  which is why the no-reasons case is a scenario. A template with a seeded reason was captured
+  from the e2e stack (`stack.client.template.reject.json`), and the mapper tests run on both.

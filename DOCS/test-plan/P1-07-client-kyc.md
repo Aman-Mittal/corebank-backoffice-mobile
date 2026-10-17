@@ -19,8 +19,10 @@ to a user who may read what it opens (`READ_CLIENTIDENTIFIER`, `READ_CLIENTNOTE`
   trimmed); description (optional). "Save" stays disabled until a type and a key are given.
   `POST /clients/<id>/identifiers` sends `documentTypeId`, `documentKey`, `status: "Active"` and
   the description only when given. The new identifier is listed and the form closes.
-- A server refusal naming `documentKey` or `documentTypeId` (a key or a type the client already
-  has) is shown under that field; anything else above the form. The form keeps what was typed.
+- A server refusal about the key or the type is shown under that field; anything else above the
+  form. The form keeps what was typed. A duplicate key (one any client already holds) arrives as
+  a 403 domain rule on `id`, so it is placed by its code,
+  `error.msg.clientIdentifier.identityKey.duplicate`.
 - **Delete** (`DELETE_CLIENTIDENTIFIER`): each row's Delete asks to confirm in place; Cancel keeps
   it, Confirm sends `DELETE /clients/<id>/identifiers/<identifierId>` and it leaves the list.
 
@@ -51,7 +53,8 @@ client.
   two notes ("Prefers morning visits" by `mifos` on 2026-10-01; "Asked about a second loan" by
   `clerk` on 2026-10-05).
 - **Client 2 Acme Traders Ltd:** no identifiers, no notes.
-- A duplicate document key answers 400 naming `documentKey`, as the server does.
+- A duplicate document key answers the server's refusal as captured from the e2e stack: 403,
+  a domain rule on `id` with the code `error.msg.clientIdentifier.identityKey.duplicate`.
 
 **Personas** added: `kycAdmin` (`READ_CLIENT` and read, create, update and delete for
 `CLIENTIDENTIFIER` and `CLIENTNOTE`), `kycReader` (`READ_CLIENT`, `READ_CLIENTIDENTIFIER`,
@@ -70,7 +73,9 @@ client.
 | P1-CLIENTS-020/7  | **When** a note's Delete is confirmed, **then** `DELETE` is sent and the note leaves the list                                                                                                                                                              | web         | green  |
 | P1-CLIENTS-020/8  | **Given** `clerk`, **then** the client's page has no Identifiers or Notes link, and `/clients/1/notes` by URL shows Access Denied naming `READ_CLIENTNOTE`; **given** `kycReader`, both screens list but offer no add, edit or delete                      | web         | green  |
 | P1-CLIENTS-020/9  | **When** the notes fail to load (500), **then** an error with "Try again" is shown, and trying again after recovery lists them                                                                                                                             | web         | green  |
-| P1-CLIENTS-020/10 | **Against** the docker stack, a Passport identifier and a note added to a new client are listed                                                                                                                                                            | web-backend | red    |
+| P1-CLIENTS-020/10 | **Against** the docker stack, a Passport identifier and a note added to a new client are listed                                                                                                                                                            | web-backend | green  |
+| P1-CLIENTS-020/11 | **Against** the docker stack, a Passport key another client already holds is refused, the reason shown under the key, which keeps its value                                                                                                                | web-backend | green  |
+| P1-CLIENTS-020/12 | **Against** the docker stack, an identifier is deleted, and a note added, edited (kept after a reload) and deleted                                                                                                                                         | web-backend | green  |
 
 ## Unit and component cases
 
@@ -88,10 +93,15 @@ client.
 ## Status notes
 
 - **Specified first**, then implemented: every scenario started red. The web scenarios are
-  green; P1-CLIENTS-020/10 needs the docker stack (`backend` project; the nightly pending probe
-  reports when it passes).
+  green, and P1-CLIENTS-020/10 turned green when the nightly pending probe of 2026-10-17 reported
+  it passing against the docker stack.
 - **Edit boxes are text areas** on web, whose text is what was typed: a spec waits for the box
   to close before reading the saved note, or it reads the draft.
-- **Captured shapes:** only the template could be captured (the community sandbox has no
-  identifiers or notes on any client, 2026-10-17). Identifier and note payloads follow the
-  server's `ClientIdentifierData` and `NoteData`; **re-capture** them from the e2e stack.
+- **Captured shapes:** the template came from the community sandbox, which had no identifiers or
+  notes; identifier and note payloads were then captured from the e2e stack
+  (`stack.client.*.json`, 2026-10-17) and the mapper tests run on them.
+- **A refusal the mock had wrong, found against the stack (P1-CLIENTS-020/11):** the server
+  refuses a duplicate key as a 403 domain rule on `parameterName: "id"`, not as a validation
+  error on `documentKey`, so the app showed it above the form. Forms can now place a message by
+  its error code (`error.msg.clientIdentifier.identityKey.duplicate` → the key field), and the
+  mock answers the captured shape (`client.identifier.duplicate.json`).

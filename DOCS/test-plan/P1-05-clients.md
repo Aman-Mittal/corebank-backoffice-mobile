@@ -73,7 +73,7 @@ clients screen to render (the shell and RBAC specs) do not each mock it.
 | P1-CLIENTS-003/3 | **Given** 25 clients, **then** the first page shows 20 and "1–20 of 25"; Next requests `offset=20` and shows 5 with Next disabled; Previous returns to the first page                         | web            | green  |
 | P1-CLIENTS-003/4 | **Given** `clerk`, **then** there is no "New client" control; a row opens that client's page                                                                                                  | web            | green  |
 | P1-CLIENTS-003/5 | **The view** shows name, account number, status, office, legal form, external id, mobile, email, submitted-on and activation dates (from `[y, m, d]`)                                         | web            | green  |
-| P1-CLIENTS-003/6 | **On a device**, the clients list opens from the drawer and a client's page opens from the list                                                                                               | native-backend | red    |
+| P1-CLIENTS-003/6 | **On a device**, the clients list opens from the drawer and a client's page opens from the list                                                                                               | native-backend | green  |
 
 ## E2E scenarios: legal forms (P1-CLIENTS-005)
 
@@ -141,7 +141,7 @@ clients screen to render (the shell and RBAC specs) do not each mock it.
   route protection (P1-02) already satisfied (`/clients/new` was declared `CREATE_CLIENT` there).
 - **Against the docker stack:** P1-CLIENTS-005/1 and P1-CLIENTS-009/6 started red (`backend`
   project) and turned green when the nightly pending probe of 2026-10-17 reported them passing.
-  **Red, because it needs a device:** P1-CLIENTS-003/6.
+  P1-CLIENTS-003/6 runs on every PR in the Android e2e job (an emulator signed in to the docker stack), on a client it seeds.
 - **Shell and RBAC specs** that used `/clients` as their example of an admitted module now expect
   the clients screens; P1-SHELL-027/3 takes Notifications as its still-placeholder module.
 - **Captured shapes:** the mapper tests run on `GET /clients` and `GET /clients/{id}` payloads

@@ -84,7 +84,7 @@ under that field; anything else is shown above the form. The form keeps what was
 | P1-ORG-001/10 | **When** the list fails to load (500), **then** an error with "Try again" is shown, and trying again after recovery shows the offices                                                                                                          | web            | green  |
 | P1-ORG-001/11 | **When** an office id does not exist (404), **then** the view says so and links back to the list                                                                                                                                               | web            | green  |
 | P1-ORG-001/12 | **Against** the docker stack, an office created through the form appears in the list and its page                                                                                                                                              | web-backend    | green  |
-| P1-ORG-001/13 | **On a device**, the offices list opens from the drawer and an office's page opens from the list                                                                                                                                               | native-backend | red    |
+| P1-ORG-001/13 | **On a device**, the offices list opens from the drawer and an office's page opens from the list                                                                                                                                               | native-backend | green  |
 
 ## E2E scenarios: staff (P1-ORG-002)
 
@@ -101,7 +101,7 @@ under that field; anything else is shown above the form. The form keeps what was
 | P1-ORG-002/9  | **Given** `staffReader`, **then** `/organization/staff/2/edit` by URL shows Access Denied naming `UPDATE_STAFF`                                                                                                                                                          | web            | green  |
 | P1-ORG-002/10 | **Given** no staff, **then** the list says there are none yet                                                                                                                                                                                                            | web            | green  |
 | P1-ORG-002/11 | **Against** the docker stack, staff created in the head office appears in the list with status Active                                                                                                                                                                    | web-backend    | green  |
-| P1-ORG-002/12 | **On a device**, the staff list opens from the drawer and a staff member's page opens from the list                                                                                                                                                                      | native-backend | red    |
+| P1-ORG-002/12 | **On a device**, the staff list opens from the drawer and a staff member's page opens from the list                                                                                                                                                                      | native-backend | green  |
 
 ## Unit and component cases
 
@@ -132,11 +132,12 @@ under that field; anything else is shown above the form. The form keeps what was
 
 - **Backend:** P1-ORG-001/12 and P1-ORG-002/11 went green in the nightly pending probe on
   2026-10-17 (docker stack, `backend` project).
-- **Red, because they need a device:** P1-ORG-001/13 and P1-ORG-002/12 (Maestro, against the
-  docker stack).
+- **On a device:** P1-ORG-001/13 and P1-ORG-002/12 run on every PR in the Android e2e job (an emulator signed in to the docker stack); the
+  stack starts with no staff, so the staff flow seeds a loan officer first.
 - **Found while making the specs pass:** on web the navigation stack keeps earlier screens mounted
   (hidden), so following a parent office leaves two office pages in the DOM. The page objects
   select the visible one, and saving an edit returns to the record's existing page
   (`router.dismissTo`) rather than stacking a second copy, so Back does not reopen the form.
-- **Not captured:** the public sandbox had no staff on 2026-10-16, so the staff fixture follows the
-  shape fineract-backoffice-ui recorded from a running instance. Re-capture it from the e2e stack.
+- **Captured shapes:** the public sandbox had no staff on 2026-10-16, so the staff fixture follows
+  the shape fineract-backoffice-ui recorded from a running instance. The list was then captured
+  from the e2e stack (`stack.staff.list.json`, 2026-10-17), and the mapper tests run on both.
