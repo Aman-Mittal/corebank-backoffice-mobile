@@ -1,0 +1,13 @@
+{
+  "isStaff": false,
+  "narrations": [
+    {
+      "id": 23,
+      "name": "E2E rejection reason",
+      "position": 1,
+      "description": "",
+      "active": true,
+      "mandatory": false
+    }
+  ]
+}

@@ -42,7 +42,9 @@ export async function createRestrictedUser(
   if (!grant.ok()) throw new Error(`PUT /roles/${roleId}/permissions answered ${grant.status()}`);
 
   const username = `e2e-user-${id}`;
-  const password = `Pa55-${id}-word!`;
+  // The server's default policy: 12-50 characters, upper and lower case, a digit, a symbol, and
+  // no character twice in a row (so runs in the id are collapsed).
+  const password = `Mbo-${id}-Xy7!`.replaceAll(/(.)\1+/g, '$1');
   const user = await fineractPost(request, '/v1/users', {
     username,
     firstname: 'E2E',

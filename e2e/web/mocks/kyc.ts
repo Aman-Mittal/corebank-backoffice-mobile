@@ -15,7 +15,31 @@
  */
 
 import type { Handler } from './api';
-import { fieldRejection } from './organization';
+
+/**
+ * The server's refusal of a duplicate identifier, as captured from the e2e stack
+ * (`src/testing/fixtures/backend/client.identifier.duplicate.json`): a domain rule on `id`.
+ */
+const duplicateRefusal = (key: string) => {
+  const message = `Client already has a Passport with unique key ${key}`;
+  return {
+    status: 403,
+    body: {
+      developerMessage: 'Request was understood but caused a domain rule violation.',
+      httpStatusCode: '403',
+      defaultUserMessage: 'Errors contain reason for domain rule violation.',
+      userMessageGlobalisationCode: 'validation.msg.domain.rule.violation',
+      errors: [
+        {
+          developerMessage: message,
+          defaultUserMessage: message,
+          userMessageGlobalisationCode: 'error.msg.clientIdentifier.identityKey.duplicate',
+          parameterName: 'id',
+        },
+      ],
+    },
+  };
+};
 
 /** The document types the community sandbox offers (`identifiers/template`). */
 export const DOCUMENT_TYPES = [
@@ -94,10 +118,7 @@ export function kycHandlers(options: { failNotesOnce?: boolean } = {}): Record<s
     handlers[`POST ${base}/identifiers`] = (req) => {
       const body = req.postDataJSON() as Record<string, unknown>;
       if (identifiers[clientId]!.some((i) => i.documentKey === body.documentKey)) {
-        return fieldRejection(
-          'documentKey',
-          `Identifier with key ${String(body.documentKey)} already exists`,
-        );
+        return duplicateRefusal(String(body.documentKey));
       }
       const id = nextId++;
       identifiers[clientId]!.push({

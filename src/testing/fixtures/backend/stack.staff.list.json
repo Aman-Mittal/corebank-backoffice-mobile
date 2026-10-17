@@ -1,0 +1,26 @@
+[
+  {
+    "id": 1,
+    "firstname": "Loan",
+    "lastname": "Officer",
+    "displayName": "Officer, Loan",
+    "officeId": 1,
+    "officeName": "Head Office",
+    "isLoanOfficer": true,
+    "isActive": true,
+    "joiningDate": "2026-01-02",
+    "dateFormat": "dd MMMM yyyy"
+  },
+  {
+    "id": 2,
+    "firstname": "Ada",
+    "lastname": "Clerk",
+    "displayName": "Clerk, Ada",
+    "officeId": 1,
+    "officeName": "Head Office",
+    "isLoanOfficer": false,
+    "isActive": true,
+    "joiningDate": "2026-01-05",
+    "dateFormat": "dd MMMM yyyy"
+  }
+]

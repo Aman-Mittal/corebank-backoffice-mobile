@@ -1,0 +1,13 @@
+[
+  {
+    "id": 11,
+    "clientId": 21,
+    "documentType": {
+      "id": 1,
+      "name": "Passport"
+    },
+    "documentKey": "P-ADA-1",
+    "description": "Issued in London",
+    "status": "clientIdentifierStatusType.active"
+  }
+]

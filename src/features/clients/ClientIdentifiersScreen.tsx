@@ -131,7 +131,13 @@ function IdentifierRow({
 }
 
 /** Server parameter names → the form's fields (TID.identifierForm). */
-const FIELDS = { documentTypeId: 'type', documentKey: 'key', description: 'description' } as const;
+const FIELDS = {
+  documentTypeId: 'type',
+  documentKey: 'key',
+  description: 'description',
+  // The server refuses a duplicate as a domain rule on `id`, not on `documentKey`.
+  'error.msg.clientIdentifier.identityKey.duplicate': 'key',
+} as const;
 type Field = (typeof FIELDS)[keyof typeof FIELDS];
 
 function IdentifierForm({

@@ -52,8 +52,22 @@ describe('toAppError', () => {
     });
     expect(e.kind).toBe('validation');
     expect(e.messages).toEqual([
-      { field: 'firstname', message: 'The parameter `firstname` is mandatory.' },
-      { field: 'approvedLoanAmount', message: 'must be greater than 0' },
+      { field: 'firstname', message: 'The parameter `firstname` is mandatory.', code: null },
+      { field: 'approvedLoanAmount', message: 'must be greater than 0', code: null },
+    ]);
+  });
+
+  it("keeps each error's own code (captured duplicate-identifier refusal)", async () => {
+    const duplicate = (await import('@/testing/fixtures/backend/client.identifier.duplicate.json'))
+      .default;
+    const e = toAppError(403, duplicate);
+    expect(e.kind).toBe('domainRule');
+    expect(e.messages).toEqual([
+      {
+        field: 'id',
+        message: duplicate.errors[0]!.developerMessage,
+        code: 'error.msg.clientIdentifier.identityKey.duplicate',
+      },
     ]);
   });
 

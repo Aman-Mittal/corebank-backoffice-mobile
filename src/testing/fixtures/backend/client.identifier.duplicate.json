@@ -1,0 +1,28 @@
+{
+  "developerMessage": "Request was understood but caused a domain rule violation.",
+  "httpStatusCode": "403",
+  "defaultUserMessage": "Errors contain reason for domain rule violation.",
+  "userMessageGlobalisationCode": "validation.msg.domain.rule.violation",
+  "errors": [
+    {
+      "developerMessage": "Client Ada Lovelaceunder Head Office Branch already has a Passport with unique key P-ADA-1",
+      "defaultUserMessage": "Client Ada Lovelaceunder Head Office Branch already has a Passport with unique key P-ADA-1",
+      "userMessageGlobalisationCode": "error.msg.clientIdentifier.identityKey.duplicate",
+      "parameterName": "id",
+      "args": [
+        {
+          "value": "Ada Lovelace"
+        },
+        {
+          "value": "Head Office"
+        },
+        {
+          "value": "Passport"
+        },
+        {
+          "value": "P-ADA-1"
+        }
+      ]
+    }
+  ]
+}

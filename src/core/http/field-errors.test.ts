@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { AppError } from './app-error';
+import { AppError, toAppError } from './app-error';
 import { formFailure } from './field-errors';
 
 const FIELDS = { name: 'name', mobileNo: 'mobile' } as const;
@@ -46,5 +46,26 @@ describe('formFailure', () => {
       form: 'Something went wrong',
     });
     expect(formFailure(new AppError('server', 500, null, []), FIELDS, 'fb').form).toBe('fb');
+  });
+});
+
+describe('formFailure with error codes', () => {
+  it('places a refusal by its code when its parameter names no form field', async () => {
+    // Captured from the e2e stack: a duplicate key is a domain rule on `id`, not `documentKey`.
+    const duplicate = (await import('@/testing/fixtures/backend/client.identifier.duplicate.json'))
+      .default;
+    const error = toAppError(403, duplicate);
+    const fields = {
+      documentKey: 'key',
+      'error.msg.clientIdentifier.identityKey.duplicate': 'key',
+    } as const;
+    expect(formFailure(error, fields, 'x')).toEqual({
+      fields: { key: duplicate.errors[0]!.developerMessage },
+      form: null,
+    });
+    expect(formFailure(error, { documentKey: 'key' } as const, 'x')).toEqual({
+      fields: {},
+      form: duplicate.errors[0]!.developerMessage,
+    });
   });
 });

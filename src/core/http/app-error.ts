@@ -34,6 +34,12 @@ export type AppErrorKind =
 export interface FieldMessage {
   readonly field: string | null;
   readonly message: string;
+  /**
+   * The error's own globalisation code (`error.msg.clientIdentifier.identityKey.duplicate`). Some
+   * refusals name no usable field (`parameterName: "id"`), and the code is what says which field
+   * they are about.
+   */
+  readonly code?: string | null;
 }
 
 export class AppError extends Error {
@@ -88,7 +94,8 @@ function fieldMessages(body: ErrorBody): FieldMessage[] {
       (err['defaultUserMessage'] as string | undefined) ||
       'Validation error';
     const field = typeof err['parameterName'] === 'string' ? err['parameterName'] : null;
-    return { field, message };
+    const code = err['userMessageGlobalisationCode'];
+    return { field, message, code: typeof code === 'string' ? code : null };
   });
 }
 

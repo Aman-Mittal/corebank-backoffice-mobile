@@ -26,7 +26,9 @@ export interface FormFailure<F extends string> {
 /**
  * Maps a rejected write onto a form.
  *
- * `fields` maps the server's parameter names onto the form's own (`mobileNo` → `mobile`). A
+ * `fields` maps the server's parameter names onto the form's own (`mobileNo` → `mobile`), and may
+ * also map an error code onto a field, for a refusal whose parameter names none (a duplicate
+ * identifier arrives as a domain rule on `id`); the code wins over the parameter. A
  * message naming a parameter the form does not show, or naming none, is kept for the form-level
  * error rather than dropped: the server's reason is the only statement of what went wrong.
  * Anything that is not an `AppError` (a bug, not a refusal) gets `fallback`.
@@ -39,8 +41,9 @@ export function formFailure<F extends string>(
   if (!(error instanceof AppError)) return { fields: {}, form: fallback };
   const out: Partial<Record<F, string>> = {};
   const unplaced: string[] = [];
-  for (const { field, message } of error.messages) {
-    const target = field === null ? undefined : fields[field];
+  for (const { field, message, code } of error.messages) {
+    const target =
+      (code ? fields[code] : undefined) ?? (field === null ? undefined : fields[field]);
     if (target && !out[target]) out[target] = message;
     else if (!target) unplaced.push(message);
   }

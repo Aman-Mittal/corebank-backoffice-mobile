@@ -1,0 +1,18 @@
+[
+  {
+    "id": 4,
+    "clientId": 21,
+    "noteType": {
+      "id": 100,
+      "code": "noteType.client",
+      "value": "Client note"
+    },
+    "note": "Prefers morning visits",
+    "createdById": 1,
+    "createdByUsername": "mifos",
+    "createdOn": "2026-10-17T16:19:55.462952+05:30",
+    "updatedById": 1,
+    "updatedByUsername": "mifos",
+    "updatedOn": "2026-10-17T16:19:55.462952+05:30"
+  }
+]

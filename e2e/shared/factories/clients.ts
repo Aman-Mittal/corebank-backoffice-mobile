@@ -96,3 +96,42 @@ export async function ensureCodeValue(request: APIRequestContext, codeName: stri
   );
   return body.subResourceId as number;
 }
+
+/**
+ * Runs a client command (`activate`, `reject`, `assignStaff`, …) through the REST API. A command
+ * with a date gets the locale and date format; the server refuses them on one without
+ * (`assignStaff` answers 400 for unsupported parameters).
+ */
+export async function clientCommand(
+  request: APIRequestContext,
+  clientId: number,
+  command: string,
+  body: Record<string, unknown>,
+) {
+  const dated = Object.keys(body).some((k) => k.endsWith('Date'));
+  return ok(
+    await fineractPost(request, `/v1/clients/${clientId}?command=${command}`, {
+      ...(dated ? { locale: 'en', dateFormat: 'yyyy-MM-dd' } : {}),
+      ...body,
+    }),
+    `POST /clients/${clientId}?command=${command}`,
+  );
+}
+
+/** Adds a Passport identifier with `key` to the client through the REST API; answers its id. */
+export async function addPassport(request: APIRequestContext, clientId: number, key: string) {
+  const template = (await (
+    await fineractGet(request, `/v1/clients/${clientId}/identifiers/template`)
+  ).json()) as { allowedDocumentTypes: { id: number; name: string }[] };
+  const passport = template.allowedDocumentTypes.find((t) => t.name === 'Passport');
+  if (!passport) throw new Error('the stack has no Passport document type');
+  const body = await ok(
+    await fineractPost(request, `/v1/clients/${clientId}/identifiers`, {
+      documentTypeId: passport.id,
+      documentKey: key,
+      status: 'Active',
+    }),
+    `POST /clients/${clientId}/identifiers`,
+  );
+  return body.resourceId as number;
+}
