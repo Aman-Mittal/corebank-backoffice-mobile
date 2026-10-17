@@ -18,6 +18,7 @@ import type { Page } from '@playwright/test';
 
 import { LoginPage } from '../pages/login.page';
 import { authResponse, mockApi, type Handler } from './api';
+import { OFFICES } from './organization';
 
 /** The permission sets the RBAC scenarios sign in with (DOCS/test-plan/P1-02-shell-rbac.md). */
 export const PERSONAS = {
@@ -32,13 +33,16 @@ export const PERSONAS = {
   officeReader: ['READ_OFFICE'],
   staffAdmin: ['READ_STAFF', 'CREATE_STAFF', 'UPDATE_STAFF', 'READ_OFFICE'],
   staffReader: ['READ_STAFF'],
+  clientAdmin: ['READ_CLIENT', 'CREATE_CLIENT', 'ACTIVATE_CLIENT', 'READ_OFFICE'],
 } as const satisfies Record<string, readonly string[]>;
 
 export type Persona = keyof typeof PERSONAS;
 
 /**
  * Signs in through the real form as a persona, with the API mocked. Extra handlers answer the
- * screens a scenario visits. The home screen's office lookup is always answered.
+ * screens a scenario visits. Always answered, unless a scenario overrides them: the home screen's
+ * office lookup, the office list, and an empty client list, so a spec that only needs the clients
+ * screen to render (shell, RBAC) need not mock it.
  */
 export async function signInAs(page: Page, persona: Persona, extra: Record<string, Handler> = {}) {
   const api = await mockApi(page, {
@@ -50,6 +54,8 @@ export async function signInAs(page: Page, persona: Persona, extra: Record<strin
       status: 200,
       body: { id: 1, name: 'Head Office', openingDate: [2009, 1, 1], hierarchy: '.' },
     }),
+    'GET /v1/offices': () => ({ status: 200, body: OFFICES }),
+    'GET /v1/clients': () => ({ status: 200, body: { totalFilteredRecords: 0, pageItems: [] } }),
     ...extra,
   });
   const login = new LoginPage(page);

@@ -30,4 +30,4 @@ tags:
 - assertNotVisible:
     id: shell.drawer
 - assertVisible:
-    id: placeholder.screen
+    id: clients.screen

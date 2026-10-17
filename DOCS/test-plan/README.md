@@ -48,4 +48,5 @@ out of date.
 | [P1-02-shell-rbac.md](P1-02-shell-rbac.md)           | Navigation shell, permissions, route protection, Access Denied |
 | [P1-03-two-factor-oidc.md](P1-03-two-factor-oidc.md) | Two-factor and identity-provider sign-in                       |
 | [P1-04-offices-staff.md](P1-04-offices-staff.md)     | Offices and staff: lists, views, create and edit               |
+| [P1-05-clients.md](P1-05-clients.md)                 | Clients: list, page, create and activate                       |
 | [unit-test-catalogue.md](unit-test-catalogue.md)     | Generated list of every unit and component test                |

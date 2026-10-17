@@ -61,9 +61,15 @@ const prefixes = [...read('e2e/shared/testids.ts').matchAll(/=>\s*`([\w.-]+)\$\{
 const problems = [];
 
 for (const file of walk('e2e/native').filter((f) => /\.ya?ml$/.test(f))) {
-  for (const m of read(file).matchAll(/^\s*id:\s*["']?([\w.-]+)["']?\s*$/gm)) {
-    if (!declared.has(m[1]) && !prefixes.some((p) => m[1].startsWith(p)))
-      problems.push(`${file}: id "${m[1]}" is not declared in e2e/shared/testids.ts`);
+  for (const m of read(file).matchAll(/^\s*id:\s*["']?([\w.\\*+-]+)["']?\s*$/gm)) {
+    // A regex id (`clients\.row\..*`, "any row") is checked by its literal part, up to the first
+    // unescaped metacharacter, which must be a declared prefix.
+    const regex = m[1].includes('\\');
+    const id = regex ? m[1].split(/(?<!\\)[.*+]/)[0].replaceAll('\\', '') : m[1];
+    const ok = regex
+      ? prefixes.includes(id)
+      : declared.has(id) || prefixes.some((p) => id.startsWith(p));
+    if (!ok) problems.push(`${file}: id "${m[1]}" is not declared in e2e/shared/testids.ts`);
   }
 }
 
