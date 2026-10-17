@@ -28,6 +28,12 @@ mkdir -p "$DIAG"
 build=$(mktemp)
 flows=$(mktemp)
 
+# Expo SDK 57 needs Xcode 26.4 or newer (docs.expo.dev/versions/v57.0.0); the runner's default
+# Xcode may be older, so the newest installed one is selected.
+xcode=$(ls -d /Applications/Xcode_26*.app 2>/dev/null | sort -V | tail -n 1)
+if [ -n "$xcode" ]; then sudo xcode-select -s "$xcode"; fi
+echo "::notice title=iOS stage::building with $(xcodebuild -version | tr '\n' ' ')"
+
 npx expo run:ios --configuration Release --no-bundler 2>&1 | tee "$build"
 status=${PIPESTATUS[0]}
 if [ "$status" -ne 0 ]; then
@@ -36,9 +42,10 @@ if [ "$status" -ne 0 ]; then
     xcodebuild -version
     xcrun simctl list devices booted
     echo '...'
-    grep -E 'error|Error|failed' "$build" | tail -n 30
+    # The reason follows the first error line; the dependency listing after it can run to pages.
+    grep -m 3 -A 12 -E 'error:|Error:' "$build"
     echo '...'
-    tail -n 30 "$build"
+    tail -n 15 "$build"
   } >"$DIAG/iOS build failed.txt"
   exit 1
 fi
