@@ -84,6 +84,10 @@
   password broke the server's default policy, which forbids a character twice in a row
   (`Pa55-…`). With that fixed both pass (2026-10-17). The nightly pending probe now posts each
   still-red spec's error as a "Still red" annotation, which is how such a cause shows up.
+- **Newer servers add `FACTOR_PASSWORD`** to every session's permission list (Spring Security's
+  authentication-factor marker; seen on CI's `apache/fineract:latest`, 2026-10-17). It records how
+  the user signed in and grants nothing, so P1-SHELL-028/1 compares the list without `FACTOR_*`
+  codes.
 - **Defects the scenarios found during implementation:**
   - Two specs passed on the old build: P1-SHELL-002/2 asserted only "no Access Denied", and
     P1-SHELL-023/6 found the home screen's sign-out button. Both now assert positively.
