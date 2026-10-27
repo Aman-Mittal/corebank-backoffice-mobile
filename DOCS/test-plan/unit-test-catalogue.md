@@ -388,7 +388,7 @@ scripts; project `web` covers components through react-native-web in jsdom.
 - usePermission / Can / RequireAccess > RequireAccess renders the screen when admitted, and Access Denied naming the codes otherwise
 - usePermission / Can / RequireAccess > RequireAccess with no requirement always renders
 
-## `src/ui/SelectField.test.tsx` (web)
+## `src/ui/form/SelectField.test.tsx` (web)
 
 - SelectField > shows the choice, opens a radio group marking it, and reports a new one
 - SelectField > disabled, still shows the value and does not open
