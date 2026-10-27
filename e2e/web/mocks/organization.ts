@@ -95,11 +95,20 @@ const idOf = (req: Request) => new URL(req.url()).pathname.split('/').pop() ?? '
  * screen a create navigates to, and the list after it, see the new record.
  */
 export function organizationHandlers(
-  options: { staff?: typeof STAFF; failOfficesOnce?: boolean } = {},
+  options: {
+    staff?: typeof STAFF;
+    failOfficesOnce?: boolean;
+    /** The next offices read answers 200 with a body that is not a list. */
+    unreadableOfficesOnce?: boolean;
+    /** The next staff read answers 200 with a body that is not a list. */
+    unreadableStaffOnce?: boolean;
+  } = {},
 ): Record<string, Handler> {
   const offices: Record<string, unknown>[] = OFFICES.map((o) => ({ ...o }));
   const staff: Record<string, unknown>[] = (options.staff ?? STAFF).map((s) => ({ ...s }));
   let officeFailures = options.failOfficesOnce ? 1 : 0;
+  let unreadableOffices = options.unreadableOfficesOnce ? 1 : 0;
+  let unreadableStaff = options.unreadableStaffOnce ? 1 : 0;
 
   const office = (req: Request) => {
     const found = offices.find((o) => String(o.id) === idOf(req));
@@ -115,6 +124,10 @@ export function organizationHandlers(
       if (officeFailures > 0) {
         officeFailures -= 1;
         return { status: 500, body: { developerMessage: 'boom' } };
+      }
+      if (unreadableOffices > 0) {
+        unreadableOffices -= 1;
+        return { status: 200, body: { unexpected: true } };
       }
       return { status: 200, body: offices };
     },
@@ -134,6 +147,10 @@ export function organizationHandlers(
       return { status: 200, body: { officeId: id, resourceId: id } };
     },
     'GET /v1/staff': (req) => {
+      if (unreadableStaff > 0) {
+        unreadableStaff -= 1;
+        return { status: 200, body: { unexpected: true } };
+      }
       const officeId = new URL(req.url()).searchParams.get('officeId');
       return {
         status: 200,

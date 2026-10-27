@@ -183,6 +183,10 @@ export class HttpClientApi implements ClientApi {
         },
       }),
     );
+    // An empty body is an empty page; a body with no rows array is a failure, not "no clients".
+    if (page !== undefined && page !== null && !Array.isArray(page.pageItems)) {
+      throw new Error('GET /clients answered a body that is not a page');
+    }
     return {
       total: page?.totalFilteredRecords ?? 0,
       items: ((page?.pageItems ?? []) as ClientPayload[]).map(mapClient),

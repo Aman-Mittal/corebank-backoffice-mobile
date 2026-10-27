@@ -18,7 +18,7 @@ import type { components } from '@/api/generated/openapi';
 import { call, type ApiClient } from '@/core/http/client';
 
 import { ISO_DATE_FIELDS, toIsoApiDate, withoutBlanks } from './api-date';
-import { required } from './required';
+import { listBody, required } from './required';
 import type { Staff, StaffApi, StaffDraft, StaffQuery, StaffUpdate } from './staff.api';
 
 type StaffData = components['schemas']['StaffData'];
@@ -80,7 +80,7 @@ export class HttpStaffApi implements StaffApi {
       }),
     );
     // An office with no staff is an ordinary state, and has been seen as an empty body.
-    return ((payloads ?? []) as StaffPayload[]).map(mapStaff);
+    return listBody<StaffPayload>(payloads, 'GET /staff').map(mapStaff);
   }
 
   async get(staffId: number): Promise<Staff> {

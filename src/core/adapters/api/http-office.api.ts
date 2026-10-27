@@ -18,7 +18,7 @@ import type { components } from '@/api/generated/openapi';
 import { call, type ApiClient } from '@/core/http/client';
 
 import { ISO_DATE_FIELDS, toIsoApiDate } from './api-date';
-import { required } from './required';
+import { listBody, required } from './required';
 import type { Office, OfficeApi, OfficeDraft } from './office.api';
 
 type GetOfficesResponse = components['schemas']['GetOfficesResponse'];
@@ -55,8 +55,8 @@ export class HttpOfficeApi implements OfficeApi {
         params: { query: includeAllOffices === undefined ? {} : { includeAllOffices } },
       }),
     );
-    // `?? []`: this endpoint has been seen to answer an empty body.
-    return ((payloads ?? []) as OfficePayload[]).map(mapOffice);
+    // This endpoint has been seen to answer an empty body.
+    return listBody<OfficePayload>(payloads, 'GET /offices').map(mapOffice);
   }
 
   async get(officeId: number): Promise<Office> {

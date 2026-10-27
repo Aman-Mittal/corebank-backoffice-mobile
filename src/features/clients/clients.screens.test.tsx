@@ -28,7 +28,7 @@ import captured from '@/testing/fixtures/backend/authentication.json';
 import page from '@/testing/fixtures/backend/clients.page.json';
 import offices from '@/testing/fixtures/backend/offices.list.json';
 import { renderWithAdapters } from '@/testing/render';
-import { resetRouterMock, routerCalls } from '@/testing/router-mock';
+import { resetRouterMock, routerCalls, searchParams } from '@/testing/router-mock';
 
 import { TID } from '../../../e2e/shared/testids';
 import { ClientFormScreen } from './ClientFormScreen';
@@ -90,6 +90,31 @@ describe('ClientsListScreen', () => {
     await userEvent.click(screen.getByTestId(TID.clients.next));
     await waitFor(() => expect(api.list).toHaveBeenLastCalledWith({ offset: 20, limit: 20 }));
     expect(screen.queryByTestId(TID.clients.create)).not.toBeInTheDocument();
+  });
+
+  it('keeps the page in the URL; First and Last disable at the ends', async () => {
+    const { api } = await render(<ClientsListScreen />, ['READ_CLIENT']);
+    await screen.findByTestId(TID.clients.row(3));
+    expect(screen.getByTestId(TID.clients.first)).toHaveAttribute('aria-disabled', 'true');
+    await userEvent.click(screen.getByTestId(TID.clients.last));
+    expect(routerCalls.setParams).toEqual([{ page: '3', q: undefined }]);
+    await waitFor(() => expect(api.list).toHaveBeenLastCalledWith({ offset: 40, limit: 20 }));
+    expect(screen.getByTestId(TID.clients.last)).toHaveAttribute('aria-disabled', 'true');
+    expect(screen.getByTestId(TID.clients.next)).toHaveAttribute('aria-disabled', 'true');
+    await userEvent.click(screen.getByTestId(TID.clients.first));
+    expect(searchParams).toEqual({});
+  });
+
+  it('opens at the page and search in the URL, and moves a page past the end to the last', async () => {
+    searchParams.page = '9';
+    searchParams.q = 'ada';
+    const { api } = await render(<ClientsListScreen />, ['READ_CLIENT']);
+    expect(screen.getByTestId(TID.clients.search)).toHaveValue('ada');
+    expect(api.list).toHaveBeenCalledWith({ offset: 160, limit: 20, search: 'ada' });
+    await waitFor(() => expect(searchParams).toEqual({ page: '3', q: 'ada' }));
+    await waitFor(() =>
+      expect(api.list).toHaveBeenLastCalledWith({ offset: 40, limit: 20, search: 'ada' }),
+    );
   });
 
   it('searches on the server once typing pauses, from the first page', async () => {

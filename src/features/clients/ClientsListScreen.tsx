@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import { useRouter } from 'expo-router';
-import { useState } from 'react';
+import { useLocalSearchParams, useRouter } from 'expo-router';
+import { useEffect, useRef, useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import type { Client } from '@/core/adapters/api/client.api';
@@ -32,6 +32,7 @@ import { colors, MIN_TOUCH, spacing } from '@/ui/theme';
 import { TID } from '../../../e2e/shared/testids';
 import { CLIENT_ACCESS } from './access';
 import { statusText } from './client-labels';
+import { lastPage, readListParams, toListParams, type ClientListParams } from './list-params';
 import { useClientPage } from './useClients';
 
 export const PAGE_SIZE = 20;
@@ -41,24 +42,40 @@ const SEARCH_DELAY_MS = 300;
  * Clients, a page at a time from the server. The search box asks the server too (by display
  * name), once typing pauses, and starts again from the first page. People and entities are
  * listed together: no legal-form filter (DOCS/test-plan/P1-05-clients.md).
+ *
+ * The page and the search live in the URL (`?page=2&q=ada`), so coming back from a client, a
+ * reload or a shared link lands where the list was (DOCS/test-plan/P1-09-list-paging-failures.md).
  */
 export function ClientsListScreen() {
   const { t } = useI18n();
   const router = useRouter();
   const canCreate = usePermission(CLIENT_ACCESS.create);
-  const [search, setSearch] = useState('');
+  const position = readListParams(useLocalSearchParams<ClientListParams>());
+  const [search, setSearch] = useState(position.search);
   const term = useDebouncedValue(search.trim(), SEARCH_DELAY_MS);
-  // The page belongs to the search it was reached under; a new search starts at the first.
-  const [paging, setPaging] = useState({ term: '', page: 0 });
-  const page = paging.term === term ? paging.page : 0;
+  const goTo = (page: number) => router.setParams(toListParams({ page, search: position.search }));
+  // A new search starts at the first page. Only typing moves it: the URL changing under the box
+  // (Back) must not write the box's old term over it.
+  const typed = useRef(term);
+  useEffect(() => {
+    if (term === typed.current) return;
+    typed.current = term;
+    router.setParams(toListParams({ page: 0, search: term }));
+  }, [term, router]);
+  const page = position.page;
   const clients = useClientPage({
     offset: page * PAGE_SIZE,
     limit: PAGE_SIZE,
-    ...(term ? { search: term } : {}),
+    ...(position.search ? { search: position.search } : {}),
   });
   const total = clients.data?.total ?? 0;
   const items = clients.data?.items ?? [];
-  const goTo = (p: number) => setPaging({ term, page: p });
+  const last = lastPage(total, PAGE_SIZE);
+  // A page past the end (a link kept after clients closed) shows the last page instead.
+  const pastEnd = clients.isSuccess && !clients.isPlaceholderData && total > 0 && page > last;
+  useEffect(() => {
+    if (pastEnd) router.setParams(toListParams({ page: last, search: position.search }));
+  }, [pastEnd, last, position.search, router]);
 
   return (
     <Page
@@ -86,7 +103,7 @@ export function ClientsListScreen() {
       ) : clients.isError ? (
         <ErrorState error={clients.error} onRetry={() => void clients.refetch()} />
       ) : items.length === 0 ? (
-        <EmptyState message={t(term ? 'CLIENTS.NO_MATCH' : 'CLIENTS.EMPTY')} />
+        <EmptyState message={t(position.search ? 'CLIENTS.NO_MATCH' : 'CLIENTS.EMPTY')} />
       ) : (
         <>
           <View role="list">
@@ -100,6 +117,13 @@ export function ClientsListScreen() {
             ))}
           </View>
           <View style={styles.pager}>
+            <Button
+              testID={TID.clients.first}
+              label={t('CLIENTS.FIRST')}
+              variant="secondary"
+              disabled={page === 0}
+              onPress={() => goTo(0)}
+            />
             <Button
               testID={TID.clients.previous}
               label={t('CLIENTS.PREVIOUS')}
@@ -118,8 +142,15 @@ export function ClientsListScreen() {
               testID={TID.clients.next}
               label={t('CLIENTS.NEXT')}
               variant="secondary"
-              disabled={(page + 1) * PAGE_SIZE >= total}
+              disabled={page >= last}
               onPress={() => goTo(page + 1)}
+            />
+            <Button
+              testID={TID.clients.last}
+              label={t('CLIENTS.LAST')}
+              variant="secondary"
+              disabled={page >= last}
+              onPress={() => goTo(last)}
             />
           </View>
         </>
@@ -154,6 +185,7 @@ const styles = StyleSheet.create({
   pager: {
     flexDirection: 'row',
     alignItems: 'center',
+    flexWrap: 'wrap',
     justifyContent: 'space-between',
     gap: spacing.sm,
     paddingTop: spacing.sm,

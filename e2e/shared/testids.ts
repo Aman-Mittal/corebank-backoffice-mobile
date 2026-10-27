@@ -152,8 +152,10 @@ export const TID = {
     create: 'clients.create',
     /** "1–20 of 45". */
     range: 'clients.range',
+    first: 'clients.first',
     previous: 'clients.previous',
     next: 'clients.next',
+    last: 'clients.last',
     /** One per client: `clients.row.2`. */
     row: (id: number | string) => `clients.row.${id}`,
   },

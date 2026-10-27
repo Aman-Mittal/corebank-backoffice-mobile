@@ -27,8 +27,10 @@ export class ClientsPage {
   readonly search: Locator;
   readonly create: Locator;
   readonly range: Locator;
+  readonly first: Locator;
   readonly previous: Locator;
   readonly next: Locator;
+  readonly last: Locator;
   readonly rows: Locator;
 
   constructor(private readonly page: Page) {
@@ -37,8 +39,10 @@ export class ClientsPage {
     this.search = byId(page, t.search);
     this.create = byId(page, t.create);
     this.range = byId(page, t.range);
+    this.first = byId(page, t.first);
     this.previous = byId(page, t.previous);
     this.next = byId(page, t.next);
+    this.last = byId(page, t.last);
     this.rows = page.locator('[data-testid^="clients.row."]').filter({ visible: true });
   }
 

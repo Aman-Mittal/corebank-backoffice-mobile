@@ -14,18 +14,49 @@
  * limitations under the License.
  */
 
-import type { ReactNode } from 'react';
+import { useSyncExternalStore, type ReactNode } from 'react';
 
 /**
  * A stand-in for expo-router in component tests: links render as anchors, redirects render a
  * marker the test can assert on, and navigation calls are recorded.
  */
-export const routerCalls: { replace: unknown[]; push: unknown[]; dismissTo: unknown[] } = {
+export const routerCalls: {
+  replace: unknown[];
+  push: unknown[];
+  dismissTo: unknown[];
+  setParams: unknown[];
+} = {
   replace: [],
   push: [],
   dismissTo: [],
+  setParams: [],
 };
-export const searchParams: { reason?: string } = {};
+/** The current route's query. `setParams` merges into it, dropping `undefined` values. */
+export const searchParams: Record<string, string | undefined> = {};
+
+// Screens re-render when `setParams` changes the query, as they do under expo-router.
+const listeners = new Set<() => void>();
+let paramsVersion = 0;
+const subscribe = (listener: () => void) => {
+  listeners.add(listener);
+  return () => listeners.delete(listener);
+};
+
+// One router object, as expo-router's is stable across renders (screens list it in effect deps).
+const router = {
+  replace: (to: unknown) => routerCalls.replace.push(to),
+  push: (to: unknown) => routerCalls.push.push(to),
+  dismissTo: (to: unknown) => routerCalls.dismissTo.push(to),
+  setParams: (params: Record<string, string | undefined>) => {
+    routerCalls.setParams.push(params);
+    for (const [key, value] of Object.entries(params)) {
+      if (value === undefined) Reflect.deleteProperty(searchParams, key);
+      else searchParams[key] = value;
+    }
+    paramsVersion += 1;
+    listeners.forEach((listener) => listener());
+  },
+};
 
 export const expoRouterMock = {
   Link: ({ href, children, testID }: { href: string; children: ReactNode; testID?: string }) => (
@@ -36,12 +67,11 @@ export const expoRouterMock = {
   Redirect: ({ href }: { href: unknown }) => (
     <div data-testid="redirect">{JSON.stringify(href)}</div>
   ),
-  useRouter: () => ({
-    replace: (to: unknown) => routerCalls.replace.push(to),
-    push: (to: unknown) => routerCalls.push.push(to),
-    dismissTo: (to: unknown) => routerCalls.dismissTo.push(to),
-  }),
-  useLocalSearchParams: () => searchParams,
+  useRouter: () => router,
+  useLocalSearchParams: () => {
+    useSyncExternalStore(subscribe, () => paramsVersion);
+    return { ...searchParams };
+  },
   usePathname: () => '/home',
 };
 
@@ -49,5 +79,6 @@ export function resetRouterMock() {
   routerCalls.replace.length = 0;
   routerCalls.push.length = 0;
   routerCalls.dismissTo.length = 0;
-  delete searchParams.reason;
+  routerCalls.setParams.length = 0;
+  for (const key of Object.keys(searchParams)) Reflect.deleteProperty(searchParams, key);
 }

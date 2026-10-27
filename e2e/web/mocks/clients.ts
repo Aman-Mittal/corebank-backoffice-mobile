@@ -209,6 +209,8 @@ const notFound = (id: string) => ({
 });
 
 const boom = { status: 500, body: { developerMessage: 'boom' } };
+/** A 200 whose body is not the shape the list reads (DOCS/test-plan/P1-09-list-paging-failures.md). */
+export const unreadable = { status: 200, body: { unexpected: true } };
 const idOf = (req: Request) => new URL(req.url()).pathname.split('/').pop() ?? '';
 const isoToArray = (iso: unknown) => String(iso).split('-').map(Number);
 
@@ -220,6 +222,8 @@ export function clientsHandlers(
   options: {
     clients?: Record<string, unknown>[];
     failListOnce?: boolean;
+    /** The next list read answers 200 with a body that is not a page. */
+    unreadableListOnce?: boolean;
     failOneOnce?: boolean;
     /** Every command template answers no reasons, as the community sandbox does. */
     noReasons?: boolean;
@@ -233,6 +237,7 @@ export function clientsHandlers(
 ): Record<string, Handler> {
   const clients: Record<string, unknown>[] = (options.clients ?? CLIENTS).map((c) => ({ ...c }));
   let listFailures = options.failListOnce ? 1 : 0;
+  let unreadableLists = options.unreadableListOnce ? 1 : 0;
   let oneFailures = options.failOneOnce ? 1 : 0;
   let refusal = options.refuseCommand;
   const elsewhere = new Map(Object.entries(options.changedElsewhere ?? {}));
@@ -252,6 +257,10 @@ export function clientsHandlers(
       if (listFailures > 0) {
         listFailures -= 1;
         return boom;
+      }
+      if (unreadableLists > 0) {
+        unreadableLists -= 1;
+        return unreadable;
       }
       const q = new URL(req.url()).searchParams;
       const name = (q.get('displayName') ?? '').toLowerCase();

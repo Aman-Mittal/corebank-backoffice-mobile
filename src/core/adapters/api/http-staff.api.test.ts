@@ -84,6 +84,11 @@ describe('HttpStaffApi', () => {
     expect(await empty.list()).toEqual([]);
   });
 
+  it('fails on a body that is not a list, rather than answering none', async () => {
+    const http = new HttpStaffApi(fakeApi({ 'GET /v1/staff': [200, { unexpected: true }] }).client);
+    await expect(http.list()).rejects.toThrow('GET /staff answered a body that is not a list');
+  });
+
   it('gets one staff member', async () => {
     const http = new HttpStaffApi(fakeApi({ 'GET /v1/staff/2': [200, staff[1]] }).client);
     expect((await http.get(2)).displayName).toBe('Okello, Grace');

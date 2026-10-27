@@ -133,6 +133,15 @@ describe('HttpClientApi', () => {
     expect(await empty.list({ offset: 0, limit: 20 })).toEqual({ total: 0, items: [] });
   });
 
+  it('fails on a body that is not a page, rather than answering no clients', async () => {
+    const http = new HttpClientApi(
+      fakeApi({ 'GET /v1/clients': [200, { unexpected: true }] }).client,
+    );
+    await expect(http.list({ offset: 0, limit: 20 })).rejects.toThrow(
+      'GET /clients answered a body that is not a page',
+    );
+  });
+
   it('gets one client', async () => {
     const http = new HttpClientApi(fakeApi({ 'GET /v1/clients/3': [200, one] }).client);
     expect((await http.get(3)).displayName).toBe('Arif Arif');

@@ -47,6 +47,25 @@ test.describe('clients against the backend', () => {
     await expect(view.legalForm).toContainText('Entity');
   });
 
+  test('a search with more than a page of matches pages to the last one', async ({
+    page,
+    request,
+  }) => {
+    spec('P1-SHELL-018/5');
+    const lastname = `E2E${runId()}`;
+    for (let i = 0; i < 21; i += 1) {
+      await createPersonClient(request, { active: true, lastname });
+    }
+    const list = new ClientsPage(page);
+    await list.open();
+    await list.search.fill(lastname);
+    await expect(list.range).toHaveText('1–20 of 21');
+    await expect(list.rows).toHaveCount(20);
+    await list.next.click();
+    await expect(list.range).toHaveText('21–21 of 21');
+    await expect(list.rows).toHaveCount(1);
+  });
+
   test('a person created through the form opens as active and is listed', async ({ page }) => {
     spec('P1-CLIENTS-009/6');
     const lastname = `E2E${runId()}`;

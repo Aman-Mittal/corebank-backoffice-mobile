@@ -64,6 +64,13 @@ describe('HttpOfficeApi', () => {
     expect(await http.list()).toEqual([]);
   });
 
+  it('fails on a body that is not a list, rather than answering none', async () => {
+    const http = new HttpOfficeApi(
+      fakeApi({ 'GET /v1/offices': [200, { unexpected: true }] }).client,
+    );
+    await expect(http.list()).rejects.toThrow('GET /offices answered a body that is not a list');
+  });
+
   it('gets one office', async () => {
     const http = new HttpOfficeApi(fakeApi({ 'GET /v1/offices/2': [200, offices[1]] }).client);
     expect((await http.get(2)).openingDate).toBe('2026-10-02');

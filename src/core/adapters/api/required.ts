@@ -26,3 +26,14 @@ export function required<T>(value: T | undefined | null, entity: string, field: 
   }
   return value;
 }
+
+/**
+ * A list endpoint's body, checked rather than trusted. An empty body is an empty list (some
+ * endpoints answer one); any other body that is not an array is a failure, so the screen shows an
+ * error instead of claiming there is nothing (DOCS/test-plan/P1-09-list-paging-failures.md).
+ */
+export function listBody<T>(body: unknown, endpoint: string): T[] {
+  if (body === undefined || body === null) return [];
+  if (!Array.isArray(body)) throw new Error(`${endpoint} answered a body that is not a list`);
+  return body as T[];
+}

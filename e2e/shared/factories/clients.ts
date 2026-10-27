@@ -47,9 +47,8 @@ async function ok(res: Awaited<ReturnType<typeof fineractPost>>, what: string) {
  */
 export async function createPersonClient(
   request: APIRequestContext,
-  { active }: { active: boolean },
+  { active, lastname = `E2E${runId()}` }: { active: boolean; lastname?: string },
 ) {
-  const lastname = `E2E${runId()}`;
   const date = '2026-01-05';
   const body = await ok(
     await fineractPost(request, '/v1/clients', {
