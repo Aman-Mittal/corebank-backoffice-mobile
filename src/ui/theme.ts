@@ -29,6 +29,7 @@ export const colors = {
   warningSurface: '#FFF7E6',
   warningBorder: '#B45309',
   danger: '#B91C1C',
+  success: '#15803D',
 } as const;
 
 export const spacing = { xs: 4, sm: 8, md: 16, lg: 24, xl: 32 } as const;

@@ -1,0 +1,26 @@
+{
+  "id": 1,
+  "username": "mifos",
+  "officeId": 1,
+  "officeName": "Head Office",
+  "firstname": "App",
+  "lastname": "Administrator",
+  "email": "demomfi@mifos.org",
+  "passwordNeverExpires": false,
+  "availableRoles": [
+    {
+      "id": 2,
+      "name": "Self Service User",
+      "description": "self service user role",
+      "disabled": true
+    }
+  ],
+  "selectedRoles": [
+    {
+      "id": 1,
+      "name": "Super user",
+      "description": "This role provides all application permissions.",
+      "disabled": false
+    }
+  ]
+}

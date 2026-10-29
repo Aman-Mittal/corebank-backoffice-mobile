@@ -17,17 +17,20 @@
 import { QueryClientProvider } from '@tanstack/react-query';
 import { render, type RenderOptions } from '@testing-library/react';
 import type { ReactElement } from 'react';
+import { Provider } from 'react-redux';
 
 import { AdapterProvider } from '@/core/adapters/AdapterProvider';
 import type { AdapterOverride } from '@/core/adapters/registry';
+import { APP_STORE } from '@/core/tokens';
 
 import { createQueryClient } from '@/core/query/query-client';
 
 import { createFakeAdapters } from './fake-adapters';
 
 /**
- * Renders a component inside an AdapterProvider built from fakes. Returns the fakes alongside
- * the render result, so a test can assert on what the component asked an adapter for.
+ * Renders a component inside an AdapterProvider built from fakes, and the fakes' Redux store.
+ * Returns the fakes alongside the render result, so a test can assert on what the component asked
+ * an adapter for.
  */
 export function renderWithAdapters(
   ui: ReactElement,
@@ -40,7 +43,9 @@ export function renderWithAdapters(
     registry,
     ...render(
       <AdapterProvider registry={registry}>
-        <QueryClientProvider client={createQueryClient()}>{ui}</QueryClientProvider>
+        <Provider store={registry.resolve(APP_STORE)}>
+          <QueryClientProvider client={createQueryClient()}>{ui}</QueryClientProvider>
+        </Provider>
       </AdapterProvider>,
       options,
     ),

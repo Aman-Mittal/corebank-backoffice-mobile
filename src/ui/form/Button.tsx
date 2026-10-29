@@ -26,6 +26,7 @@ export function Button({
   disabled = false,
   variant = 'primary',
   role = 'button',
+  expanded,
 }: {
   readonly label: string;
   readonly testID?: string;
@@ -33,12 +34,15 @@ export function Button({
   readonly disabled?: boolean;
   readonly variant?: 'primary' | 'secondary';
   readonly role?: 'button' | 'link';
+  /** For a button that shows and hides a panel: whether the panel is open. */
+  readonly expanded?: boolean;
 }) {
   return (
     <Pressable
       testID={testID}
       role={role}
       aria-disabled={disabled}
+      aria-expanded={expanded}
       disabled={disabled}
       onPress={onPress}
       style={[styles.base, styles[variant], disabled && styles.disabled]}
