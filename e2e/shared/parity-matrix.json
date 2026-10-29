@@ -490,6 +490,14 @@
       "platforms": ["web", "android", "ios"]
     },
     {
+      "id": "P1-SHELL-038",
+      "phase": 1,
+      "area": "shell",
+      "title": "profile",
+      "source": "fineract-backoffice-ui:src/app/features/profile (no e2e spec of its own)",
+      "platforms": ["web", "android", "ios"]
+    },
+    {
       "id": "P2-GROUPS-001",
       "phase": 2,
       "area": "groups",
