@@ -53,4 +53,5 @@ out of date.
 | [P1-07-client-kyc.md](P1-07-client-kyc.md)                     | Client identifiers and notes                                   |
 | [P1-08-client-staff.md](P1-08-client-staff.md)                 | Client staff assignment                                        |
 | [P1-09-list-paging-failures.md](P1-09-list-paging-failures.md) | List paging, and lists whose load fails                        |
+| [P1-10-profile-state.md](P1-10-profile-state.md)               | Profile; session and permission state in Redux                 |
 | [unit-test-catalogue.md](unit-test-catalogue.md)               | Generated list of every unit and component test                |
