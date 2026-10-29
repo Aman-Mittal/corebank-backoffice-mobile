@@ -21,6 +21,7 @@ import { OFFICE_API, type OfficeApi } from '@/core/adapters/api/office.api';
 import { STAFF_API, type StaffApi } from '@/core/adapters/api/staff.api';
 import { TWO_FACTOR_API, type TwoFactorApi } from '@/core/adapters/api/two-factor.api';
 import { USER_DETAILS_API, type UserDetailsApi } from '@/core/adapters/api/user-details.api';
+import { PROFILE_API, type ProfileApi } from '@/core/adapters/api/profile.api';
 import {
   createDeploymentConfigStore,
   DEPLOYMENT_CONFIG,
@@ -28,7 +29,8 @@ import {
 } from '@/core/config/deployment-config';
 import { AdapterRegistry, provide, type AdapterOverride } from '@/core/adapters/registry';
 import { SessionStore } from '@/core/auth/session-store';
-import { SESSION } from '@/core/tokens';
+import { APP_STORE, SESSION } from '@/core/tokens';
+import { createAppStore, type AppStore } from '@/state/store';
 import { CLOCK, type ClockAdapter } from '@/core/adapters/clock/clock.adapter';
 import { DOWNLOAD, type DownloadAdapter } from '@/core/adapters/download/download.adapter';
 import { sanitiseFilename } from '@/core/adapters/download/download.adapter';
@@ -63,6 +65,8 @@ export interface FakeAdapters {
   readonly network: NetworkAdapter & { setOnline(online: boolean): void };
   readonly clock: ClockAdapter & { set(ms: number): void; advance(ms: number): void };
   readonly i18n: I18nAdapter;
+  /** The Redux store; its thunks resolve adapters from the last registry built. */
+  readonly store: AppStore;
   /** Signed out once `restore()` settles (it is called for you). */
   readonly session: SessionStore;
   /** API contracts that reject until a test overrides them, so an unexpected call is loud. */
@@ -73,6 +77,7 @@ export interface FakeAdapters {
   readonly clientKycApi: ClientKycApi;
   readonly twoFactorApi: TwoFactorApi;
   readonly userDetailsApi: UserDetailsApi;
+  readonly profileApi: ProfileApi;
   /** No identity provider unless a test passes `deploymentConfig` overrides. */
   readonly deploymentConfig: DeploymentConfigStore;
 }
@@ -142,7 +147,13 @@ export function createFakeAdapters(): FakeAdapters {
     subscribe: () => () => undefined,
   };
 
-  const session = new SessionStore(secureStorage, () => 'default');
+  // Thunks resolve through the registry a test actually renders with (its overrides included),
+  // which is built after the store.
+  let built: AdapterRegistry | null = null;
+  const store = createAppStore({
+    resolve: (t) => (built ??= new AdapterRegistry(overrides)).resolve(t),
+  });
+  const session = new SessionStore(secureStorage, () => 'default', undefined, store);
   void session.restore();
   const authApi: AuthApi = { signIn: unscripted('AuthApi.signIn') };
   const officeApi: OfficeApi = {
@@ -185,11 +196,18 @@ export function createFakeAdapters(): FakeAdapters {
     invalidate: unscripted('TwoFactorApi.invalidate'),
   };
   const userDetailsApi: UserDetailsApi = { sessionFor: unscripted('UserDetailsApi.sessionFor') };
+  const profileApi: ProfileApi = {
+    get: unscripted('ProfileApi.get'),
+    passwordPolicy: unscripted('ProfileApi.passwordPolicy'),
+    changePassword: unscripted('ProfileApi.changePassword'),
+  };
   const deploymentConfig = createDeploymentConfigStore(async () => null);
   void deploymentConfig.load();
 
   const overrides: AdapterOverride[] = [
+    provide(APP_STORE, store),
     provide(SESSION, session),
+    provide(PROFILE_API, profileApi),
     provide(TWO_FACTOR_API, twoFactorApi),
     provide(USER_DETAILS_API, userDetailsApi),
     provide(DEPLOYMENT_CONFIG, deploymentConfig),
@@ -208,13 +226,14 @@ export function createFakeAdapters(): FakeAdapters {
 
   return {
     overrides,
-    registry: (extra = []) => new AdapterRegistry([...overrides, ...extra]),
+    registry: (extra = []) => (built = new AdapterRegistry([...overrides, ...extra])),
     storage,
     secureStorage,
     download,
     network,
     clock,
     i18n,
+    store,
     session,
     authApi,
     officeApi,
@@ -223,6 +242,7 @@ export function createFakeAdapters(): FakeAdapters {
     clientKycApi,
     twoFactorApi,
     userDetailsApi,
+    profileApi,
     deploymentConfig,
   };
 }

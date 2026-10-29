@@ -30,6 +30,10 @@ built from a generated type inherits the spec's blind spots.
   the community sandbox on 2026-10-17: its `allowedDocumentTypes` are the four seeded document
   types. No client there had identifiers or notes to capture, so those payloads follow the
   server's `ClientIdentifierData` and `NoteData` (P1-07); the e2e stack's are below.
+- `user.one.json` (`GET /v1/users/1`) and `passwordpreferences.json` (`GET /v1/passwordpreferences`)
+  were captured from the community sandbox on 2026-10-29. The user's roles arrive in
+  `selectedRoles` with `description` and `disabled` beside the declared `id` and `name`; the
+  policy endpoint answers the one active policy as an object, not a list.
 
 ## Captured from the e2e stack
 
