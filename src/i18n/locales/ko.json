@@ -40,7 +40,8 @@
     "ACTIVE": "활성",
     "INACTIVE": "비활성",
     "SAVE": "저장",
-    "EDIT": "편집"
+    "EDIT": "편집",
+    "CANCEL": "취소"
   },
   "HOME": {
     "TITLE": "홈",
@@ -368,5 +369,19 @@
     "NEW_NOTE": "새 메모",
     "ADD_NOTE": "메모 추가",
     "EDIT_NOTE": "메모"
+  },
+  "PROFILE": {
+    "TITLE": "프로필",
+    "USERNAME": "사용자 이름",
+    "DISPLAY_NAME": "표시 이름",
+    "OFFICE": "지점",
+    "EMAIL": "이메일",
+    "ROLES": "역할",
+    "CHANGE_PASSWORD": "비밀번호 변경",
+    "NEW_PASSWORD": "새 비밀번호",
+    "REPEAT_NEW_PASSWORD": "새 비밀번호 확인",
+    "PASSWORDS_DO_NOT_MATCH": "비밀번호가 일치하지 않습니다.",
+    "PASSWORD_POLICY": "비밀번호 정책: {{policy}}",
+    "PASSWORD_CHANGED": "비밀번호가 변경되었습니다."
   }
 }
