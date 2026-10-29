@@ -18,6 +18,7 @@ import { token } from './adapters/registry';
 import type { SessionStore } from './auth/session-store';
 import type { AuthState } from './http/auth';
 import type { ApiClient } from './http/client';
+import type { AppStore } from '@/state/store';
 
 /*
  * Application-level tokens, kept apart from the composition root so a screen or test can import
@@ -26,6 +27,9 @@ import type { ApiClient } from './http/client';
 
 /** The typed HTTP client, as an adapter so API contracts can depend on it. */
 export const API_CLIENT = token<ApiClient>('ApiClient');
+
+/** The Redux store (ADR 0004): the session, and state that lives as long as it. */
+export const APP_STORE = token<AppStore>('AppStore');
 
 /** Who is signed in. */
 export const SESSION = token<SessionStore>('SessionStore');

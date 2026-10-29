@@ -14,16 +14,16 @@
  * limitations under the License.
  */
 
-import { useSyncExternalStore } from 'react';
-
 import { useAdapter } from '@/core/adapters/AdapterProvider';
 import { SESSION } from '@/core/tokens';
+import { useAppSelector } from '@/state/hooks';
 
-import type { SessionState, SessionStore } from './session-store';
+import { selectSession, type SessionState } from './session-slice';
+import type { SessionStore } from './session-store';
 
-/** The current session state, re-rendering on every change. */
+/** The current session state, from the store (ADR 0004); re-renders on every session change. */
 export function useSession(): SessionState & { readonly store: SessionStore } {
   const store = useAdapter(SESSION);
-  const state = useSyncExternalStore(store.subscribe, store.getState, store.getState);
+  const state = useAppSelector(selectSession);
   return { ...state, store };
 }

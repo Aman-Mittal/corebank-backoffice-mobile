@@ -16,18 +16,19 @@
 
 import type { ReactNode } from 'react';
 
-import { permissionsSatisfy, type Access } from './permissions';
-import { useSession } from './useSession';
+import { useAppSelector } from '@/state/hooks';
+
+import type { Access } from './permissions';
+import { selectGranted, selectPermitted } from './session-slice';
 
 /** The signed-in user's permission codes; empty when signed out. */
 export function useGranted(): readonly string[] {
-  const state = useSession();
-  return state.status === 'signedIn' ? state.session.permissions : [];
+  return useAppSelector(selectGranted);
 }
 
 /** Whether the signed-in user satisfies `access` (`null` = ungated). Re-renders on session change. */
 export function usePermission(access: Access | null): boolean {
-  return permissionsSatisfy(useGranted(), access);
+  return useAppSelector((state) => selectPermitted(state, access));
 }
 
 /** Renders `children` when permitted, otherwise `fallback` (nothing by default). */
