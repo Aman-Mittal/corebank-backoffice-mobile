@@ -17,6 +17,7 @@
 import captured from '@/testing/fixtures/backend/authentication.json';
 import { createFakeAdapters } from '@/testing/fake-adapters';
 import { mapSession } from '@/core/adapters/api/http-auth.api';
+import { passwordFormToggled } from '@/features/profile/profile-slice';
 
 import { asSignOutReason, SessionStore } from './session-store';
 
@@ -28,6 +29,18 @@ const make = () => {
 };
 
 describe('SessionStore', () => {
+  it('keeps its state in the store it is given, and reports session changes only', async () => {
+    const fakes = createFakeAdapters();
+    await fakes.session.restore();
+    const heard = vi.fn();
+    fakes.session.subscribe(heard);
+    fakes.store.dispatch(passwordFormToggled());
+    expect(heard).not.toHaveBeenCalled();
+    await fakes.session.signIn(session);
+    expect(heard).toHaveBeenCalledTimes(1);
+    expect(fakes.store.getState().session).toEqual({ status: 'signedIn', session });
+  });
+
   it('starts restoring, then signs out when nothing is persisted', async () => {
     const { store } = make();
     expect(store.getState().status).toBe('restoring');

@@ -20,7 +20,8 @@ import userEvent from '@testing-library/user-event';
 import { AUTH_API, type AuthApi } from '@/core/adapters/api/auth.api';
 import { mapSession } from '@/core/adapters/api/http-auth.api';
 import { provide } from '@/core/adapters/registry';
-import { SESSION } from '@/core/tokens';
+import { APP_STORE, SESSION } from '@/core/tokens';
+import { createAppStore } from '@/state/store';
 import { SessionStore } from '@/core/auth/session-store';
 import { AppError } from '@/core/http/app-error';
 import captured from '@/testing/fixtures/backend/authentication.json';
@@ -141,6 +142,8 @@ describe('LoginScreen', () => {
   });
 
   it('redirects home when already signed in', async () => {
+    // The screen reads the session from the store it is rendered with, so both are provided.
+    const appStore = createAppStore({ resolve: () => assert.fail('no thunk runs here') });
     const store = new SessionStore(
       {
         get: async () => null,
@@ -149,9 +152,13 @@ describe('LoginScreen', () => {
         clear: async () => undefined,
       },
       () => 'default',
+      undefined,
+      appStore,
     );
     await store.signIn(mapSession(captured, 'default'));
-    renderWithAdapters(<LoginScreen />, { adapters: [provide(SESSION, store)] });
+    renderWithAdapters(<LoginScreen />, {
+      adapters: [provide(APP_STORE, appStore), provide(SESSION, store)],
+    });
     expect(screen.getByTestId('redirect')).toHaveTextContent('/home');
   });
 });
