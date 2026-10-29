@@ -18,12 +18,13 @@ import { QueryClientProvider } from '@tanstack/react-query';
 import { Stack } from 'expo-router';
 import Head from 'expo-router/head';
 import { useEffect, useState } from 'react';
+import { Provider } from 'react-redux';
 
 import { AdapterProvider } from '@/core/adapters/AdapterProvider';
 import { useI18n } from '@/core/adapters/i18n/useI18n';
 import { createAppRegistry } from '@/core/app-registry';
 import { DEPLOYMENT_CONFIG } from '@/core/config/deployment-config';
-import { SESSION } from '@/core/tokens';
+import { APP_STORE, SESSION } from '@/core/tokens';
 import { LoadingScreen } from '@/ui/LoadingScreen';
 import { createQueryClient } from '@/core/query/query-client';
 
@@ -42,9 +43,9 @@ function Shell() {
 }
 
 /**
- * Root: one adapter registry and one query cache for the app's lifetime. Restores a persisted
- * session on start, and drops every cached query when the session ends, so nothing read under one
- * user is shown to the next.
+ * Root: one adapter registry, one Redux store and one query cache for the app's lifetime. Restores
+ * a persisted session on start, and drops every cached query when the session ends, so nothing
+ * read under one user is shown to the next.
  */
 export default function RootLayout() {
   const [registry] = useState(() => createAppRegistry());
@@ -69,9 +70,11 @@ export default function RootLayout() {
 
   return (
     <AdapterProvider registry={registry}>
-      <QueryClientProvider client={queryClient}>
-        {configReady ? <Shell /> : <LoadingScreen />}
-      </QueryClientProvider>
+      <Provider store={registry.resolve(APP_STORE)}>
+        <QueryClientProvider client={queryClient}>
+          {configReady ? <Shell /> : <LoadingScreen />}
+        </QueryClientProvider>
+      </Provider>
     </AdapterProvider>
   );
 }

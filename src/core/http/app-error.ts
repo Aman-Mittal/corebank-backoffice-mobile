@@ -138,3 +138,29 @@ export function toNetworkError(error: unknown): AppError {
   const timeout = error instanceof Error && error.name === 'RequestTimeoutError';
   return new AppError(timeout ? 'timeout' : 'network', 0, null, []);
 }
+
+/** An `AppError` as plain data, for state that must be serializable (the Redux store). */
+export interface SerializedAppError {
+  readonly kind: AppErrorKind;
+  readonly status: number;
+  readonly summary: string | null;
+  readonly messages: readonly FieldMessage[];
+  readonly correlationId: string | null;
+}
+
+/**
+ * Captures a failure as data. Anything that is not an `AppError` (a bug, not a refusal) becomes a
+ * `server` error with no message, so a screen shows its generic text rather than a stack.
+ */
+export function serializeAppError(error: unknown): SerializedAppError {
+  if (!(error instanceof AppError)) {
+    return { kind: 'server', status: 0, summary: null, messages: [], correlationId: null };
+  }
+  const { kind, status, summary, messages, correlationId } = error;
+  return { kind, status, summary, messages: [...messages], correlationId };
+}
+
+/** The `AppError` a serialized one stands for, for the screens that branch on it. */
+export function fromSerialized(error: SerializedAppError): AppError {
+  return new AppError(error.kind, error.status, error.summary, error.messages, error.correlationId);
+}

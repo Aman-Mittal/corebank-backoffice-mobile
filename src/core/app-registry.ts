@@ -30,9 +30,9 @@ import { createPlatformSecureStorage } from './adapters/secure-storage/platform-
 import { STORAGE } from './adapters/storage/storage.adapter';
 import { createPlatformStorage } from './adapters/storage/platform-storage';
 import { createApiClient } from './http/client';
-import { API_CLIENT, AUTH_STATE, SESSION, SESSION_EXPIRED } from './tokens';
+import { API_CLIENT, APP_STORE, AUTH_STATE, SESSION, SESSION_EXPIRED } from './tokens';
 
-export { API_CLIENT, AUTH_STATE, SESSION, SESSION_EXPIRED } from './tokens';
+export { API_CLIENT, APP_STORE, AUTH_STATE, SESSION, SESSION_EXPIRED } from './tokens';
 import { readServerConfig } from './config/runtime-config';
 import { AUTH_API } from './adapters/api/auth.api';
 import { HttpAuthApi } from './adapters/api/http-auth.api';
@@ -45,6 +45,9 @@ import { OFFICE_API } from './adapters/api/office.api';
 import { HttpStaffApi } from './adapters/api/http-staff.api';
 import { STAFF_API } from './adapters/api/staff.api';
 import { SessionStore } from './auth/session-store';
+import { HttpProfileApi } from './adapters/api/http-profile.api';
+import { PROFILE_API } from './adapters/api/profile.api';
+import { createAppStore } from '@/state/store';
 import { HttpTwoFactorApi } from './adapters/api/http-two-factor.api';
 import { HttpUserDetailsApi } from './adapters/api/http-user-details.api';
 import { TWO_FACTOR_API } from './adapters/api/two-factor.api';
@@ -56,7 +59,8 @@ import { readDeploymentSource } from './config/deployment-source';
  * Builds the application registry: every default implementation, keyed by token.
  *
  * Platform files (`*.native.ts` / `*.ts`) are chosen by Metro, so this module names one import
- * per adapter and is the same on every platform.
+ * per adapter and is the same on every platform. The Redux store's thunks resolve adapters at
+ * call time, through this same registry.
  */
 export function createAppRegistry(overrides: readonly AdapterOverride[] = []): AdapterRegistry {
   return new AdapterRegistry(overrides)
@@ -70,6 +74,7 @@ export function createAppRegistry(overrides: readonly AdapterOverride[] = []): A
       const device = getLocales().map((l) => l.languageTag);
       return createI18nextAdapter(pickLanguage([chosen, ...device]));
     })
+    .register(APP_STORE, (r) => createAppStore({ resolve: (t) => r.resolve(t) }))
     .register(
       SESSION,
       (r) =>
@@ -78,6 +83,7 @@ export function createAppRegistry(overrides: readonly AdapterOverride[] = []): A
           () => readServerConfig(r.resolve(STORAGE)).tenantId,
           // Resolved at call time: the API client depends on the session for its credentials.
           (tfaToken) => r.resolve(TWO_FACTOR_API).invalidate(tfaToken),
+          r.resolve(APP_STORE),
         ),
     )
     .register(AUTH_STATE, (r) => r.resolve(SESSION).authState)
@@ -89,6 +95,7 @@ export function createAppRegistry(overrides: readonly AdapterOverride[] = []): A
     .register(CLIENT_KYC_API, (r) => new HttpClientKycApi(r.resolve(API_CLIENT)))
     .register(TWO_FACTOR_API, (r) => new HttpTwoFactorApi(r.resolve(API_CLIENT)))
     .register(USER_DETAILS_API, (r) => new HttpUserDetailsApi(r.resolve(API_CLIENT)))
+    .register(PROFILE_API, (r) => new HttpProfileApi(r.resolve(API_CLIENT)))
     .register(DEPLOYMENT_CONFIG, () => createDeploymentConfigStore(readDeploymentSource))
     .register(API_CLIENT, (r) =>
       createApiClient({
