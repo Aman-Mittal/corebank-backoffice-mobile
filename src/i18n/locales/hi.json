@@ -40,7 +40,8 @@
     "ACTIVE": "सक्रिय",
     "INACTIVE": "निष्क्रिय",
     "SAVE": "सहेजें",
-    "EDIT": "संपादित करें"
+    "EDIT": "संपादित करें",
+    "CANCEL": "रद्द करें"
   },
   "HOME": {
     "TITLE": "होम",
@@ -368,5 +369,19 @@
     "NEW_NOTE": "नया नोट",
     "ADD_NOTE": "नोट जोड़ें",
     "EDIT_NOTE": "नोट"
+  },
+  "PROFILE": {
+    "TITLE": "प्रोफ़ाइल",
+    "USERNAME": "उपयोगकर्ता नाम",
+    "DISPLAY_NAME": "प्रदर्शित नाम",
+    "OFFICE": "कार्यालय",
+    "EMAIL": "ईमेल",
+    "ROLES": "भूमिकाएं",
+    "CHANGE_PASSWORD": "पासवर्ड बदलें",
+    "NEW_PASSWORD": "नया पासवर्ड",
+    "REPEAT_NEW_PASSWORD": "नया पासवर्ड पुनः दर्ज करें",
+    "PASSWORDS_DO_NOT_MATCH": "पासवर्ड मेल नहीं खाते।",
+    "PASSWORD_POLICY": "पासवर्ड नीति: {{policy}}",
+    "PASSWORD_CHANGED": "आपका पासवर्ड बदल दिया गया।"
   }
 }
