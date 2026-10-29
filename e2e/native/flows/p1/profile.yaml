@@ -30,6 +30,8 @@ tags:
     id: profile.screen
 - assertVisible:
     id: profile.username
+# The id is on the row's container; Android reports the text on the Text inside it.
+- assertVisible:
     text: mifos
 - assertVisible:
     id: profile.roles
