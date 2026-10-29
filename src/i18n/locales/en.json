@@ -40,7 +40,8 @@
     "ACTIVE": "Active",
     "INACTIVE": "Inactive",
     "SAVE": "Save",
-    "EDIT": "Edit"
+    "EDIT": "Edit",
+    "CANCEL": "Cancel"
   },
   "HOME": {
     "TITLE": "Home",
@@ -368,5 +369,19 @@
     "NEW_NOTE": "New note",
     "ADD_NOTE": "Add note",
     "EDIT_NOTE": "Note"
+  },
+  "PROFILE": {
+    "TITLE": "Profile",
+    "USERNAME": "Username",
+    "DISPLAY_NAME": "Display name",
+    "OFFICE": "Office",
+    "EMAIL": "Email",
+    "ROLES": "Roles",
+    "CHANGE_PASSWORD": "Change password",
+    "NEW_PASSWORD": "New password",
+    "REPEAT_NEW_PASSWORD": "Repeat new password",
+    "PASSWORDS_DO_NOT_MATCH": "The passwords do not match.",
+    "PASSWORD_POLICY": "Password policy: {{policy}}",
+    "PASSWORD_CHANGED": "Your password was changed."
   }
 }
