@@ -134,3 +134,54 @@ export async function addPassport(request: APIRequestContext, clientId: number, 
   );
   return body.resourceId as number;
 }
+
+/**
+ * Makes sure a client charge definition named `name` exists (flat, specified due date, USD: the
+ * only kind the server lets apply to clients) and answers its id. The stack ships none.
+ */
+export async function ensureClientCharge(
+  request: APIRequestContext,
+  { name = 'E2E Client Fee', amount = 100 }: { name?: string; amount?: number } = {},
+) {
+  const charges = (await (await fineractGet(request, '/v1/charges')).json()) as {
+    id: number;
+    name: string;
+  }[];
+  const existing = charges.find((c) => c.name === name);
+  if (existing) return existing.id;
+  const body = await ok(
+    await fineractPost(request, '/v1/charges', {
+      name,
+      chargeAppliesTo: 3,
+      currencyCode: 'USD',
+      amount,
+      chargeTimeType: 2,
+      chargeCalculationType: 1,
+      active: true,
+      penalty: false,
+      locale: 'en',
+    }),
+    'POST /charges',
+  );
+  return body.resourceId as number;
+}
+
+/** Charges a client through the REST API; answers the client charge's id. */
+export async function addClientCharge(
+  request: APIRequestContext,
+  clientId: number,
+  chargeId: number,
+  { amount = 100, dueDate = '2026-02-15' }: { amount?: number; dueDate?: string } = {},
+) {
+  const body = await ok(
+    await fineractPost(request, `/v1/clients/${clientId}/charges`, {
+      chargeId,
+      amount,
+      dueDate,
+      locale: 'en',
+      dateFormat: 'yyyy-MM-dd',
+    }),
+    `POST /clients/${clientId}/charges`,
+  );
+  return body.resourceId as number;
+}
