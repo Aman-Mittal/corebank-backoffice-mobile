@@ -39,6 +39,7 @@ import { CLIENT_ACCESS } from './access';
 import { ACTION_KEYS, clientActions, isReasoned, REASON_CODES } from './client-actions';
 import { LEGAL_FORM_KEYS, statusText } from './client-labels';
 import { ClientStaff } from './ClientStaff';
+import { ClientTransfer } from './ClientTransfer';
 import { useClient, useClientCommand, useClientReasons } from './useClients';
 
 export function ClientViewScreen({ clientId }: { readonly clientId: number }) {
@@ -49,6 +50,7 @@ export function ClientViewScreen({ clientId }: { readonly clientId: number }) {
   const canReadIdentifiers = usePermission(CLIENT_ACCESS.readIdentifiers);
   const canReadNotes = usePermission(CLIENT_ACCESS.readNotes);
   const canReadCharges = usePermission(CLIENT_ACCESS.readCharges);
+  const canReadFamily = usePermission(CLIENT_ACCESS.readFamily);
 
   if (!valid || (client.isError && isNotFound(client.error))) {
     return (
@@ -77,6 +79,11 @@ export function ClientViewScreen({ clientId }: { readonly clientId: number }) {
       <DetailRow label={t('CLIENTS.OFFICE')} testID={TID.client.office}>
         {c.officeName}
       </DetailRow>
+      {c.transferToOfficeName ? (
+        <DetailRow label={t('CLIENTS.TRANSFER.TO')} testID={TID.client.transferTo}>
+          {c.transferToOfficeName}
+        </DetailRow>
+      ) : null}
       <DetailRow label={t('CLIENTS.LEGAL_FORM')} testID={TID.client.legalForm}>
         {c.legalForm ? t(LEGAL_FORM_KEYS[c.legalForm]) : null}
       </DetailRow>
@@ -107,6 +114,7 @@ export function ClientViewScreen({ clientId }: { readonly clientId: number }) {
       ) : null}
       <ClientActions key={c.id} client={c} />
       <ClientStaff key={`staff-${c.id}`} client={c} />
+      <ClientTransfer key={`transfer-${c.id}`} client={c} />
       <View style={styles.links}>
         {canReadIdentifiers ? (
           <Button
@@ -133,6 +141,15 @@ export function ClientViewScreen({ clientId }: { readonly clientId: number }) {
             variant="secondary"
             role="link"
             onPress={() => router.push(href(`/clients/${c.id}/charges`))}
+          />
+        ) : null}
+        {canReadFamily ? (
+          <Button
+            testID={TID.client.familyLink}
+            label={t('FAMILY.TITLE')}
+            variant="secondary"
+            role="link"
+            onPress={() => router.push(href(`/clients/${c.id}/family`))}
           />
         ) : null}
       </View>

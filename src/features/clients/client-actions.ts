@@ -18,7 +18,8 @@ import type { ClientCommand, ClientStatus, ReasonedCommand } from '@/core/adapte
 
 /**
  * The commands each status allows, in the order they are offered. Transfers are not here: they
- * are their own slice (P1-08). A status this app does not know offers nothing rather than a guess.
+ * have their own panel (ClientTransfer). A status this app does not know offers nothing rather
+ * than a guess.
  */
 const ACTIONS: Record<ClientStatus, readonly ClientCommand[]> = {
   pending: ['activate', 'reject', 'withdraw'],
