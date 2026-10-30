@@ -80,6 +80,7 @@ export class ClientPage {
   readonly identifiersLink: Locator;
   readonly notesLink: Locator;
   readonly chargesLink: Locator;
+  readonly familyLink: Locator;
   readonly staff: Locator;
   readonly assignStaff: Locator;
   readonly unassignStaff: Locator;
@@ -89,6 +90,13 @@ export class ClientPage {
   readonly staffCancel: Locator;
   readonly unassignConfirm: Locator;
   readonly unassignCancel: Locator;
+  readonly transferTo: Locator;
+  readonly transferOffice: Select;
+  readonly transferDate: Locator;
+  readonly transferNote: Locator;
+  readonly transferConfirm: Locator;
+  readonly transferCancel: Locator;
+  readonly transferError: Locator;
 
   constructor(private readonly page: Page) {
     const t = TID.client;
@@ -115,6 +123,7 @@ export class ClientPage {
     this.identifiersLink = byId(page, t.identifiersLink);
     this.notesLink = byId(page, t.notesLink);
     this.chargesLink = byId(page, t.chargesLink);
+    this.familyLink = byId(page, t.familyLink);
     this.staff = byId(page, t.staff);
     this.assignStaff = byId(page, t.assignStaff);
     this.unassignStaff = byId(page, t.unassignStaff);
@@ -124,6 +133,18 @@ export class ClientPage {
     this.staffCancel = byId(page, t.staffCancel);
     this.unassignConfirm = byId(page, t.unassignConfirm);
     this.unassignCancel = byId(page, t.unassignCancel);
+    this.transferTo = byId(page, t.transferTo);
+    this.transferOffice = new Select(page, t.transferOffice);
+    this.transferDate = byId(page, t.transferDate);
+    this.transferNote = byId(page, t.transferNote);
+    this.transferConfirm = byId(page, t.transferConfirm);
+    this.transferCancel = byId(page, t.transferCancel);
+    this.transferError = byId(page, t.transferError);
+  }
+
+  /** The button for one transfer command: `proposeTransfer`, `acceptTransfer`, … */
+  transfer(command: string): Locator {
+    return byId(this.page, TID.client.transfer(command));
   }
 
   /** The button for one command: `activate`, `reject`, `undoRejection`, … */
