@@ -25,6 +25,7 @@ set -uo pipefail
 APP_ID=io.github.amanmittal.mfibackoffice
 DIAG=${DIAG:-${RUNNER_TEMP:-/tmp}/ios-diagnostics}
 mkdir -p "$DIAG"
+pods=$(mktemp)
 build=$(mktemp)
 flows=$(mktemp)
 
@@ -34,8 +35,32 @@ xcode=$(ls -d /Applications/Xcode_26*.app 2>/dev/null | sort -V | tail -n 1)
 if [ -n "$xcode" ]; then sudo xcode-select -s "$xcode"; fi
 echo "::notice title=iOS stage::building with $(xcodebuild -version | tr '\n' ' ')"
 
-npx expo run:ios --configuration Release --no-bundler 2>&1 | tee "$build"
+# Prebuild and `pod install` run as their own steps: inside `expo run:ios` a failed `pod install`
+# is only a warning, and the build then fails on "The sandbox is not in sync with the
+# Podfile.lock", which hides the reason.
+npx expo prebuild --platform ios --no-install 2>&1 | tee "$pods"
 status=${PIPESTATUS[0]}
+if [ "$status" -eq 0 ]; then
+  # The retry refreshes the spec repo, in case the first attempt met a stale or partial one.
+  (cd ios && { pod install || pod install --repo-update; }) 2>&1 | tee -a "$pods"
+  status=${PIPESTATUS[0]}
+fi
+if [ "$status" -ne 0 ]; then
+  { echo "prebuild or pod install exited $status"; tail -n 40 "$pods"; } \
+    >"$DIAG/iOS native project failed.txt"
+  exit 1
+fi
+
+npx expo run:ios --configuration Release --no-bundler --no-install 2>&1 | tee "$build"
+status=${PIPESTATUS[0]}
+# After installing, `expo run:ios` opens the app through a deep link, and a freshly booted
+# simulator can time out on that (`simctl openurl` code 60). Maestro launches the app itself, so
+# an installed app with only that launch failed is no reason to stop.
+if [ "$status" -ne 0 ] && grep -q 'simctl openurl .* exited with non-zero code' "$build" &&
+  xcrun simctl get_app_container booted "$APP_ID" >/dev/null 2>&1; then
+  echo '::notice title=iOS stage::the app is installed; expo could not open it, so Maestro will'
+  status=0
+fi
 if [ "$status" -ne 0 ]; then
   {
     echo "expo run:ios exited $status"
