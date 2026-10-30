@@ -25,5 +25,7 @@ export const clientKeys = {
   identifiers: (clientId: number) => [...clientKeys.detail(clientId), 'identifiers'] as const,
   documentTypes: (clientId: number) => [...clientKeys.detail(clientId), 'document-types'] as const,
   notes: (clientId: number) => [...clientKeys.detail(clientId), 'notes'] as const,
+  charges: (clientId: number) => [...clientKeys.detail(clientId), 'charges'] as const,
+  chargeOptions: (clientId: number) => [...clientKeys.detail(clientId), 'charge-options'] as const,
   staffOptions: (officeId: number) => [...clientKeys.all, 'staff-options', officeId] as const,
 };
