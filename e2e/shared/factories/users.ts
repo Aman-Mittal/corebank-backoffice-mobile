@@ -19,12 +19,14 @@ import type { APIRequestContext } from '@playwright/test';
 import { adminHeaders, apiBaseUrl, fineractGet, fineractPost, runId } from '../fineract-api';
 
 /**
- * Creates a role holding exactly `permissions`, and a user with only that role, through the
- * REST API. Written for this project (not copied from any reference suite).
+ * Creates a role holding exactly `permissions`, and a user with only that role in `officeId`
+ * (the head office by default), through the REST API. Written for this project (not copied from
+ * any reference suite).
  */
 export async function createRestrictedUser(
   request: APIRequestContext,
   permissions: readonly string[],
+  officeId = 1,
 ) {
   const id = runId();
   const role = await fineractPost(request, '/v1/roles', {
@@ -50,7 +52,7 @@ export async function createRestrictedUser(
     firstname: 'E2E',
     lastname: id,
     email: `${username}@example.invalid`,
-    officeId: 1,
+    officeId,
     roles: [roleId],
     sendPasswordToEmail: false,
     passwordNeverExpires: true,
