@@ -16,19 +16,34 @@
 
 import type { ReactNode } from 'react';
 
+import { useAdapter } from '@/core/adapters/AdapterProvider';
+import { DEPLOYMENT_CONFIG } from '@/core/config/deployment-config';
 import { useAppSelector } from '@/state/hooks';
 
-import type { Access } from './permissions';
+import { ALL_FUNCTIONS, type Access } from './permissions';
 import { selectGranted, selectPermitted } from './session-slice';
 
-/** The signed-in user's permission codes; empty when signed out. */
+/** What every client-side gate sees while a deployment has switched them off. */
+const UNGATED: readonly string[] = [ALL_FUNCTIONS];
+
+/**
+ * Whether the app's own gates are on. A deployment may switch them off (`rbacEnabled: false`);
+ * the server still checks every request (DOCS/test-plan/P1-15-refusals-office-scope.md).
+ */
+function useGatesOn(): boolean {
+  return useAdapter(DEPLOYMENT_CONFIG).get().rbacEnabled;
+}
+
+/** The signed-in user's permission codes; empty when signed out. All, with the gates off. */
 export function useGranted(): readonly string[] {
-  return useAppSelector(selectGranted);
+  const granted = useAppSelector(selectGranted);
+  return useGatesOn() ? granted : UNGATED;
 }
 
 /** Whether the signed-in user satisfies `access` (`null` = ungated). Re-renders on session change. */
 export function usePermission(access: Access | null): boolean {
-  return useAppSelector((state) => selectPermitted(state, access));
+  const permitted = useAppSelector((state) => selectPermitted(state, access));
+  return useGatesOn() ? permitted : true;
 }
 
 /** Renders `children` when permitted, otherwise `fallback` (nothing by default). */
