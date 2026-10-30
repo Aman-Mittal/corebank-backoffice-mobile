@@ -58,6 +58,15 @@ export const PERSONAS = {
   ],
   kycReader: ['READ_CLIENT', 'READ_CLIENTIDENTIFIER', 'READ_CLIENTNOTE'],
   staffAssigner: ['READ_CLIENT', 'ASSIGNSTAFF_CLIENT', 'UNASSIGNSTAFF_CLIENT'],
+  chargeAdmin: [
+    'READ_CLIENT',
+    'READ_CLIENTCHARGE',
+    'CREATE_CLIENTCHARGE',
+    'PAY_CLIENTCHARGE',
+    'WAIVE_CLIENTCHARGE',
+    'DELETE_CLIENTCHARGE',
+  ],
+  chargeReader: ['READ_CLIENT', 'READ_CLIENTCHARGE'],
 } as const satisfies Record<string, readonly string[]>;
 
 export type Persona = keyof typeof PERSONAS;

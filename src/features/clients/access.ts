@@ -36,4 +36,9 @@ export const CLIENT_ACCESS = {
   createNote: { anyOf: ['CREATE_CLIENTNOTE'] },
   updateNote: { anyOf: ['UPDATE_CLIENTNOTE'] },
   deleteNote: { anyOf: ['DELETE_CLIENTNOTE'] },
+  readCharges: { anyOf: ['READ_CLIENTCHARGE'] },
+  createCharge: { anyOf: ['CREATE_CLIENTCHARGE'] },
+  payCharge: { anyOf: ['PAY_CLIENTCHARGE'] },
+  waiveCharge: { anyOf: ['WAIVE_CLIENTCHARGE'] },
+  deleteCharge: { anyOf: ['DELETE_CLIENTCHARGE'] },
 } as const satisfies Record<string, Access>;

@@ -370,6 +370,32 @@
     "ADD_NOTE": "नोट जोड़ें",
     "EDIT_NOTE": "नोट"
   },
+  "CHARGES": {
+    "TITLE": "शुल्क",
+    "ADD": "शुल्क जोड़ें",
+    "NONE": "इस ग्राहक पर कोई शुल्क नहीं है।",
+    "PENALTY": "दंड",
+    "DUE": "देय {{date}}",
+    "AMOUNTS": "राशि {{amount}} · भुगतान {{paid}} · माफ़ {{waived}} · बकाया {{outstanding}}",
+    "STATUS": {
+      "OUTSTANDING": "बकाया",
+      "PAID": "भुगतान हो गया",
+      "WAIVED": "माफ़"
+    },
+    "PAY": "भुगतान करें",
+    "WAIVE": "माफ़ करें",
+    "CONFIRM_WAIVE": "इस शुल्क की बकाया राशि माफ़ करें?",
+    "CONFIRM_DELETE": "यह शुल्क हटाएँ?",
+    "PAY_AMOUNT": "भुगतान राशि",
+    "PAY_DATE": "भुगतान तिथि",
+    "AMOUNT_INVALID": "शून्य से अधिक राशि दर्ज करें, जैसे 12.50।",
+    "CHARGE": "शुल्क",
+    "CHARGE_PLACEHOLDER": "शुल्क चुनें",
+    "OPTIONS_FAILED": "शुल्क लोड नहीं हो सके।",
+    "NO_OPTIONS": "कोई ग्राहक शुल्क सेट नहीं है।",
+    "AMOUNT_IN": "राशि ({{currency}})",
+    "DUE_DATE": "देय तिथि"
+  },
   "PROFILE": {
     "TITLE": "प्रोफ़ाइल",
     "USERNAME": "उपयोगकर्ता नाम",

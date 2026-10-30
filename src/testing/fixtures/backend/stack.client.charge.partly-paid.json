@@ -1,0 +1,34 @@
+{
+  "id": 1,
+  "clientId": 14,
+  "chargeId": 1,
+  "name": "E2E Client Fee",
+  "chargeTimeType": {
+    "id": 2,
+    "code": "chargeTimeType.specifiedDueDate",
+    "value": "Specified due date"
+  },
+  "dueDate": [2026, 2, 15],
+  "chargeCalculationType": {
+    "id": 1,
+    "code": "chargeCalculationType.flat",
+    "value": "Flat"
+  },
+  "currency": {
+    "code": "USD",
+    "name": "US Dollar",
+    "decimalPlaces": 2,
+    "displaySymbol": "$",
+    "nameCode": "currency.USD",
+    "displayLabel": "US Dollar ($)"
+  },
+  "amount": 100.0,
+  "amountPaid": 30.0,
+  "amountWaived": 0,
+  "amountWrittenOff": 0,
+  "amountOutstanding": 70.0,
+  "penalty": false,
+  "isActive": true,
+  "isPaid": false,
+  "isWaived": false
+}

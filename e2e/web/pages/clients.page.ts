@@ -79,6 +79,7 @@ export class ClientPage {
   readonly actions: Locator;
   readonly identifiersLink: Locator;
   readonly notesLink: Locator;
+  readonly chargesLink: Locator;
   readonly staff: Locator;
   readonly assignStaff: Locator;
   readonly unassignStaff: Locator;
@@ -113,6 +114,7 @@ export class ClientPage {
     this.actions = page.locator('[data-testid^="client.action."]').filter({ visible: true });
     this.identifiersLink = byId(page, t.identifiersLink);
     this.notesLink = byId(page, t.notesLink);
+    this.chargesLink = byId(page, t.chargesLink);
     this.staff = byId(page, t.staff);
     this.assignStaff = byId(page, t.assignStaff);
     this.unassignStaff = byId(page, t.unassignStaff);

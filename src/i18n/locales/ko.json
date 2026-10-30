@@ -370,6 +370,32 @@
     "ADD_NOTE": "메모 추가",
     "EDIT_NOTE": "메모"
   },
+  "CHARGES": {
+    "TITLE": "수수료",
+    "ADD": "수수료 추가",
+    "NONE": "이 고객에게 수수료가 없습니다.",
+    "PENALTY": "벌금",
+    "DUE": "만기 {{date}}",
+    "AMOUNTS": "금액 {{amount}} · 납부 {{paid}} · 면제 {{waived}} · 미납 {{outstanding}}",
+    "STATUS": {
+      "OUTSTANDING": "미납",
+      "PAID": "납부 완료",
+      "WAIVED": "면제"
+    },
+    "PAY": "납부",
+    "WAIVE": "면제",
+    "CONFIRM_WAIVE": "이 수수료의 미납액을 면제할까요?",
+    "CONFIRM_DELETE": "이 수수료를 삭제할까요?",
+    "PAY_AMOUNT": "납부 금액",
+    "PAY_DATE": "납부일",
+    "AMOUNT_INVALID": "0보다 큰 금액을 입력하세요(예: 12.50).",
+    "CHARGE": "수수료",
+    "CHARGE_PLACEHOLDER": "수수료 선택",
+    "OPTIONS_FAILED": "수수료를 불러오지 못했습니다.",
+    "NO_OPTIONS": "설정된 고객 수수료가 없습니다.",
+    "AMOUNT_IN": "금액 ({{currency}})",
+    "DUE_DATE": "만기일"
+  },
   "PROFILE": {
     "TITLE": "프로필",
     "USERNAME": "사용자 이름",

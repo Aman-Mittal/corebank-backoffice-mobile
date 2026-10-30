@@ -370,6 +370,32 @@
     "ADD_NOTE": "Add note",
     "EDIT_NOTE": "Note"
   },
+  "CHARGES": {
+    "TITLE": "Charges",
+    "ADD": "Add charge",
+    "NONE": "This client has no charges.",
+    "PENALTY": "Penalty",
+    "DUE": "Due {{date}}",
+    "AMOUNTS": "Amount {{amount}} · Paid {{paid}} · Waived {{waived}} · Outstanding {{outstanding}}",
+    "STATUS": {
+      "OUTSTANDING": "Outstanding",
+      "PAID": "Paid",
+      "WAIVED": "Waived"
+    },
+    "PAY": "Pay",
+    "WAIVE": "Waive",
+    "CONFIRM_WAIVE": "Waive what is outstanding on this charge?",
+    "CONFIRM_DELETE": "Delete this charge?",
+    "PAY_AMOUNT": "Amount to pay",
+    "PAY_DATE": "Payment date",
+    "AMOUNT_INVALID": "Enter an amount above zero, like 12.50.",
+    "CHARGE": "Charge",
+    "CHARGE_PLACEHOLDER": "Choose a charge",
+    "OPTIONS_FAILED": "The charges could not be loaded.",
+    "NO_OPTIONS": "No client charges are set up.",
+    "AMOUNT_IN": "Amount ({{currency}})",
+    "DUE_DATE": "Due date"
+  },
   "PROFILE": {
     "TITLE": "Profile",
     "USERNAME": "Username",

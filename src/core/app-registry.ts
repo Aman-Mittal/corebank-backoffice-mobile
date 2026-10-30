@@ -38,8 +38,10 @@ import { AUTH_API } from './adapters/api/auth.api';
 import { HttpAuthApi } from './adapters/api/http-auth.api';
 import { HttpOfficeApi } from './adapters/api/http-office.api';
 import { CLIENT_API } from './adapters/api/client.api';
+import { CLIENT_CHARGE_API } from './adapters/api/client-charge.api';
 import { CLIENT_KYC_API } from './adapters/api/client-kyc.api';
 import { HttpClientApi } from './adapters/api/http-client.api';
+import { HttpClientChargeApi } from './adapters/api/http-client-charge.api';
 import { HttpClientKycApi } from './adapters/api/http-client-kyc.api';
 import { OFFICE_API } from './adapters/api/office.api';
 import { HttpStaffApi } from './adapters/api/http-staff.api';
@@ -93,6 +95,7 @@ export function createAppRegistry(overrides: readonly AdapterOverride[] = []): A
     .register(STAFF_API, (r) => new HttpStaffApi(r.resolve(API_CLIENT)))
     .register(CLIENT_API, (r) => new HttpClientApi(r.resolve(API_CLIENT)))
     .register(CLIENT_KYC_API, (r) => new HttpClientKycApi(r.resolve(API_CLIENT)))
+    .register(CLIENT_CHARGE_API, (r) => new HttpClientChargeApi(r.resolve(API_CLIENT)))
     .register(TWO_FACTOR_API, (r) => new HttpTwoFactorApi(r.resolve(API_CLIENT)))
     .register(USER_DETAILS_API, (r) => new HttpUserDetailsApi(r.resolve(API_CLIENT)))
     .register(PROFILE_API, (r) => new HttpProfileApi(r.resolve(API_CLIENT)))

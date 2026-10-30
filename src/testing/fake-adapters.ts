@@ -16,6 +16,7 @@
 
 import { AUTH_API, type AuthApi } from '@/core/adapters/api/auth.api';
 import { CLIENT_API, type ClientApi } from '@/core/adapters/api/client.api';
+import { CLIENT_CHARGE_API, type ClientChargeApi } from '@/core/adapters/api/client-charge.api';
 import { CLIENT_KYC_API, type ClientKycApi } from '@/core/adapters/api/client-kyc.api';
 import { OFFICE_API, type OfficeApi } from '@/core/adapters/api/office.api';
 import { STAFF_API, type StaffApi } from '@/core/adapters/api/staff.api';
@@ -75,6 +76,7 @@ export interface FakeAdapters {
   readonly staffApi: StaffApi;
   readonly clientApi: ClientApi;
   readonly clientKycApi: ClientKycApi;
+  readonly clientChargeApi: ClientChargeApi;
   readonly twoFactorApi: TwoFactorApi;
   readonly userDetailsApi: UserDetailsApi;
   readonly profileApi: ProfileApi;
@@ -188,6 +190,14 @@ export function createFakeAdapters(): FakeAdapters {
     updateNote: unscripted('ClientKycApi.updateNote'),
     deleteNote: unscripted('ClientKycApi.deleteNote'),
   };
+  const clientChargeApi: ClientChargeApi = {
+    charges: unscripted('ClientChargeApi.charges'),
+    chargeOptions: unscripted('ClientChargeApi.chargeOptions'),
+    addCharge: unscripted('ClientChargeApi.addCharge'),
+    payCharge: unscripted('ClientChargeApi.payCharge'),
+    waiveCharge: unscripted('ClientChargeApi.waiveCharge'),
+    deleteCharge: unscripted('ClientChargeApi.deleteCharge'),
+  };
 
   const twoFactorApi: TwoFactorApi = {
     methods: unscripted('TwoFactorApi.methods'),
@@ -216,6 +226,7 @@ export function createFakeAdapters(): FakeAdapters {
     provide(STAFF_API, staffApi),
     provide(CLIENT_API, clientApi),
     provide(CLIENT_KYC_API, clientKycApi),
+    provide(CLIENT_CHARGE_API, clientChargeApi),
     provide(STORAGE, storage),
     provide(SECURE_STORAGE, secureStorage),
     provide(DOWNLOAD, download),
@@ -240,6 +251,7 @@ export function createFakeAdapters(): FakeAdapters {
     staffApi,
     clientApi,
     clientKycApi,
+    clientChargeApi,
     twoFactorApi,
     userDetailsApi,
     profileApi,
