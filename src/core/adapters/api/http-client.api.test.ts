@@ -19,6 +19,8 @@ import page from '@/testing/fixtures/backend/clients.page.json';
 import sandboxTemplate from '@/testing/fixtures/backend/client.template.reject.json';
 import stackOffice from '@/testing/fixtures/backend/stack.client.template.office.json';
 import stackReject from '@/testing/fixtures/backend/stack.client.template.reject.json';
+import stackOffices from '@/testing/fixtures/backend/stack.client.template.offices.json';
+import stackTransfer from '@/testing/fixtures/backend/stack.client.transfer-in-progress.json';
 import { fakeApi } from '@/testing/fake-api';
 
 import {
@@ -53,6 +55,17 @@ describe('mapClient (captured shape)', () => {
       closedOnDate: null,
       staffId: null,
       staffName: null,
+      transferToOfficeId: null,
+      transferToOfficeName: null,
+    });
+  });
+
+  it('reads where a transfer in progress would move the client (e2e stack)', () => {
+    expect(mapClient(stackTransfer as ClientPayload)).toMatchObject({
+      status: 'transferInProgress',
+      officeName: 'Head Office',
+      transferToOfficeId: 3,
+      transferToOfficeName: 'Capture Branch',
     });
   });
 
@@ -308,6 +321,49 @@ describe('HttpClientApi', () => {
     expect(api.requests.map((r) => [Object.fromEntries(r.query), r.body])).toEqual([
       [{ command: 'assignStaff' }, { staffId: 4 }],
       [{ command: 'unassignStaff' }, { staffId: 4 }],
+    ]);
+  });
+
+  it('reads every office from the client template, asking with no query', async () => {
+    const api = fakeApi({ 'GET /v1/clients/template': [200, stackOffices] });
+    const offices = await new HttpClientApi(api.client).transferOffices();
+    expect(offices).toEqual([
+      { id: 1, name: 'Head Office' },
+      { id: 2, name: 'E2E Office' },
+      { id: 3, name: 'Capture Branch' },
+    ]);
+    expect([...api.requests[0]!.query.keys()]).toEqual([]);
+  });
+
+  it('sends each transfer command only the fields the server accepts', async () => {
+    const api = fakeApi({ 'POST /v1/clients/3': [200, { clientId: 3, resourceId: 3 }] });
+    const http = new HttpClientApi(api.client);
+    await http.transfer(3, 'proposeTransfer', {
+      destinationOfficeId: 2,
+      transferDate: '2026-10-01',
+      note: ' Moving ',
+    });
+    await http.transfer(3, 'proposeAndAcceptTransfer', {
+      destinationOfficeId: 2,
+      transferDate: '2026-10-01',
+      note: '  ',
+    });
+    await http.transfer(3, 'acceptTransfer', {});
+    await http.transfer(3, 'rejectTransfer', { note: 'Full' });
+    expect(api.requests.map((r) => [Object.fromEntries(r.query), r.body])).toEqual([
+      [
+        { command: 'proposeTransfer' },
+        {
+          destinationOfficeId: 2,
+          transferDate: '2026-10-01',
+          dateFormat: 'yyyy-MM-dd',
+          locale: 'en',
+          note: 'Moving',
+        },
+      ],
+      [{ command: 'proposeAndAcceptTransfer' }, { destinationOfficeId: 2 }],
+      [{ command: 'acceptTransfer' }, {}],
+      [{ command: 'rejectTransfer' }, { note: 'Full' }],
     ]);
   });
 
