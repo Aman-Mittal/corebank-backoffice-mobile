@@ -18,6 +18,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { useAdapter } from '@/core/adapters/AdapterProvider';
 import { CLIENT_KYC_API, type IdentifierDraft } from '@/core/adapters/api/client-kyc.api';
+import { FAMILY_API, type FamilyMemberDraft } from '@/core/adapters/api/family.api';
 
 import { clientKeys } from './clients.keys';
 
@@ -72,6 +73,41 @@ export function useKycMutations(clientId: number) {
     deleteNote: useMutation({
       mutationFn: (noteId: number) => api.deleteNote(clientId, noteId),
       onSuccess: notes,
+    }),
+  };
+}
+
+export function useFamilyMembers(clientId: number) {
+  const api = useAdapter(FAMILY_API);
+  return useQuery({ queryKey: clientKeys.family(clientId), queryFn: () => api.members(clientId) });
+}
+
+export function useFamilyOptions(clientId: number) {
+  const api = useAdapter(FAMILY_API);
+  return useQuery({
+    queryKey: clientKeys.familyOptions(clientId),
+    queryFn: () => api.options(clientId),
+  });
+}
+
+/** Every write reloads the members, so the screen shows the server's view of them. */
+export function useFamilyMutations(clientId: number) {
+  const api = useAdapter(FAMILY_API);
+  const queryClient = useQueryClient();
+  const reload = () => queryClient.invalidateQueries({ queryKey: clientKeys.family(clientId) });
+  return {
+    add: useMutation({
+      mutationFn: (draft: FamilyMemberDraft) => api.add(clientId, draft),
+      onSuccess: reload,
+    }),
+    update: useMutation({
+      mutationFn: ({ memberId, draft }: { memberId: number; draft: FamilyMemberDraft }) =>
+        api.update(clientId, memberId, draft),
+      onSuccess: reload,
+    }),
+    remove: useMutation({
+      mutationFn: (memberId: number) => api.remove(clientId, memberId),
+      onSettled: reload,
     }),
   };
 }
