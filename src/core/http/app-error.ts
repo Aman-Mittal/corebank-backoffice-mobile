@@ -58,6 +58,8 @@ export class AppError extends Error {
 
 /** The server's code for "the request was understood and the business rules say no". */
 const DOMAIN_RULE_VIOLATION = 'validation.msg.domain.rule.violation';
+/** The server's refusal of a permission the caller lacks. */
+const NOT_AUTHORIZED = 'error.msg.not.authorized';
 
 type ErrorBody = {
   readonly userMessageGlobalisationCode?: string;
@@ -105,7 +107,9 @@ function fieldMessages(body: ErrorBody): FieldMessage[] {
  * 403 means two unrelated things: the caller lacks a permission, or the operation is not
  * allowed in this state. A domain-rule refusal names itself (its globalisation code, or a
  * populated `errors[]`) and carries the only statement of the reason, so it is kept apart from
- * an authorization refusal, whose body is backend vocabulary the user cannot act on.
+ * an authorization refusal, whose body is backend vocabulary the user cannot act on. The server's
+ * own authorization refusal (`error.msg.not.authorized`) also fills `errors[]`, so its code is
+ * checked first (captured: `stack.refusal.not-authorized.json`).
  */
 export function toAppError(
   status: number,
@@ -119,6 +123,7 @@ export function toAppError(
   const kind: AppErrorKind = (() => {
     if (status === 401) return 'unauthorized';
     if (status === 403) {
+      if (body?.userMessageGlobalisationCode === NOT_AUTHORIZED) return 'forbidden';
       return body?.userMessageGlobalisationCode === DOMAIN_RULE_VIOLATION || messages.length > 0
         ? 'domainRule'
         : 'forbidden';
