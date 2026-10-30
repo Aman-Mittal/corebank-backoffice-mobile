@@ -48,6 +48,7 @@ export function ClientViewScreen({ clientId }: { readonly clientId: number }) {
   const client = useClient(clientId, { enabled: valid });
   const canReadIdentifiers = usePermission(CLIENT_ACCESS.readIdentifiers);
   const canReadNotes = usePermission(CLIENT_ACCESS.readNotes);
+  const canReadCharges = usePermission(CLIENT_ACCESS.readCharges);
 
   if (!valid || (client.isError && isNotFound(client.error))) {
     return (
@@ -123,6 +124,15 @@ export function ClientViewScreen({ clientId }: { readonly clientId: number }) {
             variant="secondary"
             role="link"
             onPress={() => router.push(href(`/clients/${c.id}/notes`))}
+          />
+        ) : null}
+        {canReadCharges ? (
+          <Button
+            testID={TID.client.chargesLink}
+            label={t('CHARGES.TITLE')}
+            variant="secondary"
+            role="link"
+            onPress={() => router.push(href(`/clients/${c.id}/charges`))}
           />
         ) : null}
       </View>
