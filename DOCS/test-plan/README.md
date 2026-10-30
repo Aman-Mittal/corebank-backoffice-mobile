@@ -41,18 +41,22 @@ out of date.
 
 ## Documents
 
-| Document                                                       | Slice                                                          |
-| -------------------------------------------------------------- | -------------------------------------------------------------- |
-| [P0-foundation.md](P0-foundation.md)                           | Harness smoke test, About and disclaimer                       |
-| [P1-01-sign-in.md](P1-01-sign-in.md)                           | Sign-in, session, sign-out reasons                             |
-| [P1-02-shell-rbac.md](P1-02-shell-rbac.md)                     | Navigation shell, permissions, route protection, Access Denied |
-| [P1-03-two-factor-oidc.md](P1-03-two-factor-oidc.md)           | Two-factor and identity-provider sign-in                       |
-| [P1-04-offices-staff.md](P1-04-offices-staff.md)               | Offices and staff: lists, views, create and edit               |
-| [P1-05-clients.md](P1-05-clients.md)                           | Clients: list, page, create and activate                       |
-| [P1-06-client-lifecycle.md](P1-06-client-lifecycle.md)         | Client lifecycle: reject, withdraw, undo, close, reactivate    |
-| [P1-07-client-kyc.md](P1-07-client-kyc.md)                     | Client identifiers and notes                                   |
-| [P1-08-client-staff.md](P1-08-client-staff.md)                 | Client staff assignment                                        |
-| [P1-09-list-paging-failures.md](P1-09-list-paging-failures.md) | List paging, and lists whose load fails                        |
-| [P1-10-profile-state.md](P1-10-profile-state.md)               | Profile; session and permission state in Redux                 |
-| [P1-11-client-charges.md](P1-11-client-charges.md)             | Client charges: list, add, pay, waive and delete               |
-| [unit-test-catalogue.md](unit-test-catalogue.md)               | Generated list of every unit and component test                |
+| Document                                                         | Slice                                                          |
+| ---------------------------------------------------------------- | -------------------------------------------------------------- |
+| [P0-foundation.md](P0-foundation.md)                             | Harness smoke test, About and disclaimer                       |
+| [P1-01-sign-in.md](P1-01-sign-in.md)                             | Sign-in, session, sign-out reasons                             |
+| [P1-02-shell-rbac.md](P1-02-shell-rbac.md)                       | Navigation shell, permissions, route protection, Access Denied |
+| [P1-03-two-factor-oidc.md](P1-03-two-factor-oidc.md)             | Two-factor and identity-provider sign-in                       |
+| [P1-04-offices-staff.md](P1-04-offices-staff.md)                 | Offices and staff: lists, views, create and edit               |
+| [P1-05-clients.md](P1-05-clients.md)                             | Clients: list, page, create and activate                       |
+| [P1-06-client-lifecycle.md](P1-06-client-lifecycle.md)           | Client lifecycle: reject, withdraw, undo, close, reactivate    |
+| [P1-07-client-kyc.md](P1-07-client-kyc.md)                       | Client identifiers and notes                                   |
+| [P1-08-client-staff.md](P1-08-client-staff.md)                   | Client staff assignment                                        |
+| [P1-09-list-paging-failures.md](P1-09-list-paging-failures.md)   | List paging, and lists whose load fails                        |
+| [P1-10-profile-state.md](P1-10-profile-state.md)                 | Profile; session and permission state in Redux                 |
+| [P1-11-client-charges.md](P1-11-client-charges.md)               | Client charges: list, add, pay, waive and delete               |
+| [P1-12-client-transfer.md](P1-12-client-transfer.md)             | Client transfer between offices                                |
+| [P1-13-family-members.md](P1-13-family-members.md)               | Client family members                                          |
+| [P1-14-search-breadcrumbs.md](P1-14-search-breadcrumbs.md)       | Global search, navigation shortcuts and breadcrumbs            |
+| [P1-15-refusals-office-scope.md](P1-15-refusals-office-scope.md) | Server refusals, client-side gates off, office scope           |
+| [unit-test-catalogue.md](unit-test-catalogue.md)                 | Generated list of every unit and component test                |
