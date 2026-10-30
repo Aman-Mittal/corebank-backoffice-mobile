@@ -55,3 +55,20 @@ ones, and long lists are cut to their first entries; nothing else is edited.
   domain rule whose error names `parameterName: "id"`, not `documentKey`; only its globalisation
   code (`error.msg.clientIdentifier.identityKey.duplicate`) says which field it is about. The
   client and key in it are replaced by Ada Lovelace's.
+
+### Client charges (2026-10-30)
+
+Captured from the e2e stack after seeding two client charge definitions ("E2E Client Fee", 100 USD;
+"E2E Client Penalty", 25.50 USD) and a client charged with each. The community sandbox refused
+the demo credentials that day.
+
+- `stack.client.charges.template.json` (`GET /v1/clients/14/charges/template`): `chargeOptions`
+  are full `ChargeData`, each with its amount and currency.
+- `stack.client.charges.json` (`GET /v1/clients/14/charges`): a page (`totalFilteredRecords`,
+  `pageItems`), latest due date first; `dueDate` is `[y, m, d]`; a waived, an outstanding penalty
+  and a fully paid charge.
+- `stack.client.charge.partly-paid.json` (`GET /v1/clients/14/charges/1` after paying 30 of 100):
+  still neither paid nor waived.
+- `client.charge.delete-paid.json`: deleting a fully paid charge is refused as a 400 validation
+  error (`charge.is.paid`) with no parameter. `client.charge.delete-with-transactions.json`:
+  deleting a part-paid one is refused as a 403 (`error.msg.client.charge.cannot.be.deleted`).

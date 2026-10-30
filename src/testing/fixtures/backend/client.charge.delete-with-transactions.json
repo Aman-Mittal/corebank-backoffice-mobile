@@ -1,0 +1,15 @@
+{
+  "developerMessage": "The request caused a data integrity issue to be fired by the database.",
+  "httpStatusCode": "403",
+  "defaultUserMessage": "Client charge with id `1` cannot be deleted as transactions have been made on the same",
+  "userMessageGlobalisationCode": "error.msg.client.charge.cannot.be.deleted",
+  "errors": [
+    {
+      "developerMessage": "The request caused a data integrity issue to be fired by the database.",
+      "defaultUserMessage": "Client charge with id `1` cannot be deleted as transactions have been made on the same",
+      "userMessageGlobalisationCode": "error.msg.client.charge.cannot.be.deleted",
+      "parameterName": "clientChargeId",
+      "args": [{ "value": 1 }]
+    }
+  ]
+}
