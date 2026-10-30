@@ -57,6 +57,11 @@ function clientApi(overrides: Partial<ClientApi> = {}): ClientApi {
     ]),
     assignStaff: vi.fn(async () => undefined),
     unassignStaff: vi.fn(async () => undefined),
+    transferOffices: vi.fn(async () => [
+      { id: 1, name: 'Head Office' },
+      { id: 2, name: 'Kampala Branch' },
+    ]),
+    transfer: vi.fn(async () => undefined),
     ...overrides,
   };
 }
@@ -331,5 +336,69 @@ describe('ClientViewScreen', () => {
     expect(await screen.findByTestId(TID.client.staff)).toHaveTextContent('Director');
     expect(screen.queryByTestId(TID.client.assignStaff)).not.toBeInTheDocument();
     expect(screen.queryByTestId(TID.client.unassignStaff)).not.toBeInTheDocument();
+  });
+});
+
+describe('ClientTransfer', () => {
+  const ACTIVE = CLIENTS.find((c) => c.id === 3)!;
+  const IN_PROGRESS: Client = {
+    ...ACTIVE,
+    status: 'transferInProgress',
+    transferToOfficeId: 2,
+    transferToOfficeName: 'Kampala Branch',
+  };
+
+  it('proposes a transfer to another office, on a date, with a note', async () => {
+    const { api } = await render(<ClientViewScreen clientId={3} />, [
+      'READ_CLIENT',
+      'PROPOSETRANSFER_CLIENT',
+    ]);
+    await userEvent.click(await screen.findByTestId(TID.client.transfer('proposeTransfer')));
+    expect(screen.queryByTestId(TID.client.transfer('proposeAndAcceptTransfer'))).toBeNull();
+    const confirm = screen.getByTestId(TID.client.transferConfirm);
+    expect(confirm).toHaveAttribute('aria-disabled', 'true');
+    expect(screen.getByTestId(TID.client.transferDate)).toHaveValue('2026-01-15');
+    await userEvent.click(screen.getByTestId(TID.client.transferOffice));
+    expect(
+      screen.queryByTestId(TID.option(TID.client.transferOffice, ACTIVE.officeId!)),
+    ).toBeNull();
+    await userEvent.click(await screen.findByTestId(TID.option(TID.client.transferOffice, 2)));
+    await userEvent.type(screen.getByTestId(TID.client.transferNote), 'Moving');
+    await userEvent.click(confirm);
+    await waitFor(() =>
+      expect(api.transfer).toHaveBeenCalledWith(3, 'proposeTransfer', {
+        destinationOfficeId: 2,
+        transferDate: '2026-01-15',
+        note: 'Moving',
+      }),
+    );
+  });
+
+  it('shows where a transfer goes, and answers it once confirmed', async () => {
+    const api = clientApi({ get: vi.fn(async () => IN_PROGRESS) });
+    await render(<ClientViewScreen clientId={3} />, ['ALL_FUNCTIONS'], api);
+    expect(await screen.findByTestId(TID.client.transferTo)).toHaveTextContent('Kampala Branch');
+    expect(screen.queryByTestId(TID.client.transfer('proposeTransfer'))).toBeNull();
+    await userEvent.click(screen.getByTestId(TID.client.transfer('rejectTransfer')));
+    expect(screen.queryByTestId(TID.client.transferOffice)).toBeNull();
+    await userEvent.click(screen.getByTestId(TID.client.transferCancel));
+    expect(api.transfer).not.toHaveBeenCalled();
+    await userEvent.click(screen.getByTestId(TID.client.transfer('acceptTransfer')));
+    await userEvent.click(screen.getByTestId(TID.client.transferConfirm));
+    await waitFor(() =>
+      expect(api.transfer).toHaveBeenCalledWith(3, 'acceptTransfer', { note: '' }),
+    );
+  });
+
+  it('offers only Withdraw while a transfer is on hold', async () => {
+    const onHold: Client = { ...IN_PROGRESS, status: 'transferOnHold', transferToOfficeName: null };
+    await render(
+      <ClientViewScreen clientId={3} />,
+      ['ALL_FUNCTIONS'],
+      clientApi({ get: vi.fn(async () => onHold) }),
+    );
+    expect(await screen.findByTestId(TID.client.transfer('withdrawTransfer'))).toBeInTheDocument();
+    expect(screen.queryByTestId(TID.client.transfer('acceptTransfer'))).toBeNull();
+    expect(screen.queryByTestId(TID.client.transfer('rejectTransfer'))).toBeNull();
   });
 });
