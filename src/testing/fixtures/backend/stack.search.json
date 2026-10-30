@@ -1,0 +1,32 @@
+[
+  {
+    "entityId": 15,
+    "entityAccountNo": "000000015",
+    "entityName": "Pending Capture",
+    "entityType": "CLIENT",
+    "parentId": 1,
+    "parentName": "Head Office",
+    "entityStatus": { "id": 100, "code": "clientStatusType.pending", "value": "Pending" },
+    "subEntityType": "depositAccountType.invalid"
+  },
+  {
+    "entityId": 14,
+    "entityAccountNo": "000000014",
+    "entityName": "Charge Capture",
+    "entityType": "CLIENT",
+    "parentId": 1,
+    "parentName": "Head Office",
+    "entityStatus": { "id": 300, "code": "clientStatusType.active", "value": "Active" },
+    "subEntityType": "depositAccountType.invalid"
+  },
+  {
+    "entityId": 24,
+    "entityAccountNo": "000000024",
+    "entityName": "Family Capture",
+    "entityType": "CLIENT",
+    "parentId": 1,
+    "parentName": "Head Office",
+    "entityStatus": { "id": 300, "code": "clientStatusType.active", "value": "Active" },
+    "subEntityType": "depositAccountType.invalid"
+  }
+]

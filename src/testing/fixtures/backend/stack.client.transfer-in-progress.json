@@ -1,0 +1,30 @@
+{
+  "id": 16,
+  "accountNo": "000000016",
+  "status": {
+    "id": 303,
+    "code": "clientStatusType.transfer.in.progress",
+    "value": "Transfer in progress"
+  },
+  "active": false,
+  "activationDate": [2026, 1, 5],
+  "firstname": "Move",
+  "lastname": "Alpha",
+  "displayName": "Move Alpha",
+  "isStaff": false,
+  "officeId": 1,
+  "officeName": "Head Office",
+  "transferToOfficeId": 3,
+  "transferToOfficeName": "Capture Branch",
+  "timeline": {
+    "submittedOnDate": [2026, 1, 5]
+  },
+  "savingsProductName": "16",
+  "legalForm": {
+    "id": 1,
+    "code": "legalFormType.person",
+    "value": "Person"
+  },
+  "clientCollateralManagements": [],
+  "groups": []
+}
