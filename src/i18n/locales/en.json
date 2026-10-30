@@ -53,7 +53,8 @@
     "LOADING": "Loading…",
     "MENU": "Open navigation",
     "CLOSE_MENU": "Close navigation",
-    "NAVIGATION": "Navigation"
+    "NAVIGATION": "Navigation",
+    "BREADCRUMB": "Breadcrumb"
   },
   "NAV": {
     "DASHBOARD": "Dashboard",
@@ -225,7 +226,8 @@
   },
   "STATE": {
     "LOAD_FAILED": "This could not be loaded.",
-    "RETRY": "Try again"
+    "RETRY": "Try again",
+    "REFUSED": "Your role does not cover this."
   },
   "FORM": {
     "REQUIRED": "Required",
@@ -280,7 +282,7 @@
     "SEARCH": "Search clients by name",
     "EMPTY": "There are no clients yet.",
     "NO_MATCH": "No clients match your search.",
-    "NOT_FOUND": "This client does not exist.",
+    "NOT_FOUND": "This client doesn't exist, or you don't have permission to view it.",
     "BACK": "Back to clients",
     "FIRST": "First",
     "PREVIOUS": "Previous",
@@ -348,6 +350,22 @@
       "PLACEHOLDER": "Choose a member of staff",
       "NONE": "This office has no staff to assign.",
       "CONFIRM_UNASSIGN": "Unassign {{name}} from this client?"
+    },
+    "TRANSFER": {
+      "TO": "Transferring to",
+      "PROPOSE": "Propose transfer",
+      "PROPOSE_CONFIRM": "Confirm proposal",
+      "NOW": "Transfer now",
+      "NOW_CONFIRM": "Confirm transfer",
+      "ACCEPT": "Accept transfer",
+      "ACCEPT_CONFIRM": "Accept this transfer? The client moves to the new office.",
+      "REJECT": "Reject transfer",
+      "REJECT_CONFIRM": "Reject this transfer? The client is put on hold until it is withdrawn.",
+      "WITHDRAW": "Withdraw transfer",
+      "WITHDRAW_CONFIRM": "Withdraw this transfer? The client stays at its office.",
+      "OFFICE": "Destination office",
+      "DATE": "Transfer date",
+      "NOTE": "Note"
     }
   },
   "KYC": {
@@ -396,6 +414,28 @@
     "AMOUNT_IN": "Amount ({{currency}})",
     "DUE_DATE": "Due date"
   },
+  "FAMILY": {
+    "TITLE": "Family members",
+    "ADD": "Add family member",
+    "NONE": "No family members have been added.",
+    "CONFIRM_DELETE": "Delete this family member?",
+    "FIRST_NAME": "First name",
+    "MIDDLE_NAME": "Middle name",
+    "LAST_NAME": "Last name",
+    "RELATIONSHIP": "Relationship",
+    "NO_RELATIONSHIPS": "No relationships are set up. An administrator adds them to the code RELATIONSHIP.",
+    "GENDER": "Gender",
+    "MARITAL_STATUS": "Marital status",
+    "PROFESSION": "Profession",
+    "QUALIFICATION": "Qualification",
+    "MOBILE": "Mobile number",
+    "AGE": "Age",
+    "AGE_VALUE": "Age {{age}}",
+    "AGE_INVALID": "Enter the age in whole years.",
+    "DATE_OF_BIRTH": "Date of birth",
+    "DEPENDENT": "Dependent",
+    "CHOOSE": "Choose one"
+  },
   "PROFILE": {
     "TITLE": "Profile",
     "USERNAME": "Username",
@@ -409,5 +449,19 @@
     "PASSWORDS_DO_NOT_MATCH": "The passwords do not match.",
     "PASSWORD_POLICY": "Password policy: {{policy}}",
     "PASSWORD_CHANGED": "Your password was changed."
+  },
+  "SEARCH": {
+    "TITLE": "Search",
+    "QUERY": "Search clients, loans, savings and screens",
+    "HINT": "Type at least two characters.",
+    "EMPTY": "No results.",
+    "FAILED": "Records could not be searched. Screens are still listed.",
+    "SHORTCUTS": "Screens",
+    "RECORDS": "Records",
+    "TYPE": {
+      "CLIENT": "Client",
+      "LOAN": "Loan",
+      "SAVINGS": "Savings account"
+    }
   }
 }
