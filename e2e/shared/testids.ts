@@ -97,6 +97,25 @@ export const TID = {
     version: 'about.version',
     license: 'about.license',
   },
+  search: {
+    screen: 'search.screen',
+    query: 'search.query',
+    /** "Type at least two characters". */
+    hint: 'search.hint',
+    empty: 'search.empty',
+    /** Records could not be searched; shortcuts may still show. */
+    failed: 'search.failed',
+    /** A navigation shortcut, by its catalogue id: `search.shortcut.organization.offices`. */
+    shortcut: (id: string) => `search.shortcut.${id}`,
+    /** A record: `search.result.client.11`. */
+    result: (type: string, id: number | string) => `search.result.${type}.${id}`,
+  },
+  breadcrumb: {
+    trail: 'breadcrumb.trail',
+    /** An ancestor crumb, by its route id: `breadcrumb.crumb.clients`. */
+    crumb: (id: string) => `breadcrumb.crumb.${id}`,
+    current: 'breadcrumb.current',
+  },
   /** Loading, failure and empty states shared by every data screen. */
   state: {
     loading: 'state.loading',
@@ -201,6 +220,7 @@ export const TID = {
     identifiersLink: 'client.identifiers-link',
     notesLink: 'client.notes-link',
     chargesLink: 'client.charges-link',
+    familyLink: 'client.family-link',
     staff: 'client.staff',
     assignStaff: 'client.assign-staff',
     unassignStaff: 'client.unassign-staff',
@@ -211,6 +231,16 @@ export const TID = {
     unassignConfirm: 'client.unassign-confirm',
     unassignCancel: 'client.unassign-cancel',
     staffError: 'client.staff-error',
+    /** "Transferring to Kampala Branch", while a transfer is in progress. */
+    transferTo: 'client.transfer-to',
+    /** A transfer command's button: `client.transfer.proposeTransfer`. */
+    transfer: (command: string) => `client.transfer.${command}`,
+    transferOffice: 'client.transfer-office',
+    transferDate: 'client.transfer-date',
+    transferNote: 'client.transfer-note',
+    transferConfirm: 'client.transfer-confirm',
+    transferCancel: 'client.transfer-cancel',
+    transferError: 'client.transfer-error',
   },
   identifiers: {
     screen: 'identifiers.screen',
@@ -265,6 +295,35 @@ export const TID = {
     cancelConfirm: 'charges.cancel-confirm',
     /** A refused pay, waive or delete, shown in its row. */
     rowError: 'charges.row-error',
+  },
+  family: {
+    screen: 'family.screen',
+    back: 'family.back',
+    add: 'family.add',
+    /** One per member: `family.row.2`. */
+    row: (id: number | string) => `family.row.${id}`,
+    edit: (id: number | string) => `family.edit.${id}`,
+    remove: (id: number | string) => `family.remove.${id}`,
+    confirmRemove: 'family.confirm-remove',
+    cancelRemove: 'family.cancel-remove',
+  },
+  familyForm: {
+    firstName: 'family-form.first-name',
+    middleName: 'family-form.middle-name',
+    lastName: 'family-form.last-name',
+    relationship: 'family-form.relationship',
+    noRelationships: 'family-form.no-relationships',
+    gender: 'family-form.gender',
+    maritalStatus: 'family-form.marital-status',
+    profession: 'family-form.profession',
+    qualification: 'family-form.qualification',
+    mobile: 'family-form.mobile',
+    age: 'family-form.age',
+    dateOfBirth: 'family-form.date-of-birth',
+    dependent: 'family-form.dependent',
+    submit: 'family-form.submit',
+    cancel: 'family-form.cancel',
+    error: 'family-form.error',
   },
   chargeForm: {
     charge: 'charge-form.charge',
