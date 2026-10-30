@@ -40,9 +40,13 @@ import { HttpOfficeApi } from './adapters/api/http-office.api';
 import { CLIENT_API } from './adapters/api/client.api';
 import { CLIENT_CHARGE_API } from './adapters/api/client-charge.api';
 import { CLIENT_KYC_API } from './adapters/api/client-kyc.api';
+import { FAMILY_API } from './adapters/api/family.api';
+import { SEARCH_API } from './adapters/api/search.api';
 import { HttpClientApi } from './adapters/api/http-client.api';
 import { HttpClientChargeApi } from './adapters/api/http-client-charge.api';
 import { HttpClientKycApi } from './adapters/api/http-client-kyc.api';
+import { HttpFamilyApi } from './adapters/api/http-family.api';
+import { HttpSearchApi } from './adapters/api/http-search.api';
 import { OFFICE_API } from './adapters/api/office.api';
 import { HttpStaffApi } from './adapters/api/http-staff.api';
 import { STAFF_API } from './adapters/api/staff.api';
@@ -96,6 +100,8 @@ export function createAppRegistry(overrides: readonly AdapterOverride[] = []): A
     .register(CLIENT_API, (r) => new HttpClientApi(r.resolve(API_CLIENT)))
     .register(CLIENT_KYC_API, (r) => new HttpClientKycApi(r.resolve(API_CLIENT)))
     .register(CLIENT_CHARGE_API, (r) => new HttpClientChargeApi(r.resolve(API_CLIENT)))
+    .register(FAMILY_API, (r) => new HttpFamilyApi(r.resolve(API_CLIENT)))
+    .register(SEARCH_API, (r) => new HttpSearchApi(r.resolve(API_CLIENT)))
     .register(TWO_FACTOR_API, (r) => new HttpTwoFactorApi(r.resolve(API_CLIENT)))
     .register(USER_DETAILS_API, (r) => new HttpUserDetailsApi(r.resolve(API_CLIENT)))
     .register(PROFILE_API, (r) => new HttpProfileApi(r.resolve(API_CLIENT)))

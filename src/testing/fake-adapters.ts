@@ -18,6 +18,8 @@ import { AUTH_API, type AuthApi } from '@/core/adapters/api/auth.api';
 import { CLIENT_API, type ClientApi } from '@/core/adapters/api/client.api';
 import { CLIENT_CHARGE_API, type ClientChargeApi } from '@/core/adapters/api/client-charge.api';
 import { CLIENT_KYC_API, type ClientKycApi } from '@/core/adapters/api/client-kyc.api';
+import { FAMILY_API, type FamilyApi } from '@/core/adapters/api/family.api';
+import { SEARCH_API, type SearchApi } from '@/core/adapters/api/search.api';
 import { OFFICE_API, type OfficeApi } from '@/core/adapters/api/office.api';
 import { STAFF_API, type StaffApi } from '@/core/adapters/api/staff.api';
 import { TWO_FACTOR_API, type TwoFactorApi } from '@/core/adapters/api/two-factor.api';
@@ -77,6 +79,8 @@ export interface FakeAdapters {
   readonly clientApi: ClientApi;
   readonly clientKycApi: ClientKycApi;
   readonly clientChargeApi: ClientChargeApi;
+  readonly familyApi: FamilyApi;
+  readonly searchApi: SearchApi;
   readonly twoFactorApi: TwoFactorApi;
   readonly userDetailsApi: UserDetailsApi;
   readonly profileApi: ProfileApi;
@@ -179,6 +183,8 @@ export function createFakeAdapters(): FakeAdapters {
     staffOptions: unscripted('ClientApi.staffOptions'),
     assignStaff: unscripted('ClientApi.assignStaff'),
     unassignStaff: unscripted('ClientApi.unassignStaff'),
+    transferOffices: unscripted('ClientApi.transferOffices'),
+    transfer: unscripted('ClientApi.transfer'),
   };
   const clientKycApi: ClientKycApi = {
     identifiers: unscripted('ClientKycApi.identifiers'),
@@ -198,6 +204,14 @@ export function createFakeAdapters(): FakeAdapters {
     waiveCharge: unscripted('ClientChargeApi.waiveCharge'),
     deleteCharge: unscripted('ClientChargeApi.deleteCharge'),
   };
+  const familyApi: FamilyApi = {
+    members: unscripted('FamilyApi.members'),
+    options: unscripted('FamilyApi.options'),
+    add: unscripted('FamilyApi.add'),
+    update: unscripted('FamilyApi.update'),
+    remove: unscripted('FamilyApi.remove'),
+  };
+  const searchApi: SearchApi = { search: unscripted('SearchApi.search') };
 
   const twoFactorApi: TwoFactorApi = {
     methods: unscripted('TwoFactorApi.methods'),
@@ -227,6 +241,8 @@ export function createFakeAdapters(): FakeAdapters {
     provide(CLIENT_API, clientApi),
     provide(CLIENT_KYC_API, clientKycApi),
     provide(CLIENT_CHARGE_API, clientChargeApi),
+    provide(FAMILY_API, familyApi),
+    provide(SEARCH_API, searchApi),
     provide(STORAGE, storage),
     provide(SECURE_STORAGE, secureStorage),
     provide(DOWNLOAD, download),
@@ -252,6 +268,8 @@ export function createFakeAdapters(): FakeAdapters {
     clientApi,
     clientKycApi,
     clientChargeApi,
+    familyApi,
+    searchApi,
     twoFactorApi,
     userDetailsApi,
     profileApi,
