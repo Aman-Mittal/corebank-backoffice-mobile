@@ -33,7 +33,10 @@ export function LoadingState() {
   );
 }
 
-/** A read failed. Says why in the user's terms and offers to try again. */
+/**
+ * A read failed. Says why in the user's terms, and offers to try again unless the server refused
+ * the user's role: that is refused the same way every time (DOCS/test-plan/P1-15-…md).
+ */
 export function ErrorState({
   error,
   onRetry,
@@ -42,21 +45,24 @@ export function ErrorState({
   readonly onRetry: () => void;
 }) {
   const { t } = useI18n();
+  const refused = error instanceof AppError && error.kind === 'forbidden';
   const message =
     error instanceof AppError && (error.kind === 'network' || error.kind === 'timeout')
       ? t('COMMON.ERRORS.NETWORK')
-      : error instanceof AppError && error.kind === 'forbidden'
-        ? t('COMMON.ERRORS.FORBIDDEN')
+      : refused
+        ? t('STATE.REFUSED')
         : t('STATE.LOAD_FAILED');
   return (
     <View testID={TID.state.error} role="alert" style={styles.box}>
       <Text style={styles.text}>{message}</Text>
-      <Button
-        testID={TID.state.retry}
-        label={t('STATE.RETRY')}
-        variant="secondary"
-        onPress={onRetry}
-      />
+      {refused ? null : (
+        <Button
+          testID={TID.state.retry}
+          label={t('STATE.RETRY')}
+          variant="secondary"
+          onPress={onRetry}
+        />
+      )}
     </View>
   );
 }
