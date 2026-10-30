@@ -1,0 +1,85 @@
+{
+  "penalty": false,
+  "chargeOptions": [
+    {
+      "id": 1,
+      "name": "E2E Client Fee",
+      "active": true,
+      "penalty": false,
+      "freeWithdrawal": false,
+      "isPaymentType": false,
+      "freeWithdrawalChargeFrequency": 0,
+      "restartFrequency": 0,
+      "restartFrequencyEnum": 0,
+      "currency": {
+        "code": "USD",
+        "name": "US Dollar",
+        "decimalPlaces": 2,
+        "displaySymbol": "$",
+        "nameCode": "currency.USD",
+        "displayLabel": "US Dollar ($)"
+      },
+      "amount": 100.0,
+      "chargeTimeType": {
+        "id": 2,
+        "code": "chargeTimeType.specifiedDueDate",
+        "value": "Specified due date"
+      },
+      "chargeAppliesTo": {
+        "id": 3,
+        "code": "chargeAppliesTo.client",
+        "value": "Client"
+      },
+      "chargeCalculationType": {
+        "id": 1,
+        "code": "chargeCalculationType.flat",
+        "value": "Flat"
+      },
+      "chargePaymentMode": {
+        "id": 0,
+        "code": "chargepaymentmode.regular",
+        "value": "Regular"
+      }
+    },
+    {
+      "id": 2,
+      "name": "E2E Client Penalty",
+      "active": true,
+      "penalty": true,
+      "freeWithdrawal": false,
+      "isPaymentType": false,
+      "freeWithdrawalChargeFrequency": 0,
+      "restartFrequency": 0,
+      "restartFrequencyEnum": 0,
+      "currency": {
+        "code": "USD",
+        "name": "US Dollar",
+        "decimalPlaces": 2,
+        "displaySymbol": "$",
+        "nameCode": "currency.USD",
+        "displayLabel": "US Dollar ($)"
+      },
+      "amount": 25.5,
+      "chargeTimeType": {
+        "id": 2,
+        "code": "chargeTimeType.specifiedDueDate",
+        "value": "Specified due date"
+      },
+      "chargeAppliesTo": {
+        "id": 3,
+        "code": "chargeAppliesTo.client",
+        "value": "Client"
+      },
+      "chargeCalculationType": {
+        "id": 1,
+        "code": "chargeCalculationType.flat",
+        "value": "Flat"
+      },
+      "chargePaymentMode": {
+        "id": 0,
+        "code": "chargepaymentmode.regular",
+        "value": "Regular"
+      }
+    }
+  ]
+}

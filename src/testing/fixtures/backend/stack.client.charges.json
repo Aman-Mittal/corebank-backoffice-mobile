@@ -1,0 +1,107 @@
+{
+  "totalFilteredRecords": 3,
+  "pageItems": [
+    {
+      "id": 2,
+      "clientId": 14,
+      "chargeId": 1,
+      "name": "E2E Client Fee",
+      "chargeTimeType": {
+        "id": 2,
+        "code": "chargeTimeType.specifiedDueDate",
+        "value": "Specified due date"
+      },
+      "dueDate": [2026, 3, 10],
+      "chargeCalculationType": {
+        "id": 1,
+        "code": "chargeCalculationType.flat",
+        "value": "Flat"
+      },
+      "currency": {
+        "code": "USD",
+        "name": "US Dollar",
+        "decimalPlaces": 2,
+        "displaySymbol": "$",
+        "nameCode": "currency.USD",
+        "displayLabel": "US Dollar ($)"
+      },
+      "amount": 40.0,
+      "amountPaid": 0,
+      "amountWaived": 40.0,
+      "amountWrittenOff": 0,
+      "amountOutstanding": 0.0,
+      "penalty": false,
+      "isActive": true,
+      "isPaid": false,
+      "isWaived": true
+    },
+    {
+      "id": 3,
+      "clientId": 14,
+      "chargeId": 2,
+      "name": "E2E Client Penalty",
+      "chargeTimeType": {
+        "id": 2,
+        "code": "chargeTimeType.specifiedDueDate",
+        "value": "Specified due date"
+      },
+      "dueDate": [2026, 3, 1],
+      "chargeCalculationType": {
+        "id": 1,
+        "code": "chargeCalculationType.flat",
+        "value": "Flat"
+      },
+      "currency": {
+        "code": "USD",
+        "name": "US Dollar",
+        "decimalPlaces": 2,
+        "displaySymbol": "$",
+        "nameCode": "currency.USD",
+        "displayLabel": "US Dollar ($)"
+      },
+      "amount": 25.5,
+      "amountPaid": 0,
+      "amountWaived": 0,
+      "amountWrittenOff": 0,
+      "amountOutstanding": 25.5,
+      "penalty": true,
+      "isActive": true,
+      "isPaid": false,
+      "isWaived": false
+    },
+    {
+      "id": 1,
+      "clientId": 14,
+      "chargeId": 1,
+      "name": "E2E Client Fee",
+      "chargeTimeType": {
+        "id": 2,
+        "code": "chargeTimeType.specifiedDueDate",
+        "value": "Specified due date"
+      },
+      "dueDate": [2026, 2, 15],
+      "chargeCalculationType": {
+        "id": 1,
+        "code": "chargeCalculationType.flat",
+        "value": "Flat"
+      },
+      "currency": {
+        "code": "USD",
+        "name": "US Dollar",
+        "decimalPlaces": 2,
+        "displaySymbol": "$",
+        "nameCode": "currency.USD",
+        "displayLabel": "US Dollar ($)"
+      },
+      "amount": 100.0,
+      "amountPaid": 100.0,
+      "amountWaived": 0,
+      "amountWrittenOff": 0,
+      "amountOutstanding": 0.0,
+      "penalty": false,
+      "isActive": true,
+      "isPaid": true,
+      "isWaived": false
+    }
+  ]
+}
