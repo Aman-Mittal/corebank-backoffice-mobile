@@ -12,10 +12,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Launches the app from a clean state. Every flow starts here.
+# Launches the app from a clean state and waits for the sign-in screen. Every flow starts here.
 appId: ${APP_ID}
 ---
 - launchApp:
     appId: ${APP_ID}
     clearState: true
     clearKeychain: true
+# A cold start on a CI simulator or emulator can outlast an assertion's default wait.
+- extendedWaitUntil:
+    visible:
+      id: login.screen
+    timeout: 60000
