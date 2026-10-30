@@ -1,0 +1,50 @@
+{
+  "relationshipIdOptions": [
+    {
+      "id": 26,
+      "name": "Spouse",
+      "position": 1,
+      "description": "",
+      "active": true,
+      "mandatory": false
+    },
+    {
+      "id": 27,
+      "name": "Son",
+      "position": 1,
+      "description": "",
+      "active": true,
+      "mandatory": false
+    }
+  ],
+  "genderIdOptions": [
+    {
+      "id": 28,
+      "name": "Female",
+      "position": 1,
+      "description": "",
+      "active": true,
+      "mandatory": false
+    }
+  ],
+  "maritalStatusIdOptions": [
+    {
+      "id": 29,
+      "name": "Married",
+      "position": 1,
+      "description": "",
+      "active": true,
+      "mandatory": false
+    }
+  ],
+  "professionIdOptions": [
+    {
+      "id": 30,
+      "name": "Teacher",
+      "position": 1,
+      "description": "",
+      "active": true,
+      "mandatory": false
+    }
+  ]
+}

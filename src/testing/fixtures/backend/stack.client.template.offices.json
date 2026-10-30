@@ -1,0 +1,20 @@
+{
+  "officeId": 1,
+  "officeOptions": [
+    {
+      "id": 1,
+      "name": "Head Office",
+      "nameDecorated": "Head Office"
+    },
+    {
+      "id": 2,
+      "name": "E2E Office",
+      "nameDecorated": "....E2E Office"
+    },
+    {
+      "id": 3,
+      "name": "Capture Branch",
+      "nameDecorated": "....Capture Branch"
+    }
+  ]
+}
