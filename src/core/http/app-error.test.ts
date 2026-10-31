@@ -14,7 +14,15 @@
  * limitations under the License.
  */
 
+import notAuthorized from '@/testing/fixtures/backend/stack.refusal.not-authorized.json';
+
 import { AppError, toAppError, toNetworkError } from './app-error';
+
+describe('toAppError: the captured authorization refusal', () => {
+  it('is a permission refusal, though it fills errors[] like a domain rule', () => {
+    expect(toAppError(403, notAuthorized).kind).toBe('forbidden');
+  });
+});
 
 describe('toAppError', () => {
   it('separates a domain-rule 403 from a permission 403', () => {

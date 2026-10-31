@@ -1,0 +1,15 @@
+{
+  "developerMessage": "The user associated with credentials passed on this request does not have sufficient privileges to perform this action.",
+  "httpStatusCode": "403",
+  "defaultUserMessage": "Insufficient privileges to perform this action.",
+  "userMessageGlobalisationCode": "error.msg.not.authorized",
+  "errors": [
+    {
+      "developerMessage": "User has no authority to READ offices",
+      "defaultUserMessage": "User has no authority to READ offices",
+      "userMessageGlobalisationCode": "error.msg.not.authorized",
+      "parameterName": "id",
+      "args": []
+    }
+  ]
+}

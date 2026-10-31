@@ -29,8 +29,11 @@ import type {
   ClientReason,
   ClientStatus,
   LegalForm,
+  OfficeOption,
   ReasonedCommand,
   StaffOption,
+  TransferCommand,
+  TransferInput,
 } from './client.api';
 import { required } from './required';
 
@@ -49,6 +52,8 @@ export type ClientPayload = Omit<ClientData, 'activationDate' | 'timeline' | 'st
   readonly fullname?: string;
   readonly mobileNo?: string;
   readonly staffName?: string;
+  readonly transferToOfficeId?: number;
+  readonly transferToOfficeName?: string;
   readonly legalForm?: { readonly id?: number; readonly code?: string; readonly value?: string };
 };
 
@@ -99,6 +104,8 @@ export function mapClient(payload: ClientPayload): Client {
     closedOnDate: toIsoApiDate(payload.timeline?.closedOnDate),
     staffId: payload.staffId ?? null,
     staffName: orNull(payload.staffName),
+    transferToOfficeId: payload.transferToOfficeId ?? null,
+    transferToOfficeName: orNull(payload.transferToOfficeName),
   };
 }
 
@@ -240,6 +247,32 @@ export class HttpClientApi implements ClientApi {
       this.client.POST('/v1/clients/{clientId}', {
         params: { path: { clientId }, query: { command } },
         body: { staffId },
+      }),
+    );
+  }
+
+  async transferOffices(): Promise<readonly OfficeOption[]> {
+    const template = await call(this.client.GET('/v1/clients/template', {}));
+    const offices = ((template as { officeOptions?: { id?: number; name?: string }[] } | undefined)
+      ?.officeOptions ?? []) as { id?: number; name?: string }[];
+    return offices
+      .filter((o) => o.id !== undefined)
+      .map((o) => ({ id: required(o.id, 'office option', 'id'), name: o.name ?? '' }));
+  }
+
+  async transfer(clientId: number, command: TransferCommand, input: TransferInput): Promise<void> {
+    // Answers take only a note: a date or a locale is refused as an unsupported parameter, and
+    // proposeAndAcceptTransfer refuses a transferDate.
+    const dated = command === 'proposeTransfer';
+    const body = withoutBlanks({
+      destinationOfficeId: input.destinationOfficeId,
+      ...(dated ? { transferDate: input.transferDate, ...ISO_DATE_FIELDS } : {}),
+      note: input.note?.trim(),
+    });
+    await call(
+      this.client.POST('/v1/clients/{clientId}', {
+        params: { path: { clientId }, query: { command } },
+        body,
       }),
     );
   }

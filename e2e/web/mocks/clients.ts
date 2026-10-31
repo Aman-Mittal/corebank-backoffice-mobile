@@ -31,6 +31,7 @@ const STATUSES = {
     code: 'clientStatusType.transfer.in.progress',
     value: 'Transfer in progress',
   },
+  transferOnHold: { id: 304, code: 'clientStatusType.transfer.on.hold', value: 'Transfer on hold' },
   withdrawn: { id: 400, code: 'clientStatusType.withdraw', value: 'Withdrawn' },
   rejected: { id: 500, code: 'clientStatusType.rejected', value: 'Rejected' },
   closed: { id: 600, code: 'clientStatusType.closed', value: 'Closed' },
@@ -120,6 +121,8 @@ export const LIFECYCLE_CLIENTS = [
   { ...person(6, 'Emmy', 'Noether', 'withdrawn'), timeline: { submittedOnDate: [2026, 9, 2] } },
   {
     ...person(7, 'Kurt', 'Godel', 'transferInProgress'),
+    transferToOfficeId: 2,
+    transferToOfficeName: 'Kampala Branch',
     activationDate: [2025, 5, 5],
     timeline: { submittedOnDate: [2025, 5, 5], activatedOnDate: [2025, 5, 5] },
   },
@@ -159,6 +162,18 @@ const TRANSITIONS: Record<string, { from: MockStatus; to: MockStatus; date: stri
   reactivate: { from: 'closed', to: 'pending', date: 'reactivationDate' },
   undoRejection: { from: 'rejected', to: 'pending', date: 'reopenedDate' },
   undoWithdrawal: { from: 'withdrawn', to: 'pending', date: 'reopenedDate' },
+};
+
+/**
+ * The transfer commands, as the e2e stack runs them (DOCS/test-plan/P1-12-client-transfer.md):
+ * the statuses each may start from and the one it leaves.
+ */
+const TRANSFERS: Record<string, { from: MockStatus[]; to: MockStatus; proposes?: boolean }> = {
+  proposeTransfer: { from: ['active'], to: 'transferInProgress', proposes: true },
+  proposeAndAcceptTransfer: { from: ['active'], to: 'active', proposes: true },
+  acceptTransfer: { from: ['transferInProgress'], to: 'active' },
+  rejectTransfer: { from: ['transferInProgress'], to: 'transferOnHold' },
+  withdrawTransfer: { from: ['transferInProgress', 'transferOnHold'], to: 'active' },
 };
 
 /** A domain-rule refusal, in the server's shape (`InvalidClientStateTransitionException`). */
@@ -249,6 +264,14 @@ export function clientsHandlers(
       if (q.has('officeId')) {
         return { status: 200, body: { staffOptions: options.noStaff ? [] : STAFF_OPTIONS } };
       }
+      if (!q.has('commandParam')) {
+        const officeOptions = OFFICES.map(({ id, name, nameDecorated }) => ({
+          id,
+          name,
+          nameDecorated,
+        }));
+        return { status: 200, body: { officeId: 1, officeOptions } };
+      }
       const command = q.get('commandParam') as keyof typeof REASONS;
       const narrations = options.noReasons ? [] : (REASONS[command] ?? []);
       return { status: 200, body: { isStaff: false, narrations } };
@@ -327,6 +350,7 @@ export function clientsHandlers(
     }
     const name = new URL(req.url()).searchParams.get('command') ?? '';
     if (name === 'assignStaff' || name === 'unassignStaff') return staffCommand(found, name, req);
+    if (name in TRANSFERS) return transferCommand(found, name, req);
     const transition = TRANSITIONS[name];
     if (!transition) return boom;
     if ((found.status as { code: string }).code !== STATUSES[transition.from].code) {
@@ -345,6 +369,41 @@ export function clientsHandlers(
       active: transition.to === 'active',
       ...(transition.to === 'active' ? { activationDate: date } : {}),
       timeline,
+    });
+    return { status: 200, body: { clientId: found.id, resourceId: found.id } };
+  };
+  const transferCommand = (found: Record<string, unknown>, name: string, req: Request) => {
+    const transfer = TRANSFERS[name]!;
+    const status = found.status as { code: string };
+    if (!transfer.from.some((from) => STATUSES[from].code === status.code)) {
+      return domainRefusal(
+        'error.msg.client.not.awaiting.transfer.approval.exception',
+        `The Client with id \`${String(found.id)}\` is not awaiting transfer`,
+      );
+    }
+    const body = (req.postDataJSON() ?? {}) as Record<string, unknown>;
+    if (name === 'proposeAndAcceptTransfer' && 'transferDate' in body) {
+      return fieldRejection('transferDate', 'The parameter transferDate is not supported.');
+    }
+    const destination = OFFICES.find((o) => o.id === body.destinationOfficeId);
+    if (transfer.proposes && destination?.id === found.officeId) {
+      return domainRefusal(
+        'error.msg.cannot.transfer.client.as.selected.office.and.current.office.are.same',
+        'error.msg.cannot.transfer.client.as.selected.office.and.current.office.are.same',
+      );
+    }
+    const target =
+      name === 'acceptTransfer'
+        ? OFFICES.find((o) => o.id === found.transferToOfficeId)
+        : name === 'proposeAndAcceptTransfer'
+          ? destination
+          : undefined;
+    Object.assign(found, {
+      status: STATUSES[transfer.to],
+      active: transfer.to === 'active',
+      transferToOfficeId: name === 'proposeTransfer' ? destination?.id : undefined,
+      transferToOfficeName: name === 'proposeTransfer' ? destination?.name : undefined,
+      ...(target ? { officeId: target.id, officeName: target.name } : {}),
     });
     return { status: 200, body: { clientId: found.id, resourceId: found.id } };
   };

@@ -25,5 +25,6 @@ export async function readDeploymentSource(): Promise<unknown> {
           label: process.env.EXPO_PUBLIC_OIDC_LABEL,
         }
       : null,
+    rbacEnabled: process.env.EXPO_PUBLIC_RBAC_ENABLED,
   };
 }

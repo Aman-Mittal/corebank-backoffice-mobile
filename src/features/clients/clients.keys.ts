@@ -27,5 +27,8 @@ export const clientKeys = {
   notes: (clientId: number) => [...clientKeys.detail(clientId), 'notes'] as const,
   charges: (clientId: number) => [...clientKeys.detail(clientId), 'charges'] as const,
   chargeOptions: (clientId: number) => [...clientKeys.detail(clientId), 'charge-options'] as const,
+  family: (clientId: number) => [...clientKeys.detail(clientId), 'family'] as const,
+  familyOptions: (clientId: number) => [...clientKeys.detail(clientId), 'family-options'] as const,
+  transferOffices: () => [...clientKeys.all, 'transfer-offices'] as const,
   staffOptions: (officeId: number) => [...clientKeys.all, 'staff-options', officeId] as const,
 };

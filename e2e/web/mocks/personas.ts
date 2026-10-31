@@ -67,6 +67,23 @@ export const PERSONAS = {
     'DELETE_CLIENTCHARGE',
   ],
   chargeReader: ['READ_CLIENT', 'READ_CLIENTCHARGE'],
+  transferAdmin: [
+    'READ_CLIENT',
+    'PROPOSETRANSFER_CLIENT',
+    'PROPOSEANDACCEPTTRANSFER_CLIENT',
+    'ACCEPTTRANSFER_CLIENT',
+    'REJECTTRANSFER_CLIENT',
+    'WITHDRAWTRANSFER_CLIENT',
+  ],
+  transferProposer: ['READ_CLIENT', 'PROPOSETRANSFER_CLIENT'],
+  familyAdmin: [
+    'READ_CLIENT',
+    'READ_FAMILYMEMBERS',
+    'CREATE_FAMILYMEMBERS',
+    'UPDATE_FAMILYMEMBERS',
+    'DELETE_FAMILYMEMBERS',
+  ],
+  familyReader: ['READ_CLIENT', 'READ_FAMILYMEMBERS'],
 } as const satisfies Record<string, readonly string[]>;
 
 export type Persona = keyof typeof PERSONAS;

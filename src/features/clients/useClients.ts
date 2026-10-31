@@ -24,6 +24,8 @@ import {
   type ClientDraft,
   type ClientQuery,
   type ReasonedCommand,
+  type TransferCommand,
+  type TransferInput,
 } from '@/core/adapters/api/client.api';
 
 import { clientKeys } from './clients.keys';
@@ -95,6 +97,26 @@ export function useStaffCommand(clientId: number) {
   return useMutation({
     mutationFn: ({ assign, staffId }: { assign: boolean; staffId: number }) =>
       assign ? api.assignStaff(clientId, staffId) : api.unassignStaff(clientId, staffId),
+    onSettled: () => queryClient.invalidateQueries({ queryKey: clientKeys.all }),
+  });
+}
+
+export function useTransferOffices({ enabled }: { enabled: boolean }) {
+  const api = useAdapter(CLIENT_API);
+  return useQuery({
+    queryKey: clientKeys.transferOffices(),
+    queryFn: () => api.transferOffices(),
+    enabled,
+  });
+}
+
+/** Runs a transfer command; reloads the client either way, as the lifecycle commands do. */
+export function useTransferCommand(clientId: number) {
+  const api = useAdapter(CLIENT_API);
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ command, input }: { command: TransferCommand; input: TransferInput }) =>
+      api.transfer(clientId, command, input),
     onSettled: () => queryClient.invalidateQueries({ queryKey: clientKeys.all }),
   });
 }

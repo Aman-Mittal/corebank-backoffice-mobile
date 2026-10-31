@@ -17,6 +17,7 @@
 import type { ReactNode } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 
+import { Breadcrumbs } from '@/ui/Breadcrumbs';
 import { colors, spacing } from '@/ui/theme';
 
 /**
@@ -42,6 +43,7 @@ export function Page({
       contentContainerStyle={styles.container}
       keyboardShouldPersistTaps="handled"
     >
+      <Breadcrumbs title={title} />
       <View style={styles.header}>
         <Text testID={titleTestID} role="heading" aria-level={1} style={styles.title}>
           {title}

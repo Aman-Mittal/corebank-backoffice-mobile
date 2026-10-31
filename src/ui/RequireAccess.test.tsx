@@ -17,12 +17,16 @@
 import { act, screen } from '@testing-library/react';
 
 import { mapSession } from '@/core/adapters/api/http-auth.api';
-import { Can, usePermission } from '@/core/auth/usePermission';
+import { provide } from '@/core/adapters/registry';
+import { Can, useGranted, usePermission } from '@/core/auth/usePermission';
+import { createDeploymentConfigStore, DEPLOYMENT_CONFIG } from '@/core/config/deployment-config';
+import { AppError } from '@/core/http/app-error';
 import captured from '@/testing/fixtures/backend/authentication.json';
 import { renderWithAdapters } from '@/testing/render';
 
 import { TID } from '../../e2e/shared/testids';
 import { RequireAccess } from './RequireAccess';
+import { ErrorState } from './ScreenState';
 
 vi.mock('expo-router', async () => (await import('@/testing/router-mock')).expoRouterMock);
 
@@ -84,5 +88,56 @@ describe('usePermission / Can / RequireAccess', () => {
       </RequireAccess>,
     );
     expect(screen.getByText('open')).toBeInTheDocument();
+  });
+});
+
+describe('client-side gates switched off', () => {
+  async function gatesOff() {
+    const config = createDeploymentConfigStore(async () => ({ rbacEnabled: false }));
+    await config.load();
+    return provide(DEPLOYMENT_CONFIG, config);
+  }
+
+  function Granted() {
+    return <span data-testid="granted">{useGranted().join(',')}</span>;
+  }
+
+  it('admits every screen and control, and grants all functions', async () => {
+    const { fakes } = renderWithAdapters(
+      <>
+        <Granted />
+        <Can access={{ anyOf: ['READ_USER'] }}>
+          <span>users</span>
+        </Can>
+        <RequireAccess access={{ allOf: ['READ_USER', 'READ_ROLE'] }}>
+          <span>security screen</span>
+        </RequireAccess>
+      </>,
+      { adapters: [await gatesOff()] },
+    );
+    await act(() => fakes.session.signIn(clerk));
+    expect(screen.getByText('users')).toBeInTheDocument();
+    expect(screen.getByText('security screen')).toBeInTheDocument();
+    expect(screen.getByTestId('granted')).toHaveTextContent('ALL_FUNCTIONS');
+  });
+});
+
+describe('ErrorState', () => {
+  it('says a refused read is beyond the role, with no retry that cannot succeed', () => {
+    renderWithAdapters(
+      <ErrorState error={new AppError('forbidden', 403, null, [])} onRetry={() => undefined} />,
+    );
+    expect(screen.getByTestId(TID.state.error)).toHaveTextContent('STATE.REFUSED');
+    expect(screen.queryByTestId(TID.state.retry)).toBeNull();
+  });
+
+  it('keeps the retry for a server failure and a lost connection', () => {
+    renderWithAdapters(
+      <>
+        <ErrorState error={new AppError('server', 500, null, [])} onRetry={() => undefined} />
+        <ErrorState error={new AppError('network', 0, null, [])} onRetry={() => undefined} />
+      </>,
+    );
+    expect(screen.getAllByTestId(TID.state.retry)).toHaveLength(2);
   });
 });

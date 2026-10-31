@@ -1,0 +1,38 @@
+[
+  {
+    "id": 7,
+    "clientId": 24,
+    "firstName": "Mary",
+    "middleName": "Ann",
+    "lastName": "Capture",
+    "qualification": "MSc",
+    "relationshipId": 26,
+    "relationship": "Spouse",
+    "maritalStatusId": 29,
+    "maritalStatus": "Married",
+    "genderId": 28,
+    "gender": "Female",
+    "dateOfBirth": "1992-04-03",
+    "professionId": 30,
+    "profession": "Teacher",
+    "mobileNumber": "5550101",
+    "age": 34,
+    "isDependent": false
+  },
+  {
+    "id": 8,
+    "clientId": 24,
+    "firstName": "Tom",
+    "middleName": "",
+    "lastName": "Capture",
+    "qualification": "",
+    "relationshipId": 27,
+    "relationship": "Son",
+    "maritalStatusId": 0,
+    "genderId": 0,
+    "professionId": 0,
+    "mobileNumber": "",
+    "age": 0,
+    "isDependent": true
+  }
+]

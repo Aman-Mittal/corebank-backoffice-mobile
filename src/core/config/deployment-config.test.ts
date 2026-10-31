@@ -46,7 +46,19 @@ describe('parseDeploymentConfig', () => {
         scopes: ['openid', 'profile', 'email'],
         label: 'idp.test',
       },
+      rbacEnabled: true,
     });
+  });
+
+  it('keeps the gates on unless the configuration says false, with or without a provider', () => {
+    expect(parseDeploymentConfig({ rbacEnabled: false })).toEqual({
+      oidc: null,
+      rbacEnabled: false,
+    });
+    expect(parseDeploymentConfig({ oidc: null, rbacEnabled: 'false' }).rbacEnabled).toBe(false);
+    for (const value of [true, 'true', undefined, 0, 'no']) {
+      expect(parseDeploymentConfig({ rbacEnabled: value }).rbacEnabled).toBe(true);
+    }
   });
 
   it('accepts scopes as a string or an array, and a label', () => {

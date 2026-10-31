@@ -29,6 +29,9 @@ import { renderWithAdapters } from '@/testing/render';
 import { TID } from '../../../e2e/shared/testids';
 import { ProfileScreen } from './ProfileScreen';
 
+// The page frame reads the path for its breadcrumbs.
+vi.mock('expo-router', async () => (await import('@/testing/router-mock')).expoRouterMock);
+
 const MIFOS = mapUserProfile(user);
 
 function api(overrides: Partial<ProfileApi> = {}): ProfileApi {

@@ -72,3 +72,35 @@ the demo credentials that day.
 - `client.charge.delete-paid.json`: deleting a fully paid charge is refused as a 400 validation
   error (`charge.is.paid`) with no parameter. `client.charge.delete-with-transactions.json`:
   deleting a part-paid one is refused as a 403 (`error.msg.client.charge.cannot.be.deleted`).
+
+### Client transfer (2026-10-30)
+
+- `stack.client.transfer-in-progress.json` (`GET /v1/clients/16` after `proposeTransfer`): the
+  status is `clientStatusType.transfer.in.progress`, the client is still at its office, and
+  `transferToOfficeId` and `transferToOfficeName` name the destination.
+- `stack.client.template.offices.json` (`GET /v1/clients/template`, `officeId` and
+  `officeOptions` only): every office, with `nameDecorated`. A seeded office's random name is
+  replaced by "E2E Office".
+
+### Family members (2026-10-30)
+
+Captured from the e2e stack after seeding the RELATIONSHIP, Gender, MARITAL STATUS and PROFESSION
+codes, which it ships empty.
+
+- `stack.client.familymembers.template.json` (`GET /v1/clients/14/familymembers/template`): the
+  four option lists, as `CodeValueData`.
+- `stack.client.familymembers.json` (`GET /v1/clients/24/familymembers`): one member with every
+  field and one with only names, a relationship and `isDependent`. `dateOfBirth` is an ISO string
+  here, and a code value not chosen, and an unknown age, are `0`.
+
+### Search (2026-10-30)
+
+- `stack.search.json` (`GET /v1/search?query=Capture&resource=clients,loans,savings`): three
+  clients, each with `entityType: "CLIENT"`, the account number, the office as
+  `parentId`/`parentName`, and its status. The stack had no loans or savings to find.
+
+### Refusals (2026-10-30)
+
+- `stack.refusal.not-authorized.json`: `GET /v1/offices?includeAllOffices=true` as a user holding
+  only `READ_CLIENT`. A 403 whose code is `error.msg.not.authorized`, with an `errors[]` entry on
+  `parameterName: "id"`, the same outline as a domain-rule refusal.

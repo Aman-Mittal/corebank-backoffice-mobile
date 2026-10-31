@@ -61,6 +61,9 @@ export interface Client {
   /** The assigned member of staff (loan officer); both `null` when no one is. */
   readonly staffId: number | null;
   readonly staffName: string | null;
+  /** Where a transfer in progress would move the client; both `null` when none is. */
+  readonly transferToOfficeId: number | null;
+  readonly transferToOfficeName: string | null;
 }
 
 /** A member of staff a client may be assigned to. */
@@ -120,6 +123,28 @@ export interface ClientCommandInput {
   readonly reasonId?: number | null;
 }
 
+/** The transfer commands (DOCS/test-plan/P1-12-client-transfer.md). */
+export type TransferCommand =
+  | 'proposeTransfer'
+  | 'proposeAndAcceptTransfer'
+  | 'acceptTransfer'
+  | 'rejectTransfer'
+  | 'withdrawTransfer';
+
+export interface TransferInput {
+  /** For a proposal (and a transfer done at once): the office to move to. */
+  readonly destinationOfficeId?: number;
+  /** ISO; only `proposeTransfer` takes one. */
+  readonly transferDate?: string;
+  readonly note?: string;
+}
+
+/** An office a client may be transferred to. */
+export interface OfficeOption {
+  readonly id: number;
+  readonly name: string;
+}
+
 export interface ClientReason {
   readonly id: number;
   readonly name: string;
@@ -139,6 +164,10 @@ export interface ClientApi {
   assignStaff(clientId: number, staffId: number): Promise<void>;
   /** The server wants the current holder's id to unassign them. */
   unassignStaff(clientId: number, staffId: number): Promise<void>;
+  /** Every office, from the client template: it needs only READ_CLIENT. */
+  transferOffices(): Promise<readonly OfficeOption[]>;
+  /** Runs a transfer command, sending only the fields the server accepts for it. */
+  transfer(clientId: number, command: TransferCommand, input: TransferInput): Promise<void>;
 }
 
 export const CLIENT_API = token<ClientApi>('ClientApi');

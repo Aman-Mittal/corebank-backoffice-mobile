@@ -32,31 +32,44 @@ export interface OidcConfig {
  */
 export interface DeploymentConfig {
   readonly oidc: OidcConfig | null;
+  /**
+   * The app's own permission gates (navigation, route guard, controls). A deployment may switch
+   * them off; the server still checks every request (DOCS/test-plan/P1-15-…md).
+   */
+  readonly rbacEnabled: boolean;
 }
 
-export const EMPTY_DEPLOYMENT_CONFIG: DeploymentConfig = { oidc: null };
+export const EMPTY_DEPLOYMENT_CONFIG: DeploymentConfig = { oidc: null, rbacEnabled: true };
 
 const DEFAULT_SCOPES = ['openid', 'profile', 'email'] as const;
 
 /**
  * Validates untrusted configuration. Anything unusable is dropped rather than half-applied: an
- * identity provider without an https issuer and a client id is not offered.
+ * identity provider without an https issuer and a client id is not offered. The gates stay on
+ * unless the configuration says `false` (a build variable says it as a string).
  */
 export function parseDeploymentConfig(raw: unknown): DeploymentConfig {
   if (!raw || typeof raw !== 'object') return EMPTY_DEPLOYMENT_CONFIG;
-  const oidc = (raw as { oidc?: unknown }).oidc;
-  if (!oidc || typeof oidc !== 'object') return EMPTY_DEPLOYMENT_CONFIG;
+  const { oidc, rbacEnabled } = raw as { oidc?: unknown; rbacEnabled?: unknown };
+  return {
+    oidc: parseOidc(oidc),
+    rbacEnabled: rbacEnabled !== false && rbacEnabled !== 'false',
+  };
+}
+
+function parseOidc(oidc: unknown): OidcConfig | null {
+  if (!oidc || typeof oidc !== 'object') return null;
   const { issuer, clientId, scopes, label } = oidc as Record<string, unknown>;
   if (typeof issuer !== 'string' || typeof clientId !== 'string' || clientId.trim() === '') {
-    return EMPTY_DEPLOYMENT_CONFIG;
+    return null;
   }
   let url: URL;
   try {
     url = new URL(issuer);
   } catch {
-    return EMPTY_DEPLOYMENT_CONFIG;
+    return null;
   }
-  if (url.protocol !== 'https:') return EMPTY_DEPLOYMENT_CONFIG;
+  if (url.protocol !== 'https:') return null;
   const scopeList =
     typeof scopes === 'string'
       ? scopes.split(/[\s,]+/).filter(Boolean)
@@ -64,12 +77,10 @@ export function parseDeploymentConfig(raw: unknown): DeploymentConfig {
         ? scopes.filter((s): s is string => typeof s === 'string' && s.length > 0)
         : [];
   return {
-    oidc: {
-      issuer: issuer.replace(/\/+$/, ''),
-      clientId: clientId.trim(),
-      scopes: scopeList.length > 0 ? scopeList : [...DEFAULT_SCOPES],
-      label: typeof label === 'string' && label.trim() ? label.trim() : url.hostname,
-    },
+    issuer: issuer.replace(/\/+$/, ''),
+    clientId: clientId.trim(),
+    scopes: scopeList.length > 0 ? scopeList : [...DEFAULT_SCOPES],
+    label: typeof label === 'string' && label.trim() ? label.trim() : url.hostname,
   };
 }
 
